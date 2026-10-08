@@ -1,0 +1,16 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-08T22:00:00Z" },
+  "title": "DistributeKaro UI-4 Orders & Settings",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 2900, "h": 2000, "title": "All screens & states · D-15…D-19", "is_interactive": true },
+    "Flow.dc.html": { "x": 2980, "y": 0, "w": 360, "h": 800, "title": "Clickable flow · start here", "is_interactive": true, "radius": 28 }
+  },
+  "order": ["Main.dc.html", "Flow.dc.html"],
+  "notes": {
+    "title": { "x": 0, "y": -300, "text": "UI-4 · Orders inbox, decisions & settings", "kind": "title1", "maxW": 3340 }
+  },
+  "designSystems": []
+}

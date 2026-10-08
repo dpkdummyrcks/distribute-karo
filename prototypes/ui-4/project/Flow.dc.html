@@ -1,0 +1,693 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Orders and settings flow</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700;800&amp;family=Anek+Devanagari:wght@500;600;700;800&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 360px; height: 800px; position: relative; overflow: hidden; display: flex; flex-direction: column; font-family: 'Mukta', 'Anek Devanagari', system-ui, sans-serif; {{vars}}; background: var(--bg); color: var(--text)">
+
+  <!-- ===================================================== D-15 INBOX -->
+  <sc-if value="{{scr.inbox}}" hint-placeholder-val="{{true}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 16px; display: flex; align-items: center; justify-content: space-between">
+      <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 24px">{{s.orders}}</h1>
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+    </div>
+    <div role="tablist" style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 10px; flex: none">
+      <sc-for list="{{tabs}}" as="tb" hint-placeholder-count="5">
+        <button role="tab" onClick="{{tb.pick}}" aria-selected="{{tb.on}}" style="height: 36px; padding: 0 12px; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 700; border: 1.5px solid {{tb.border}}; background: {{tb.bg}}; color: {{tb.fg}}; display: flex; align-items: center; gap: 6px; cursor: pointer">{{tb.label}}<sc-if value="{{tb.hasN}}" hint-placeholder-val="{{true}}"><span style="min-width: 20px; height: 20px; padding: 0 6px; box-sizing: border-box; border-radius: 10px; font-size: 12px; line-height: 20px; background: {{tb.nBg}}; color: {{tb.nFg}}">{{tb.n}}</span></sc-if></button>
+      </sc-for>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px">
+      <sc-if value="{{inbox.loading}}" hint-placeholder-val="{{false}}">
+        <sc-for list="{{skeleton}}" as="sk" hint-placeholder-count="4">
+          <div aria-hidden="true" style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 10px; opacity: {{sk.o}}">
+            <span style="display: flex; justify-content: space-between"><span style="width: 90px; height: 14px; border-radius: 7px; background: var(--field)"></span><span style="width: 70px; height: 22px; border-radius: 11px; background: var(--field)"></span></span>
+            <span style="width: 70%; height: 16px; border-radius: 8px; background: var(--field)"></span>
+            <span style="width: 45%; height: 12px; border-radius: 6px; background: var(--field)"></span>
+          </div>
+        </sc-for>
+      </sc-if>
+      <sc-for list="{{inbox.cards}}" as="o" hint-placeholder-count="3">
+        <button onClick="{{o.open}}" style="width: 100%; text-align: left; border: 0; border-radius: 20px; background: var(--surface); color: var(--text); padding: 14px; display: flex; flex-direction: column; gap: 8px; font-family: inherit; cursor: pointer">
+          <span style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+            <span style="font-size: 14px; font-weight: 700; color: var(--text2)">#{{o.no}} · {{o.time}}</span>
+            <span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 9px 0 7px; border-radius: 999px; font-size: 12px; font-weight: 700; background: {{o.chipBg}}; color: {{o.chipFg}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{o.chipIcon}}"></path></svg>{{o.status}}</span>
+          </span>
+          <span style="display: flex; flex-direction: column; line-height: 20px">
+            <span style="font-size: 17px; font-weight: 700">{{o.shop}}</span>
+            <span style="font-size: 14px; color: var(--text2)">{{o.owner}} · {{o.area}}</span>
+          </span>
+          <span style="display: flex; justify-content: space-between; align-items: center; gap: 8px; flex-wrap: wrap">
+            <span style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-if value="{{o.newDevice}}" hint-placeholder-val="{{false}}"><span style="height: 24px; padding: 0 8px 0 6px; border-radius: 8px; border: 1.5px solid var(--warnFg); color: var(--warnFg); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10v18H7zM11 18h2"></path></svg>{{s.newDevice}}</span></sc-if>
+              <sc-if value="{{o.short}}" hint-placeholder-val="{{false}}"><span style="height: 24px; padding: 0 8px 0 6px; border-radius: 8px; background: var(--dangerBg); color: var(--dangerFg); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 4px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l9 16H3zM12 10v4M12 17v.01"></path></svg>{{o.shortText}}</span></sc-if>
+            </span>
+            <span style="font-size: 15px; font-weight: 800">{{o.lines}} · {{o.amount}}</span>
+          </span>
+        </button>
+      </sc-for>
+      <sc-if value="{{inbox.empty}}" hint-placeholder-val="{{false}}">
+        <div style="padding: 40px 24px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
+          <span style="width: 88px; height: 88px; border-radius: 28px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l3-8h12l3 8v6H3zM3 13h5l1 3h6l1-3h5"></path></svg></span>
+          <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{inbox.emptyTitle}}</span>
+          <span style="font-size: 14px; line-height: 20px; color: var(--text2)">{{s.emptySub}}</span>
+          <a href="#" style="margin-top: 4px; height: 46px; padding: 0 18px; border-radius: 999px; background: var(--pc); color: var(--opc); font-size: 15px; font-weight: 700; display: flex; align-items: center; text-decoration: none">{{s.shareQr}}</a>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-16 ORDER DETAIL -->
+  <sc-if value="{{scr.detail}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{goInbox}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+      <span style="flex: 1; display: flex; flex-direction: column; line-height: 20px"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.order}} #{{d.no}}</span><span style="font-size: 13px; color: var(--text2)">{{d.placed}}</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px 0 8px; border-radius: 999px; font-size: 13px; font-weight: 700; background: {{d.chipBg}}; color: {{d.chipFg}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{d.chipIcon}}"></path></svg>{{d.status}}</span>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px">
+      <section style="border-radius: 20px; background: var(--surface); padding: 12px 12px 12px 14px; display: flex; align-items: center; gap: 12px">
+        <span style="width: 44px; height: 44px; flex: none; border-radius: 22px; background: var(--pc); color: var(--opc); font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center">{{d.initials}}</span>
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.shop}}</span><span style="font-size: 13px; color: var(--text2)">{{d.owner}} · {{d.area}}</span></span>
+        <a href="#" aria-label="{{s.call}}" style="width: 44px; height: 44px; flex: none; border-radius: 22px; background: var(--field); color: var(--text); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg></a>
+        <a href="#" aria-label="WhatsApp" style="width: 44px; height: 44px; flex: none; border-radius: 22px; background: var(--field); color: #128C4A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1a3.5 3.5 0 0 1-2-2l1-1-1-2z"></path></svg></a>
+      </section>
+      <sc-if value="{{d.newDevice}}" hint-placeholder-val="{{false}}">
+        <div role="note" style="border-radius: 14px; padding: 12px 14px; background: var(--warnBg); color: var(--warnFg); font-size: 14px; line-height: 20px; display: flex; gap: 10px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M7 3h10v18H7zM11 18h2"></path></svg>{{s.newDeviceBody}}</div>
+      </sc-if>
+      <sc-if value="{{d.hasNote}}" hint-placeholder-val="{{true}}">
+        <div style="border-radius: 14px; padding: 10px 14px; background: var(--sheet); font-size: 15px; line-height: 21px"><span style="font-weight: 700">{{s.note}}: </span>{{d.note}}</div>
+      </sc-if>
+      <sc-if value="{{d.hasReason}}" hint-placeholder-val="{{false}}">
+        <div style="border-radius: 14px; padding: 12px 14px; background: var(--dangerBg); color: var(--dangerFg); font-size: 15px; line-height: 21px"><span style="font-weight: 700">{{s.rejectedBecause}}: </span>{{d.reason}}</div>
+      </sc-if>
+      <section style="display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--text2)">{{d.linesTitle}}</span>
+        <sc-for list="{{d.lines}}" as="l" hint-placeholder-count="5">
+          <div style="border-radius: 16px; background: var(--surface); border: 1.5px solid {{l.border}}; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px">
+            <span style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{l.name}}</span><span style="flex: none; font-size: 15px; font-weight: 800">{{l.amount}}</span></span>
+            <span style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px; color: var(--text2)">
+              <span style="display: flex; align-items: center; gap: 6px"><span style="text-decoration: {{l.strike}}">{{l.req}}</span><sc-if value="{{l.decided}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg><span style="font-weight: 800; color: {{l.accFg}}">{{l.acc}}</span></sc-if></span>
+              <span>{{l.rate}}</span>
+            </span>
+            <sc-if value="{{l.showStock}}" hint-placeholder-val="{{true}}"><span style="font-size: 13px; font-weight: 700; color: {{l.stockFg}}">{{l.stockText}}</span></sc-if>
+            <sc-if value="{{l.hasNote}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 6px 8px; border-radius: 8px; background: var(--warnBg); color: var(--warnFg)">{{l.note}}</span></sc-if>
+          </div>
+        </sc-for>
+      </section>
+      <section style="border-radius: 18px; background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
+        <span style="display: flex; justify-content: space-between; font-size: 14px; color: var(--text2)"><span>{{s.requested}}</span><span style="text-decoration: {{d.reqStrike}}">{{d.reqTotal}}</span></span>
+        <sc-if value="{{d.hasAcc}}" hint-placeholder-val="{{false}}"><span style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 15px; font-weight: 700">{{s.acceptedTotal}}</span><span style="font-size: 20px; font-weight: 800">{{d.accTotal}}</span></span></sc-if>
+      </section>
+      <section style="display: flex; flex-direction: column; gap: 0; padding: 4px 4px 0">
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--text2); margin-bottom: 8px">{{s.timeline}}</span>
+        <sc-for list="{{d.events}}" as="ev" hint-placeholder-count="3">
+          <div style="display: flex; gap: 12px">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 16px"><span style="width: 12px; height: 12px; border-radius: 6px; margin-top: 4px; background: {{ev.dot}}"></span><sc-if value="{{ev.line}}" hint-placeholder-val="{{true}}"><span style="width: 2px; flex: 1; min-height: 14px; background: var(--outline)"></span></sc-if></div>
+            <div style="display: flex; flex-direction: column; padding-bottom: 10px; line-height: 19px"><span style="font-size: 14px; font-weight: 700">{{ev.label}}</span><span style="font-size: 12px; color: var(--text2)">{{ev.time}}</span></div>
+          </div>
+        </sc-for>
+      </section>
+    </div>
+    <sc-if value="{{d.hasActions}}" hint-placeholder-val="{{true}}">
+      <div style="flex: none; padding: 10px 16px 16px; background: var(--sheet); border-top: 1px solid var(--outline); display: flex; flex-direction: column; gap: 8px">
+        <sc-if value="{{d.isPending}}" hint-placeholder-val="{{true}}">
+          <sc-if value="{{d.anyShort}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; font-weight: 600; color: var(--dangerFg)">{{d.shortHint}}</span></sc-if>
+          <div style="display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 8px">
+            <button onClick="{{openReject}}" style="height: 48px; border-radius: 999px; border: 1.5px solid var(--danger); background: transparent; color: var(--danger); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.reject}}</button>
+            <button onClick="{{openPartial}}" style="height: 48px; border-radius: 999px; border: 0; background: var(--pc); color: var(--opc); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.partial}}</button>
+            <button onClick="{{acceptAll}}" aria-disabled="{{d.anyShort}}" style="height: 48px; border-radius: 999px; border: 0; background: {{d.allBg}}; color: {{d.allFg}}; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.acceptAll}}</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{d.canDispatch}}" hint-placeholder-val="{{false}}">
+          <button onClick="{{askDispatch}}" style="height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"></path></svg>{{s.markDispatched}}</button>
+        </sc-if>
+        <sc-if value="{{d.canDeliver}}" hint-placeholder-val="{{false}}">
+          <button onClick="{{askDeliver}}" style="height: 52px; border-radius: 999px; border: 0; background: var(--success); color: var(--onSuccess); font-family: inherit; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l2.8 2.8L16.5 9.5"></path></svg>{{s.markDelivered}}</button>
+        </sc-if>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <!-- ===================================================== D-17 PARTIAL EDITOR -->
+  <sc-if value="{{scr.partial}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{backToDetail}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+      <span style="flex: 1; display: flex; flex-direction: column; line-height: 20px"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 19px">{{s.setQty}}</span><span style="font-size: 13px; color: var(--text2)">#{{d.no}} · {{d.shop}}</span></span>
+      <button onClick="{{fillAll}}" style="height: 40px; padding: 0 10px; border: 0; border-radius: 20px; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.fillStock}}</button>
+    </div>
+    <sc-if value="{{pe.conflict}}" hint-placeholder-val="{{false}}">
+      <div role="alert" style="margin: 0 16px 8px; border-radius: 14px; padding: 12px 14px; background: var(--dangerBg); color: var(--dangerFg); font-size: 14px; line-height: 20px; display: flex; gap: 10px; align-items: flex-start; flex: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"></path></svg><span><span style="font-weight: 800">{{s.conflictTitle}}</span> {{s.conflictBody}}</span></div>
+    </sc-if>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 8px">
+      <sc-for list="{{pe.lines}}" as="l" hint-placeholder-count="5">
+        <div style="border-radius: 18px; background: var(--surface); border: 1.5px solid {{l.border}}; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+          <span style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{l.name}}</span><span style="flex: none; font-size: 15px; font-weight: 800">{{l.amount}}</span></span>
+          <span style="display: flex; flex-direction: column; font-size: 13px; line-height: 18px"><span style="color: var(--text2)">{{l.asked}} · {{l.rate}}</span><span style="font-weight: 700; color: {{l.stockFg}}">{{l.stockText}}</span></span>
+          <div style="display: flex; align-items: center; gap: 6px">
+            <button onClick="{{l.dec}}" aria-label="{{l.decAria}}" style="width: 44px; height: 44px; flex: none; border-radius: 14px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+            <label style="flex: 1; min-width: 0; height: 44px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{l.inputBorder}}; display: flex; align-items: center; padding: 0 10px; gap: 4px">
+              <input aria-label="{{l.inputAria}}" value="{{l.value}}" onChange="{{l.onInput}}" inputmode="{{l.inputMode}}" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; text-align: center; font-family: inherit; font-size: 18px; font-weight: 800; color: var(--text); outline: none">
+              <span style="font-size: 13px; font-weight: 600; color: var(--text2)">{{l.unit}}</span>
+            </label>
+            <button onClick="{{l.inc}}" aria-label="{{l.incAria}}" style="width: 44px; height: 44px; flex: none; border-radius: 14px; border: 0; background: {{l.incBg}}; color: {{l.incFg}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+            <button onClick="{{l.max}}" style="height: 44px; padding: 0 10px; flex: none; border-radius: 14px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 13px; font-weight: 800; cursor: pointer">{{s.max}}</button>
+          </div>
+          <sc-if value="{{l.err}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{l.errText}}</span></sc-if>
+          <sc-if value="{{l.showNoteBtn}}" hint-placeholder-val="{{true}}"><button onClick="{{l.addNote}}" style="align-self: flex-start; height: 32px; padding: 0 4px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{s.addNote}}</button></sc-if>
+          <sc-if value="{{l.showNote}}" hint-placeholder-val="{{false}}">
+            <label style="display: flex; flex-direction: column"><span style="box-sizing: border-box; border-radius: 12px; background: var(--field); padding: 6px 12px; display: flex; flex-direction: column"><span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.lineNote}}</span><input value="{{l.note}}" onChange="{{l.onNote}}" placeholder="{{l.notePh}}" maxlength="500" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; color: var(--text); outline: none; width: 100%"></span></label>
+          </sc-if>
+        </div>
+      </sc-for>
+    </div>
+    <div style="flex: none; padding: 10px 16px 16px; background: var(--sheet); border-top: 1px solid var(--outline); display: flex; flex-direction: column; gap: 8px">
+      <span style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 14px; color: var(--text2)">{{s.accepting}} <span style="font-size: 20px; font-weight: 800; color: var(--text)">{{pe.total}}</span></span><span style="font-size: 13px; color: var(--text2)">{{s.of}} {{pe.reqTotal}}</span></span>
+      <sc-if value="{{pe.allZero}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{s.zeroHint}}</span></sc-if>
+      <button onClick="{{confirmPartial}}" style="height: 52px; border-radius: 999px; border: 0; background: {{pe.btnBg}}; color: {{pe.btnFg}}; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{pe.btnLabel}}</button>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-19 SETTINGS -->
+  <sc-if value="{{scr.settings}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 16px; display: flex; align-items: center">
+      <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 24px">{{s.settings}}</h1>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 14px">
+      <section style="border-radius: 22px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <div style="display: flex; align-items: center; gap: 12px">
+          <span style="width: 52px; height: 52px; flex: none; border-radius: 16px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 18px; display: flex; align-items: center; justify-content: center">SB</span>
+          <span style="flex: 1; display: flex; flex-direction: column; line-height: 20px"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 18px">Shree Balaji Traders</span><span style="font-size: 13px; color: var(--text2)">Ramesh Agarwal</span></span>
+          <a href="#" style="height: 38px; padding: 0 14px; border-radius: 999px; background: var(--pc); color: var(--opc); font-size: 14px; font-weight: 700; display: flex; align-items: center; text-decoration: none">{{s.edit}}</a>
+        </div>
+        <div style="display: grid; grid-template-columns: 96px 1fr; row-gap: 6px; column-gap: 10px; font-size: 14px">
+          <span style="color: var(--text2)">{{s.loginNumber}}</span><span style="font-weight: 600">+91 98123 45678</span>
+          <span style="color: var(--text2)">{{s.email}}</span><span style="font-weight: 600; word-break: break-all">orders@shreebalaji.example</span>
+          <span style="color: var(--text2)">GSTIN</span><span style="font-weight: 600; font-family: ui-monospace, monospace">08AAKCS1234F1Z5</span>
+          <span style="color: var(--text2)">{{s.address}}</span><span style="font-weight: 600">42, Kishanpole Bazar, Jaipur 302001</span>
+        </div>
+      </section>
+      <section style="border-radius: 22px; background: var(--surface); padding: 6px 14px 12px; display: flex; flex-direction: column">
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--primary); padding: 8px 0">{{s.language}}</span>
+        <sc-for list="{{langOpts}}" as="o" hint-placeholder-count="2">
+          <label style="min-height: 48px; display: flex; align-items: center; gap: 12px; cursor: pointer"><input type="radio" name="dk4-lang" checked="{{o.on}}" onChange="{{o.pick}}" style="width: 20px; height: 20px; margin: 0; accent-color: #3730A3"><span style="font-size: 16px; font-weight: 600">{{o.label}}</span></label>
+        </sc-for>
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--primary); padding: 14px 0 8px">{{s.theme}}</span>
+        <sc-for list="{{themeOpts}}" as="o" hint-placeholder-count="3">
+          <label style="min-height: 48px; display: flex; align-items: center; gap: 12px; cursor: pointer"><input type="radio" name="dk4-theme" checked="{{o.on}}" onChange="{{o.pick}}" style="width: 20px; height: 20px; margin: 0; accent-color: #3730A3"><span style="font-size: 16px; font-weight: 600">{{o.label}}</span></label>
+        </sc-for>
+      </section>
+      <section style="border-radius: 22px; background: var(--surface); overflow: hidden">
+        <button onClick="{{goPassword}}" style="width: 100%; min-height: 56px; border: 0; border-bottom: 1px solid var(--outline); background: transparent; color: var(--text); text-align: left; padding: 8px 14px; display: flex; align-items: center; gap: 12px; font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"></path></svg><span style="flex: 1">{{s.changePassword}}</span><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--text2)"><path d="M9 5l7 7-7 7"></path></svg></button>
+        <a href="#" style="min-height: 56px; padding: 8px 14px; display: flex; align-items: center; gap: 12px; color: var(--danger); font-size: 15px; font-weight: 700; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10"></path></svg>{{s.logout}}</a>
+      </section>
+      <span style="text-align: center; font-size: 12px; color: var(--text2)">DistributeKaro 0.1.0 (POC)</span>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-19 CHANGE PASSWORD -->
+  <sc-if value="{{scr.password}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{goSettings}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+      <h1 style="flex: 1; margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px">{{s.changePassword}}</h1>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 20px 16px; display: flex; flex-direction: column; gap: 14px">
+      <label style="display: flex; flex-direction: column; gap: 4px">
+        <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{pw.curBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.currentPw}}</span>
+          <input type="{{pw.type}}" value="{{pw.cur}}" onChange="{{onCur}}" autocomplete="current-password" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+        </span>
+        <sc-if value="{{pw.curErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.curWrong}}</span></sc-if>
+      </label>
+      <label style="display: flex; flex-direction: column; gap: 6px">
+        <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{pw.newBorder}}; padding: 6px 4px 6px 14px; display: flex; align-items: center">
+          <span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.newPw}}</span><input type="{{pw.type}}" value="{{pw.next}}" onChange="{{onNew}}" autocomplete="new-password" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%"></span>
+          <button onClick="{{toggleShow}}" aria-label="{{pw.eyeLabel}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 22px; background: transparent; color: var(--text2); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{pw.eye}}"></path></svg></button>
+        </span>
+        <span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 0 2px"><span style="height: 4px; border-radius: 2px; background: {{pw.bar1}}"></span><span style="height: 4px; border-radius: 2px; background: {{pw.bar2}}"></span><span style="height: 4px; border-radius: 2px; background: {{pw.bar3}}"></span></span>
+        <span style="display: flex; justify-content: space-between; font-size: 13px; padding: 0 2px"><span style="color: {{pw.hintFg}}">{{pw.hint}}</span><span style="font-weight: 700; color: {{pw.strengthFg}}">{{pw.strengthLabel}}</span></span>
+      </label>
+      <label style="display: flex; flex-direction: column; gap: 4px">
+        <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{pw.matchBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.confirmPw}}</span>
+          <input type="{{pw.type}}" value="{{pw.confirm}}" onChange="{{onConfirm}}" autocomplete="new-password" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+        </span>
+        <sc-if value="{{pw.matchErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errMatch}}</span></sc-if>
+      </label>
+      <div style="border-radius: 14px; padding: 12px 14px; background: var(--pc); color: var(--opc); font-size: 14px; line-height: 20px; display: flex; gap: 10px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8v.01"></path></svg>{{s.otherDevices}}</div>
+    </div>
+    <div style="flex: none; padding: 12px 20px 18px; border-top: 1px solid var(--outline)">
+      <button onClick="{{savePassword}}" style="width: 100%; height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.updatePw}}</button>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== NAV -->
+  <sc-if value="{{showNav}}" hint-placeholder-val="{{true}}">
+    <nav style="height: 80px; flex: none; background: var(--navBg); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+        <button onClick="{{n.pick}}" aria-label="{{n.label}}" aria-current="{{n.current}}" style="border: 0; background: transparent; height: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: {{n.fg}}; font-family: inherit; cursor: pointer">
+          <span style="position: relative; width: 60px; height: 32px; border-radius: 16px; background: {{n.pill}}; display: flex; align-items: center; justify-content: center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.icon}}"></path></svg>
+            <sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 0; right: 10px; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: var(--danger); color: var(--onDanger); font-size: 11px; font-weight: 700; line-height: 16px; text-align: center">{{n.badge}}</span></sc-if>
+          </span>
+          <span style="font-size: 12px; font-weight: 700">{{n.label}}</span>
+        </button>
+      </sc-for>
+    </nav>
+  </sc-if>
+
+  <!-- ===================================================== D-18 REJECT SHEET -->
+  <sc-if value="{{rj.open}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end">
+      <button onClick="{{closeReject}}" aria-label="{{s.cancel}}" style="position: absolute; inset: 0; border: 0; background: var(--scrim); cursor: pointer"></button>
+      <div style="position: relative; background: var(--sheet); border-radius: 26px 26px 0 0; padding: 10px 20px 20px; display: flex; flex-direction: column; gap: 12px">
+        <span style="align-self: center; width: 36px; height: 4px; border-radius: 2px; background: var(--outline2)"></span>
+        <span style="display: flex; flex-direction: column"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px">{{s.rejectTitle}} #{{d.no}}</span><span style="font-size: 14px; color: var(--text2)">{{s.rejectSub}}</span></span>
+        <span style="font-size: 13px; font-weight: 700; color: {{rj.reasonFg}}">{{s.reason}}</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <sc-for list="{{rj.reasons}}" as="r" hint-placeholder-count="4"><button onClick="{{r.pick}}" aria-pressed="{{r.on}}" style="min-height: 40px; padding: 6px 12px; border-radius: 12px; border: 1.5px solid {{r.border}}; background: {{r.bg}}; color: {{r.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; text-align: left; cursor: pointer">{{r.label}}</button></sc-for>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{rj.textBorder}}; padding: 8px 14px; display: flex; flex-direction: column">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{rj.textLabel}}</span>
+            <textarea value="{{rj.text}}" onChange="{{onRejectText}}" rows="3" maxlength="500" placeholder="{{s.rejectPh}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; line-height: 21px; color: var(--text); outline: none; width: 100%; resize: none"></textarea>
+          </span>
+          <sc-if value="{{rj.textErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.reasonNeeded}}</span></sc-if>
+        </label>
+        <button onClick="{{confirmReject}}" style="height: 52px; border-radius: 999px; border: 0; background: var(--danger); color: var(--onDanger); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.rejectBtn}}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== DISPATCH / DELIVER DIALOG -->
+  <sc-if value="{{dlg.open}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; z-index: 11; background: var(--scrim); display: flex; align-items: center; justify-content: center; padding: 24px">
+      <div role="alertdialog" aria-label="{{dlg.title}}" style="width: 100%; background: var(--sheet); border-radius: 28px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+        <span style="width: 44px; height: 44px; border-radius: 22px; background: {{dlg.iconBg}}; color: {{dlg.iconFg}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{dlg.icon}}"></path></svg></span>
+        <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px; line-height: 26px">{{dlg.title}}</span>
+        <span style="font-size: 15px; line-height: 22px; color: var(--text2)">{{dlg.body}}</span>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px">
+          <button onClick="{{closeDialog}}" style="height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.cancel}}</button>
+          <button onClick="{{confirmDialog}}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{dlg.confirm}}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== SNACKBAR -->
+  <sc-if value="{{snack.show}}" hint-placeholder-val="{{false}}">
+    <div role="status" style="position: absolute; left: 12px; right: 12px; bottom: {{snack.bottom}}; z-index: 12; min-height: 48px; padding: 10px 16px; box-sizing: border-box; border-radius: 10px; background: var(--inv); color: var(--onInv); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(20,18,60,0.3)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{snack.text}}
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","default":"inbox","options":["inbox","inboxAccepted","inboxEmpty","inboxLoading","detailPending","partial","conflict","reject","detailPartial","detailDispatched","detailDelivered","detailRejected","settings","password"]},"lang":{"editor":"enum","default":"en","options":["en","hi"]},"dark":{"editor":"boolean","default":false},"auto":{"editor":"boolean","default":true},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.initState(props.start ?? 'inbox');
+  }
+  toM(q) { const [a, b = ''] = String(q).split('.'); return parseInt(a || '0', 10) * 1000 + parseInt((b + '000').slice(0, 3), 10); }
+  fq(m) { const a = Math.abs(m); const s = `${Math.floor(a / 1000)}.${String(a % 1000).padStart(3, '0')}`.replace(/\.?0+$/, ''); return (m < 0 ? '-' : '') + (s || '0'); }
+
+  // fixtures/items.page.json → [name, unit, ratePaise, stock]
+  baseItems() {
+    return [['Aashirvaad Atta 10 kg', 'PACK', 46500, '120'], ['Tata Salt 1 kg (case of 25)', 'CASE', 60000, '40'], ['Sugar (loose)', 'KG', 4250, '850.5'],
+      ['Fortune Sunflower Oil', 'L', 15500, '320'], ['Toor Dal', 'KG', 13800, '6.5'], ['Basmati Rice (loose)', 'KG', 9600, '0'], ['Parle-G 80 g (box of 48)', 'BOX', 48000, '64'],
+      ['Britannia Good Day 200 g', 'PCS', 4000, '600'], ['Maggi Noodles 70 g', 'DOZEN', 16800, '85'], ['Amul Butter 500 g', 'PCS', 27500, '48'], ['Amul Taaza Milk', 'L', 5400, '200'],
+      ['Surf Excel Easy Wash 1 kg', 'PCS', 14000, '150'], ['Vim Bar (pack of 4)', 'PACK', 8800, '9'], ['Colgate Strong Teeth 200 g', 'PCS', 11000, '230'], ['Dettol Soap (pack of 4)', 'PACK', 22000, '75'],
+      ['Red Label Tea 1 kg', 'PCS', 52000, '60'], ['Bru Instant Coffee 200 g', 'PCS', 38500, '0'], ["Haldiram's Bhujia 1 kg", 'PCS', 26000, '44'], ['Everest Garam Masala 100 g', 'PCS', 8200, '300'], ['Haldi Powder (loose)', 'G', 30, '25000']]
+      .map(([name, unit, rate, stock]) => ({ name, unit, rate, stockM: this.toM(stock) }));
+  }
+  // fixtures/orders.page.json + order-detail.*.json
+  baseOrders() {
+    const R = { S: ['Sharma General Store', 'Rakesh Sharma', 'Malviya Nagar'], G: ['Gupta Kirana', 'Sunita Gupta', 'Vaishali Nagar'], J: ['Jain Provision Store', 'Amit Jain', 'Raja Park'],
+      N: ['New Bharat Mart', 'Imran Khan', 'Mansarovar'], O: ['Om Sai Kirana', 'Pooja Verma', 'Jagatpura'] };
+    return [
+      [1040, 'PENDING', 'S', false, 'Please send before 5 PM', null, [[0, '5'], [2, '25.5'], [4, '50'], [8, '4'], [9, '10']], [['PENDING', '2026-10-08T05:12:00Z', 'R']]],
+      [1039, 'PENDING', 'N', true, null, null, [[1, '2'], [3, '30'], [6, '3'], [11, '12']], [['PENDING', '2026-10-08T03:45:00Z', 'R']]],
+      [1038, 'PARTIALLY_ACCEPTED', 'G', false, null, null, [[4, '40', '37', 'Only 37 kg available today'], [0, '10', '10'], [16, '6', '0', 'Out of stock — expected next week']], [['PENDING', '2026-10-08T02:35:00Z', 'R'], ['PARTIALLY_ACCEPTED', '2026-10-08T03:10:00Z', 'D']]],
+      [1037, 'ACCEPTED', 'J', false, null, null, [[15, '4', '4'], [13, '24', '24'], [14, '6', '6']], [['PENDING', '2026-10-08T02:00:00Z', 'R'], ['ACCEPTED', '2026-10-08T02:25:00Z', 'D']]],
+      [1036, 'ACCEPTED', 'O', false, 'First order', null, [[7, '48', '48'], [12, '10', '10']], [['PENDING', '2026-10-07T11:40:00Z', 'R'], ['ACCEPTED', '2026-10-07T12:30:00Z', 'D']]],
+      [1035, 'DISPATCHED', 'S', false, null, null, [[4, '75', '75'], [2, '50', '40', '40 kg now, rest on Friday'], [10, '20', '20']], [['PENDING', '2026-10-07T05:50:00Z', 'R'], ['PARTIALLY_ACCEPTED', '2026-10-07T06:35:00Z', 'D'], ['DISPATCHED', '2026-10-07T11:00:00Z', 'D']]],
+      [1034, 'DELIVERED', 'G', false, null, null, [[0, '8', '8'], [3, '20', '20'], [19, '500', '500']], [['PENDING', '2026-10-06T04:30:00Z', 'R'], ['ACCEPTED', '2026-10-06T05:00:00Z', 'D'], ['DISPATCHED', '2026-10-06T08:30:00Z', 'D'], ['DELIVERED', '2026-10-06T12:45:00Z', 'D']]],
+      [1033, 'REJECTED', 'N', false, null, "We don't deliver to Mansarovar on Sundays. Please reorder on Monday.", [[17, '10', '0'], [8, '6', '0']], [['PENDING', '2026-10-06T15:15:00Z', 'R'], ['REJECTED', '2026-10-06T15:30:00Z', 'D']]],
+      [1032, 'DELIVERED', 'J', false, null, null, [[9, '20', '12', 'Only 12 left'], [11, '6', '6']], [['PENDING', '2026-10-05T03:30:00Z', 'R'], ['PARTIALLY_ACCEPTED', '2026-10-05T04:10:00Z', 'D'], ['DISPATCHED', '2026-10-05T07:30:00Z', 'D'], ['DELIVERED', '2026-10-05T12:00:00Z', 'D']]],
+      [1031, 'CANCELLED', 'S', false, null, null, [[6, '2'], [7, '24']], [['PENDING', '2026-10-04T06:30:00Z', 'R'], ['CANCELLED', '2026-10-04T06:50:00Z', 'R']]],
+    ].map(([no, status, r, newDevice, note, reason, lines, events]) => ({
+      no, status, shop: R[r][0], owner: R[r][1], area: R[r][2], newDevice, note, reason,
+      lines: lines.map(([item, req, acc = null, lineNote = null]) => ({ item, reqM: this.toM(req), accM: acc === null ? null : this.toM(acc), note: lineNote })),
+      events: events.map(([to, at, by]) => ({ to, at, by })),
+    }));
+  }
+  initState(start) {
+    const base = { screen: 'inbox', tab: 'pending', lang: null, theme: null, items: this.baseItems(), orders: this.baseOrders(), openNo: 1040,
+      loading: false, emptyPending: false, pe: null, rj: null, dlg: null, conflict: false, snack: null,
+      pw: { cur: '', next: '', confirm: '', show: false, tried: false } };
+    const partialFor = (no, items, orders) => {
+      const o = orders.find((x) => x.no === no);
+      const vals = o.lines.map((l) => this.fq(Math.min(l.reqM, items[l.item].stockM)));
+      return { vals, notes: o.lines.map(() => ''), noteOpen: o.lines.map(() => false), tried: false };
+    };
+    const m = {
+      inbox: {}, inboxAccepted: { tab: 'accepted' }, inboxEmpty: { emptyPending: true }, inboxLoading: { loading: true },
+      detailPending: { screen: 'detail', openNo: 1040 },
+      partial: { screen: 'partial', openNo: 1040, pe: partialFor(1040, base.items, base.orders) },
+      reject: { screen: 'detail', openNo: 1040, rj: { reason: 0, text: '', tried: false } },
+      detailPartial: { screen: 'detail', openNo: 1038 }, detailDispatched: { screen: 'detail', openNo: 1035 },
+      detailDelivered: { screen: 'detail', openNo: 1034 }, detailRejected: { screen: 'detail', openNo: 1033 },
+      settings: { screen: 'settings' }, password: { screen: 'password' },
+    };
+    if (start === 'conflict') {
+      const items = base.items.map((it, i) => (i === 4 ? { ...it, stockM: 2500 } : it));
+      const pe = partialFor(1040, base.items, base.orders);
+      pe.vals[2] = '2.5';
+      return { ...base, items, screen: 'partial', openNo: 1040, pe, conflict: true };
+    }
+    return { ...base, ...(m[start] ?? {}) };
+  }
+  componentDidMount() { if ((this.props.auto ?? true) && this.state.loading) this.loadT = setTimeout(() => this.setState({ loading: false }), 1500); }
+  componentWillUnmount() { clearTimeout(this.loadT); clearTimeout(this.snackT); }
+  componentDidUpdate(prev) {
+    if (prev.start !== this.props.start) this.setState(this.initState(this.props.start ?? 'inbox'));
+    else if (prev.lang !== this.props.lang && this.state.lang !== null) this.setState({ lang: null });
+  }
+  toast(text, extra = {}) { clearTimeout(this.snackT); this.setState({ ...extra, snack: text }); this.snackT = setTimeout(() => this.setState({ snack: null }), 3500); }
+
+  renderVals() {
+    const st = this.state;
+    const dark = st.theme === null ? (this.props.dark ?? false) : st.theme === 'dark';
+    const lang = st.lang ?? this.props.lang ?? 'en';
+    const L = { bg: '#F7F6FC', surface: '#EEEDF8', field: '#E3E2F1', sheet: '#FFFFFF', outline: '#DCDBEA', outline2: '#8F8EA8', navBg: '#EAE9F5',
+      text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF', pc: '#E4E2FB', opc: '#1E1B4B', success: '#15803D', onSuccess: '#FFFFFF',
+      danger: '#B91C1C', onDanger: '#FFFFFF', dangerBg: '#FEE2E2', dangerFg: '#991B1B', warn: '#B45309', warnBg: '#FEF3C7', warnFg: '#92400E',
+      successBg: '#DCFCE7', successFg: '#166534', inv: '#2B2A40', onInv: '#F2F1FA', scrim: 'rgba(14,13,26,0.5)', disabled: '#D3D2E3', onDisabled: '#6B6A85' };
+    const D = { bg: '#0E0D1A', surface: '#1A1930', field: '#24223F', sheet: '#222039', outline: '#2C2A45', outline2: '#7C7A99', navBg: '#16152B',
+      text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760', pc: '#2E2A78', opc: '#E4E2FB', success: '#4ADE80', onSuccess: '#052E16',
+      danger: '#F87171', onDanger: '#2A0606', dangerBg: '#450A0A', dangerFg: '#FCA5A5', warn: '#FBBF24', warnBg: '#422006', warnFg: '#FCD34D',
+      successBg: '#052E16', successFg: '#86EFAC', inv: '#EEEDF7', onInv: '#16152B', scrim: 'rgba(0,0,0,0.6)', disabled: '#2C2A45', onDisabled: '#8E8CA8' };
+    const vars = Object.entries(dark ? D : L).map(([k, v]) => `--${k}: ${v}`).join('; ');
+
+    const T = {
+      en: {
+        langBtn: 'हिंदी', langAria: 'Switch to Hindi', back: 'Back', cancel: 'Cancel', orders: 'Orders', order: 'Order',
+        tabs: ['Pending', 'Accepted', 'Dispatched', 'Completed', 'Closed'],
+        status: { PENDING: 'Pending', ACCEPTED: 'Accepted', PARTIALLY_ACCEPTED: 'Partially accepted', REJECTED: 'Rejected', CANCELLED: 'Cancelled', DISPATCHED: 'Dispatched', DELIVERED: 'Delivered' },
+        items: (n) => `${n} item${n === 1 ? '' : 's'}`, newDevice: 'New device', short: (n) => `Short on ${n}`,
+        emptyTitles: ['No pending orders', 'Nothing to dispatch', 'Nothing on the way', 'No completed orders yet', 'Nothing closed'],
+        emptySub: 'New orders from your retailers show up here.', shareQr: 'Share my QR',
+        call: 'Call', note: 'Retailer note', rejectedBecause: 'Rejected', placedAt: (t) => `Placed ${t}`,
+        newDeviceBody: 'Placed from a phone this retailer has not used before. Call them if anything looks unusual.',
+        linesTitle: (n) => `${n} ITEMS`, requested: 'Requested', acceptedTotal: 'Accepted total', timeline: 'TIMELINE',
+        stock: (q) => `${q} in stock`, onlyStock: (q) => `Only ${q} in stock`, outStock: 'Out of stock',
+        ev: { PENDING: 'Placed by retailer', ACCEPTED: 'Accepted by you', PARTIALLY_ACCEPTED: 'Partially accepted by you', REJECTED: 'Rejected by you', CANCELLED: 'Cancelled by retailer', DISPATCHED: 'Dispatched', DELIVERED: 'Delivered' },
+        reject: 'Reject', partial: 'Partial', acceptAll: 'Accept all', shortHint: (n) => `Not enough stock for ${n}. Use Partial to accept what you have.`,
+        markDispatched: 'Mark as dispatched', markDelivered: 'Mark as delivered',
+        setQty: 'Set accepted quantity', fillStock: 'Fill from stock', max: 'Max', asked: (q) => `Asked ${q}`,
+        addNote: '+ Add note for retailer', lineNote: 'Note for retailer', notePhShort: 'e.g. Rest on Friday', notePhFull: 'Optional',
+        errQty: 'Enter a valid quantity', errOver: (q) => `Max you can accept is ${q}`, errWhole: (u) => `Whole numbers only for ${u}`,
+        accepting: 'Accepting', of: 'of', zeroHint: 'Nothing accepted. Use Reject instead.',
+        confirmPartial: 'Confirm partial', confirmAll: 'Accept all', useReject: 'Nothing to accept',
+        conflictTitle: 'Stock changed.', conflictBody: 'Another order just used 4 kg of Toor Dal, so only 2.5 kg is left. We updated the maximum. Check and confirm again.',
+        snackAccepted: (n) => `Order #${n} accepted · stock updated`, snackPartial: (n) => `Order #${n} partially accepted · stock updated`,
+        rejectTitle: 'Reject order', rejectSub: 'The retailer sees your reason. No stock changes.', reason: 'Reason',
+        reasons: ["Can't supply right now", 'Area not served today', 'Payment pending', 'Other'], rejectPh: 'Add a short message for the retailer',
+        msgOptional: 'Message · optional', msgRequired: 'Message · required', reasonNeeded: 'Tell the retailer why', rejectBtn: 'Reject order', snackRejected: (n) => `Order #${n} rejected`,
+        dispatchTitle: (n) => `Mark #${n} as dispatched?`, dispatchBody: (s) => `${s} will see that the order is on the way.`, dispatchBtn: 'Dispatched',
+        deliverTitle: (n) => `Mark #${n} as delivered?`, deliverBody: (s) => `Confirm that ${s} received the goods.`, deliverBtn: 'Delivered',
+        snackDispatched: (n) => `Order #${n} dispatched`, snackDelivered: (n) => `Order #${n} delivered`,
+        settings: 'Settings', edit: 'Edit', loginNumber: 'Login number', email: 'Email', address: 'Address',
+        language: 'LANGUAGE', theme: 'THEME', themes: ['Same as phone', 'Light', 'Dark'], changePassword: 'Change password', logout: 'Log out',
+        currentPw: 'Current password', newPw: 'New password', confirmPw: 'Confirm new password', curWrong: 'Current password is wrong',
+        pwHint: 'At least 8 characters. Avoid common passwords.', strength: ['Too weak', 'Okay', 'Strong'], errWeak: 'Choose a stronger password', errMatch: 'Passwords do not match',
+        otherDevices: 'You stay logged in on this phone. Other phones are logged out.', updatePw: 'Update password', show: 'Show password', hide: 'Hide password', pwSaved: 'Password changed',
+        nav: ['Home', 'Orders', 'Catalog', 'Retailers', 'More'],
+      },
+      hi: {
+        langBtn: 'English', langAria: 'Switch to English', back: 'वापस', cancel: 'रद्द करें', orders: 'ऑर्डर', order: 'ऑर्डर',
+        tabs: ['लंबित', 'स्वीकार', 'भेजे गए', 'पूरे', 'बंद'],
+        status: { PENDING: 'लंबित', ACCEPTED: 'स्वीकार', PARTIALLY_ACCEPTED: 'आंशिक स्वीकार', REJECTED: 'अस्वीकार', CANCELLED: 'रद्द', DISPATCHED: 'भेजा गया', DELIVERED: 'डिलीवर' },
+        items: (n) => `${n} आइटम`, newDevice: 'नया डिवाइस', short: (n) => `${n} में स्टॉक कम`,
+        emptyTitles: ['कोई लंबित ऑर्डर नहीं', 'भेजने के लिए कुछ नहीं', 'रास्ते में कुछ नहीं', 'अभी कोई पूरा ऑर्डर नहीं', 'कुछ बंद नहीं'],
+        emptySub: 'रिटेलर के नए ऑर्डर यहाँ दिखेंगे।', shareQr: 'मेरा QR शेयर करें',
+        call: 'कॉल', note: 'रिटेलर का नोट', rejectedBecause: 'अस्वीकार', placedAt: (t) => `${t} को दिया`,
+        newDeviceBody: 'यह ऑर्डर ऐसे फ़ोन से आया है जो इस रिटेलर ने पहले इस्तेमाल नहीं किया। कुछ अजीब लगे तो उन्हें कॉल करें।',
+        linesTitle: (n) => `${n} आइटम`, requested: 'माँगा गया', acceptedTotal: 'कुल स्वीकार', timeline: 'टाइमलाइन',
+        stock: (q) => `${q} स्टॉक में`, onlyStock: (q) => `सिर्फ़ ${q} स्टॉक में`, outStock: 'स्टॉक खत्म',
+        ev: { PENDING: 'रिटेलर ने ऑर्डर दिया', ACCEPTED: 'आपने स्वीकार किया', PARTIALLY_ACCEPTED: 'आपने आंशिक स्वीकार किया', REJECTED: 'आपने अस्वीकार किया', CANCELLED: 'रिटेलर ने रद्द किया', DISPATCHED: 'भेजा गया', DELIVERED: 'डिलीवर हुआ' },
+        reject: 'अस्वीकार', partial: 'आंशिक', acceptAll: 'सब स्वीकार', shortHint: (n) => `${n} के लिए स्टॉक कम है। जितना है उतना 'आंशिक' से स्वीकार करें।`,
+        markDispatched: 'भेजा गया मार्क करें', markDelivered: 'डिलीवर मार्क करें',
+        setQty: 'स्वीकार मात्रा तय करें', fillStock: 'स्टॉक से भरें', max: 'पूरा', asked: (q) => `माँगा ${q}`,
+        addNote: '+ रिटेलर के लिए नोट', lineNote: 'रिटेलर के लिए नोट', notePhShort: 'जैसे बाकी शुक्रवार को', notePhFull: 'वैकल्पिक',
+        errQty: 'सही मात्रा डालें', errOver: (q) => `ज़्यादा से ज़्यादा ${q} स्वीकार कर सकते हैं`, errWhole: (u) => `${u} के लिए सिर्फ़ पूरे अंक`,
+        accepting: 'स्वीकार', of: 'में से', zeroHint: 'कुछ स्वीकार नहीं किया। इसकी जगह अस्वीकार करें।',
+        confirmPartial: 'आंशिक कन्फ़र्म करें', confirmAll: 'सब स्वीकार करें', useReject: 'स्वीकार करने को कुछ नहीं',
+        conflictTitle: 'स्टॉक बदल गया।', conflictBody: 'दूसरे ऑर्डर में 4 किलो तूर दाल चली गई, अब सिर्फ़ 2.5 किलो बचा है। हमने अधिकतम मात्रा बदल दी है। जाँचकर फिर कन्फ़र्म करें।',
+        snackAccepted: (n) => `ऑर्डर #${n} स्वीकार · स्टॉक अपडेट`, snackPartial: (n) => `ऑर्डर #${n} आंशिक स्वीकार · स्टॉक अपडेट`,
+        rejectTitle: 'ऑर्डर अस्वीकार करें', rejectSub: 'रिटेलर को आपका कारण दिखेगा। स्टॉक नहीं बदलेगा।', reason: 'कारण',
+        reasons: ['अभी सप्लाई नहीं कर सकते', 'आज इस इलाके में डिलीवरी नहीं', 'पेमेंट बाकी है', 'अन्य'], rejectPh: 'रिटेलर के लिए छोटा संदेश लिखें',
+        msgOptional: 'संदेश · वैकल्पिक', msgRequired: 'संदेश · ज़रूरी', reasonNeeded: 'रिटेलर को कारण बताएँ', rejectBtn: 'ऑर्डर अस्वीकार करें', snackRejected: (n) => `ऑर्डर #${n} अस्वीकार`,
+        dispatchTitle: (n) => `#${n} को भेजा गया मार्क करें?`, dispatchBody: (s) => `${s} को दिखेगा कि ऑर्डर रास्ते में है।`, dispatchBtn: 'भेजा गया',
+        deliverTitle: (n) => `#${n} को डिलीवर मार्क करें?`, deliverBody: (s) => `पक्का करें कि ${s} को माल मिल गया।`, deliverBtn: 'डिलीवर',
+        snackDispatched: (n) => `ऑर्डर #${n} भेजा गया`, snackDelivered: (n) => `ऑर्डर #${n} डिलीवर`,
+        settings: 'सेटिंग्स', edit: 'बदलें', loginNumber: 'लॉग इन नंबर', email: 'ईमेल', address: 'पता',
+        language: 'भाषा', theme: 'थीम', themes: ['फ़ोन के जैसा', 'लाइट', 'डार्क'], changePassword: 'पासवर्ड बदलें', logout: 'लॉग आउट',
+        currentPw: 'मौजूदा पासवर्ड', newPw: 'नया पासवर्ड', confirmPw: 'नया पासवर्ड दोबारा डालें', curWrong: 'मौजूदा पासवर्ड गलत है',
+        pwHint: 'कम से कम 8 अक्षर। आम पासवर्ड न रखें।', strength: ['बहुत कमज़ोर', 'ठीक है', 'मज़बूत'], errWeak: 'ज़्यादा मज़बूत पासवर्ड चुनें', errMatch: 'पासवर्ड मेल नहीं खाते',
+        otherDevices: 'इस फ़ोन पर आप लॉग इन रहेंगे। बाकी फ़ोन से लॉग आउट हो जाएगा।', updatePw: 'पासवर्ड अपडेट करें', show: 'पासवर्ड दिखाएँ', hide: 'पासवर्ड छिपाएँ', pwSaved: 'पासवर्ड बदल गया',
+        nav: ['होम', 'ऑर्डर', 'कैटलॉग', 'रिटेलर', 'और'],
+      },
+    };
+    const t = T[lang];
+    const UNITS = { en: { PCS: 'pcs', BOX: 'box', DOZEN: 'dozen', PACK: 'pack', CASE: 'case', KG: 'kg', G: 'g', L: 'L' }, hi: { PCS: 'पीस', BOX: 'बॉक्स', DOZEN: 'दर्जन', PACK: 'पैक', CASE: 'केस', KG: 'किलो', G: 'ग्राम', L: 'लीटर' } }[lang];
+    const DEC = { KG: 500, L: 500, G: 50000 };
+    const fq = (m) => this.fq(m);
+    const inr = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(p / 100);
+    const pay = (rate, m) => Math.floor((rate * m + 500) / 1000);
+    const when = (iso, withDay = true) => new Date(iso).toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN', withDay ? { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' } : { hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' });
+    const isToday = (iso) => iso.startsWith('2026-10-08') && iso >= '2026-10-07T18:30';
+    const q = (m, unit) => `${fq(m)} ${UNITS[unit]}`;
+    const chipFor = (status) => {
+      const C = {
+        PENDING: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2', '#FEF3C7', '#92400E', '#422006', '#FCD34D'],
+        ACCEPTED: ['M5 12.5l4.5 4.5L19 7.5', '#DCFCE7', '#166534', '#052E16', '#86EFAC'],
+        PARTIALLY_ACCEPTED: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 3v18', '#CCFBF1', '#115E59', '#042F2E', '#5EEAD4'],
+        REJECTED: ['M6 6l12 12M18 6L6 18', '#FEE2E2', '#991B1B', '#450A0A', '#FCA5A5'],
+        CANCELLED: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM5.6 5.6l12.8 12.8', '#E2E8F0', '#334155', '#1E293B', '#CBD5E1'],
+        DISPATCHED: ['M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', '#DBEAFE', '#1E40AF', '#172554', '#93C5FD'],
+        DELIVERED: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l2.8 2.8L16.5 9.5', '#065F46', '#FFFFFF', '#34D399', '#022C22'],
+      }[status];
+      return { chipIcon: C[0], chipBg: dark ? C[3] : C[1], chipFg: dark ? C[4] : C[2], status: t.status[status] };
+    };
+    const reqTotal = (o) => o.lines.reduce((s, l) => s + pay(st.items[l.item].rate, l.reqM), 0);
+    const accTotal = (o) => o.lines.reduce((s, l) => s + (l.accM === null ? 0 : pay(st.items[l.item].rate, l.accM)), 0);
+    const shortLines = (o) => (o.status === 'PENDING' ? o.lines.filter((l) => st.items[l.item].stockM < l.reqM) : []);
+
+    // ---------- inbox
+    const TABS = [['pending', ['PENDING']], ['accepted', ['ACCEPTED', 'PARTIALLY_ACCEPTED']], ['dispatched', ['DISPATCHED']], ['completed', ['DELIVERED']], ['closed', ['REJECTED', 'CANCELLED']]];
+    const visible = st.emptyPending ? st.orders.filter((o) => o.status !== 'PENDING') : st.orders;
+    const tabs = TABS.map(([k, sts], i) => {
+      const on = st.tab === k;
+      const n = visible.filter((o) => sts.includes(o.status)).length;
+      return { label: t.tabs[i], on, n, hasN: n > 0 && i < 3,
+        bg: on ? 'var(--primary)' : 'transparent', fg: on ? 'var(--onPrimary)' : 'var(--text2)', border: on ? 'var(--primary)' : 'var(--outline2)',
+        nBg: on ? 'var(--onPrimary)' : (i === 0 ? 'var(--danger)' : 'var(--field)'), nFg: on ? 'var(--primary)' : (i === 0 ? 'var(--onDanger)' : 'var(--text2)'),
+        pick: () => this.setState({ tab: k }) };
+    });
+    const tabIdx = TABS.findIndex(([k]) => k === st.tab);
+    const list = st.loading ? [] : visible.filter((o) => TABS[tabIdx][1].includes(o.status));
+    const inbox = {
+      loading: st.loading, empty: !st.loading && list.length === 0, emptyTitle: t.emptyTitles[tabIdx],
+      cards: list.map((o) => {
+        const sh = shortLines(o);
+        const decided = o.lines.every((l) => l.accM !== null);
+        return { no: o.no, shop: o.shop, owner: o.owner, area: o.area, ...chipFor(o.status),
+          time: isToday(o.events[0].at) ? when(o.events[0].at, false) : when(o.events[0].at), lines: t.items(o.lines.length),
+          amount: inr(decided && o.status !== 'CANCELLED' ? accTotal(o) : reqTotal(o)), newDevice: o.newDevice,
+          short: sh.length > 0, shortText: t.short(t.items(sh.length)), open: () => this.setState({ screen: 'detail', openNo: o.no }) };
+      }),
+    };
+
+    // ---------- detail
+    const o = st.orders.find((x) => x.no === st.openNo);
+    const sh = shortLines(o);
+    const isPending = o.status === 'PENDING';
+    const decidedAny = o.lines.some((l) => l.accM !== null);
+    const d = {
+      no: o.no, shop: o.shop, owner: o.owner, area: o.area, initials: o.shop.split(/\s+/).slice(0, 2).map((w) => w[0]).join(''),
+      placed: t.placedAt(when(o.events[0].at)), ...chipFor(o.status), newDevice: o.newDevice && isPending,
+      hasNote: !!o.note, note: o.note, hasReason: o.status === 'REJECTED' && !!o.reason, reason: o.reason,
+      linesTitle: t.linesTitle(o.lines.length),
+      lines: o.lines.map((l) => {
+        const it = st.items[l.item];
+        const short = isPending && it.stockM < l.reqM;
+        const decided = l.accM !== null && o.status !== 'CANCELLED';
+        const diff = decided && l.accM !== l.reqM;
+        return { name: it.name, rate: `${inr(it.rate)}/${UNITS[it.unit]}`, req: q(l.reqM, it.unit), acc: decided ? q(l.accM, it.unit) : '',
+          decided, strike: diff ? 'line-through' : 'none', accFg: diff ? 'var(--warnFg)' : 'var(--successFg)',
+          amount: inr(decided ? pay(it.rate, l.accM) : pay(it.rate, l.reqM)),
+          showStock: isPending, stockText: it.stockM === 0 ? t.outStock : short ? t.onlyStock(q(it.stockM, it.unit)) : t.stock(q(it.stockM, it.unit)),
+          stockFg: short ? 'var(--dangerFg)' : 'var(--text2)', border: short ? 'var(--danger)' : diff ? 'var(--warnFg)' : 'transparent',
+          hasNote: !!l.note, note: l.note };
+      }),
+      reqTotal: inr(reqTotal(o)), reqStrike: decidedAny && accTotal(o) !== reqTotal(o) && o.status !== 'CANCELLED' ? 'line-through' : 'none',
+      hasAcc: decidedAny && o.status !== 'CANCELLED', accTotal: inr(accTotal(o)),
+      events: o.events.map((e, i) => ({ label: t.ev[e.to], time: when(e.at), line: i < o.events.length - 1,
+        dot: e.to === 'REJECTED' || e.to === 'CANCELLED' ? 'var(--danger)' : i === o.events.length - 1 ? 'var(--primary)' : 'var(--outline2)' })),
+      isPending, anyShort: sh.length > 0, shortHint: t.shortHint(t.items(sh.length)),
+      allBg: sh.length ? 'var(--disabled)' : 'var(--primary)', allFg: sh.length ? 'var(--onDisabled)' : 'var(--onPrimary)',
+      canDispatch: o.status === 'ACCEPTED' || o.status === 'PARTIALLY_ACCEPTED', canDeliver: o.status === 'DISPATCHED',
+    };
+    d.hasActions = d.isPending || d.canDispatch || d.canDeliver;
+
+    const decide = (accMs, notes) => {
+      const allFull = o.lines.every((l, i) => accMs[i] === l.reqM);
+      const status = allFull ? 'ACCEPTED' : 'PARTIALLY_ACCEPTED';
+      const items = st.items.map((it, i) => { const used = o.lines.reduce((s, l, j) => s + (l.item === i ? accMs[j] : 0), 0); return used ? { ...it, stockM: it.stockM - used } : it; });
+      const orders = st.orders.map((x) => (x.no !== o.no ? x : { ...x, status,
+        lines: x.lines.map((l, j) => ({ ...l, accM: accMs[j], note: notes[j] || l.note })),
+        events: [...x.events, { to: status, at: new Date().toISOString(), by: 'D' }] }));
+      this.toast(allFull ? t.snackAccepted(o.no) : t.snackPartial(o.no), { items, orders, screen: 'detail', pe: null, conflict: false });
+    };
+
+    // ---------- partial editor
+    let pe = { lines: [], conflict: false };
+    if (st.pe) {
+      const P = st.pe;
+      let total = 0, allFull = true, allZero = true, anyErr = false;
+      const accMs = [];
+      const lines = o.lines.map((l, i) => {
+        const it = st.items[l.item];
+        const cap = Math.min(l.reqM, it.stockM);
+        const step = DEC[it.unit] || 1000;
+        const raw = P.vals[i];
+        const okFmt = /^\d{1,7}(\.\d{1,3})?$/.test(raw.trim());
+        const m = okFmt ? this.toM(raw.trim()) : 0;
+        let errText = '';
+        if (!okFmt) errText = t.errQty; else if (!DEC[it.unit] && raw.includes('.')) errText = t.errWhole(UNITS[it.unit]); else if (m > cap) errText = t.errOver(q(cap, it.unit));
+        if (errText) anyErr = true;
+        accMs.push(m);
+        total += pay(it.rate, Math.min(m, cap));
+        if (m !== l.reqM) allFull = false;
+        if (m !== 0) allZero = false;
+        const set = (v) => this.setState({ pe: { ...P, vals: P.vals.map((x, j) => (j === i ? this.fq(v) : x)) } });
+        const short = it.stockM < l.reqM;
+        const atCap = m >= cap;
+        return {
+          name: it.name, unit: UNITS[it.unit], value: raw, inputMode: DEC[it.unit] ? 'decimal' : 'numeric',
+          asked: t.asked(q(l.reqM, it.unit)), rate: `${inr(it.rate)}/${UNITS[it.unit]}`, amount: inr(pay(it.rate, Math.min(m, cap))),
+          stockText: it.stockM === 0 ? t.outStock : short ? t.onlyStock(q(it.stockM, it.unit)) : t.stock(q(it.stockM, it.unit)), stockFg: short ? 'var(--dangerFg)' : 'var(--text2)',
+          border: errText ? 'var(--danger)' : m < l.reqM ? 'var(--warnFg)' : 'transparent', inputBorder: errText ? 'var(--danger)' : 'transparent',
+          incBg: atCap ? 'var(--field)' : 'var(--primary)', incFg: atCap ? 'var(--text2)' : 'var(--onPrimary)',
+          err: !!errText, errText,
+          dec: () => set(Math.max(0, Math.min(m, cap) - step)), inc: () => set(Math.min(cap, m + step)), max: () => set(cap),
+          decAria: `${it.name} −`, incAria: `${it.name} +`, inputAria: `${it.name}`,
+          onInput: (e) => this.setState({ pe: { ...P, vals: P.vals.map((x, j) => (j === i ? e.target.value.replace(/[^\d.]/g, '') : x)) } }),
+          showNoteBtn: !P.noteOpen[i], showNote: P.noteOpen[i], note: P.notes[i], notePh: m < l.reqM ? t.notePhShort : t.notePhFull,
+          addNote: () => this.setState({ pe: { ...P, noteOpen: P.noteOpen.map((x, j) => (j === i ? true : x)) } }),
+          onNote: (e) => this.setState({ pe: { ...P, notes: P.notes.map((x, j) => (j === i ? e.target.value : x)) } }),
+        };
+      });
+      pe = { lines, conflict: st.conflict, total: inr(total), reqTotal: inr(reqTotal(o)), allZero,
+        btnLabel: allZero ? t.useReject : allFull ? t.confirmAll : t.confirmPartial,
+        btnBg: allZero || anyErr ? 'var(--disabled)' : 'var(--primary)', btnFg: allZero || anyErr ? 'var(--onDisabled)' : 'var(--onPrimary)',
+        confirm: () => (allZero || anyErr ? null : decide(accMs, P.notes)) };
+    }
+
+    // ---------- reject sheet
+    let rj = { open: false };
+    if (st.rj) {
+      const R = st.rj;
+      const needText = R.reason === 3;
+      const textErr = R.tried && needText && R.text.trim().length < 3;
+      rj = { open: true, text: R.text, textLabel: needText ? t.msgRequired : t.msgOptional, textErr, textBorder: textErr ? 'var(--danger)' : 'transparent',
+        reasonFg: 'var(--text2)',
+        reasons: t.reasons.map((label, i) => { const on = R.reason === i; return { label, on, bg: on ? 'var(--dangerBg)' : 'transparent', fg: on ? 'var(--dangerFg)' : 'var(--text)', border: on ? 'var(--danger)' : 'var(--outline2)', pick: () => this.setState({ rj: { ...R, reason: i } }) }; }),
+        confirm: () => {
+          if (needText && R.text.trim().length < 3) return this.setState({ rj: { ...R, tried: true } });
+          const reason = [R.reason === 3 ? '' : t.reasons[R.reason], R.text.trim()].filter(Boolean).join('. ');
+          const orders = st.orders.map((x) => (x.no !== o.no ? x : { ...x, status: 'REJECTED', reason, lines: x.lines.map((l) => ({ ...l, accM: 0 })),
+            events: [...x.events, { to: 'REJECTED', at: new Date().toISOString(), by: 'D' }] }));
+          return this.toast(t.snackRejected(o.no), { orders, rj: null, screen: 'detail' });
+        } };
+    }
+
+    // ---------- dispatch / deliver dialog
+    let dlg = { open: false };
+    if (st.dlg) {
+      const disp = st.dlg === 'dispatch';
+      dlg = { open: true, title: disp ? t.dispatchTitle(o.no) : t.deliverTitle(o.no), body: disp ? t.dispatchBody(o.shop) : t.deliverBody(o.shop),
+        confirm: disp ? t.dispatchBtn : t.deliverBtn, icon: disp ? chipFor('DISPATCHED').chipIcon : chipFor('DELIVERED').chipIcon,
+        iconBg: disp ? (dark ? '#172554' : '#DBEAFE') : 'var(--successBg)', iconFg: disp ? (dark ? '#93C5FD' : '#1E40AF') : 'var(--successFg)',
+        go: () => {
+          const to = disp ? 'DISPATCHED' : 'DELIVERED';
+          const orders = st.orders.map((x) => (x.no !== o.no ? x : { ...x, status: to, events: [...x.events, { to, at: new Date().toISOString(), by: 'D' }] }));
+          this.toast(disp ? t.snackDispatched(o.no) : t.snackDelivered(o.no), { orders, dlg: null });
+        } };
+    }
+
+    // ---------- settings / password
+    const COMMON = ['password', '12345678', '123456789', 'qwerty123', 'password1', 'india123', 'abcd1234'];
+    const P = st.pw;
+    const score = !P.next ? -1 : (COMMON.includes(P.next.toLowerCase()) || P.next.length < 8) ? 0
+      : ((P.next.length >= 12 ? 1 : 0) + (/[A-Za-z]/.test(P.next) && /\d/.test(P.next) ? 1 : 0) + (/[^A-Za-z0-9]/.test(P.next) ? 1 : 0)) <= 1 ? 1 : 2;
+    const col = score === 0 ? 'var(--danger)' : score === 1 ? 'var(--warn)' : 'var(--success)';
+    const curErr = P.tried && P.cur !== 'balaji@1998';
+    const weak = P.tried && score < 1;
+    const matchErr = P.tried && P.confirm !== P.next;
+    const pw = { ...P, type: P.show ? 'text' : 'password', eye: P.show ? 'M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.1 3.9M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2' : 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+      eyeLabel: P.show ? t.hide : t.show, curErr, curBorder: curErr ? 'var(--danger)' : 'transparent',
+      bar1: score >= 0 ? col : 'var(--field)', bar2: score >= 1 ? col : 'var(--field)', bar3: score >= 2 ? col : 'var(--field)',
+      strengthLabel: score >= 0 ? t.strength[score] : '', strengthFg: col, hint: weak ? t.errWeak : t.pwHint, hintFg: weak ? 'var(--danger)' : 'var(--text2)',
+      newBorder: weak ? 'var(--danger)' : 'transparent', matchErr, matchBorder: matchErr ? 'var(--danger)' : 'transparent' };
+    const setPw = (p) => this.setState({ pw: { ...P, ...p } });
+    const langOpts = [['en', 'English'], ['hi', 'हिंदी']].map(([k, label]) => ({ label, on: lang === k, pick: () => this.setState({ lang: k }) }));
+    const themeOpts = t.themes.map((label, i) => { const k = [null, 'light', 'dark'][i]; return { label, on: st.theme === k, pick: () => this.setState({ theme: k }) }; });
+
+    // ---------- nav
+    const pendingN = st.orders.filter((x) => x.status === 'PENDING').length;
+    const navActive = st.screen === 'settings' ? 4 : 1;
+    const NAVI = ['M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8',
+      'M4 9l1.5-5h13L20 9M4 9h16v11H4zM4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M10 20v-5h4v5', 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z'];
+    const badges = [0, st.emptyPending ? 0 : pendingN, 0, 4, 0];
+    const nav = t.nav.map((label, i) => ({ label, icon: NAVI[i], current: i === navActive ? 'page' : 'false', pill: i === navActive ? 'var(--pc)' : 'transparent',
+      fg: i === navActive ? 'var(--text)' : 'var(--text2)', badge: badges[i], hasBadge: badges[i] > 0,
+      pick: i === 1 ? () => this.setState({ screen: 'inbox' }) : i === 4 ? () => this.setState({ screen: 'settings' }) : () => null }));
+    const showNav = st.screen === 'inbox' || st.screen === 'settings';
+    const scr = { inbox: st.screen === 'inbox', detail: st.screen === 'detail', partial: st.screen === 'partial', settings: st.screen === 'settings', password: st.screen === 'password' };
+
+    return {
+      vars, s: t, scr, tabs, inbox, d, pe, rj, dlg, pw, langOpts, themeOpts, nav, showNav,
+      skeleton: [1, 0.7, 0.45, 0.25].map((x) => ({ o: x })),
+      snack: { show: !!st.snack, text: st.snack || '', bottom: showNav ? '92px' : (st.screen === 'detail' && d.hasActions ? '96px' : '20px') },
+      toggleLang: () => this.setState({ lang: lang === 'en' ? 'hi' : 'en' }),
+      goInbox: () => this.setState({ screen: 'inbox' }),
+      openPartial: () => this.setState({ screen: 'partial', conflict: false, pe: { vals: o.lines.map((l) => this.fq(Math.min(l.reqM, st.items[l.item].stockM))), notes: o.lines.map(() => ''), noteOpen: o.lines.map(() => false), tried: false } }),
+      backToDetail: () => this.setState({ screen: 'detail', pe: null, conflict: false }),
+      fillAll: () => this.setState({ pe: { ...st.pe, vals: o.lines.map((l) => this.fq(Math.min(l.reqM, st.items[l.item].stockM))) } }),
+      confirmPartial: () => (pe.confirm ? pe.confirm() : null),
+      acceptAll: () => (sh.length ? null : decide(o.lines.map((l) => l.reqM), o.lines.map(() => ''))),
+      openReject: () => this.setState({ rj: { reason: 0, text: '', tried: false } }), closeReject: () => this.setState({ rj: null }),
+      onRejectText: (e) => this.setState({ rj: { ...st.rj, text: e.target.value } }), confirmReject: () => (rj.confirm ? rj.confirm() : null),
+      askDispatch: () => this.setState({ dlg: 'dispatch' }), askDeliver: () => this.setState({ dlg: 'deliver' }),
+      closeDialog: () => this.setState({ dlg: null }), confirmDialog: () => (dlg.go ? dlg.go() : null),
+      goSettings: () => this.setState({ screen: 'settings' }), goPassword: () => this.setState({ screen: 'password', pw: { cur: '', next: '', confirm: '', show: false, tried: false } }),
+      onCur: (e) => setPw({ cur: e.target.value }), onNew: (e) => setPw({ next: e.target.value }), onConfirm: (e) => setPw({ confirm: e.target.value }),
+      toggleShow: (e) => { e.preventDefault(); setPw({ show: !P.show }); },
+      savePassword: () => (P.cur === 'balaji@1998' && score >= 1 && P.confirm === P.next ? this.toast(t.pwSaved, { screen: 'settings' }) : setPw({ tried: true })),
+    };
+  }
+}
+</script>
+</body>
+</html>
