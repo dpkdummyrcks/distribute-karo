@@ -1,0 +1,635 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Distributor auth flow</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700;800&amp;family=Anek+Devanagari:wght@500;600;700;800&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 360px; height: 800px; position: relative; overflow: hidden; font-family: 'Mukta', 'Anek Devanagari', system-ui, sans-serif; {{vars}}; background: var(--bg); color: var(--text)">
+
+  <!-- ===================================================== D-01 SPLASH -->
+  <sc-if value="{{scr.splash}}" hint-placeholder-val="{{false}}">
+    <div style="height: 800px; position: relative; background: #241F7A; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; overflow: hidden">
+      <svg width="360" height="800" viewBox="0 0 360 800" aria-hidden="true" style="position: absolute; inset: 0">
+        <defs><pattern id="dk1-jali" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M14 0L28 14L14 28L0 14Z" fill="none" stroke="#332D9C" stroke-width="1.4"></path><circle cx="14" cy="14" r="2.2" fill="#3A34A8"></circle></pattern></defs>
+        <rect width="360" height="800" fill="url(#dk1-jali)"></rect>
+        <circle cx="180" cy="370" r="150" fill="#2A2585"></circle>
+      </svg>
+      <svg width="104" height="104" viewBox="0 0 64 64" aria-label="DistributeKaro" style="position: relative"><rect width="64" height="64" rx="16" fill="#3730A3"></rect><circle cx="23" cy="38" r="9" fill="none" stroke="#FFFFFF" stroke-width="5"></circle><path d="M32 16V47M40 16V47" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path><path d="M50 27L40 37L51 47" fill="none" stroke="#F2B33D" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div style="position: relative; display: flex; flex-direction: column; align-items: center; gap: 6px">
+        <span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 34px; letter-spacing: -0.01em; color: #FFFFFF">Distribute<span style="color: #F2B33D">Karo</span></span>
+        <span style="font-size: 16px; color: #D4D1FF">{{s.splashTag}}</span>
+      </div>
+      <svg width="160" height="4" viewBox="0 0 160 4" aria-hidden="true" style="position: absolute; bottom: 96px; border-radius: 2px; overflow: hidden"><rect width="160" height="4" rx="2" fill="#3A34A8"></rect><rect width="56" height="4" rx="2" fill="#F2B33D"><animate attributeName="x" values="-56;160" dur="1.4s" repeatCount="indefinite"></animate></rect></svg>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-02 WELCOME -->
+  <sc-if value="{{scr.welcome}}" hint-placeholder-val="{{true}}">
+    <div style="height: 800px; display: flex; flex-direction: column">
+      <div style="height: 300px; flex: none; position: relative; overflow: hidden; background: #241F7A">
+        <svg width="360" height="300" viewBox="0 0 360 300" aria-hidden="true" style="position: absolute; inset: 0">
+          <defs><pattern id="dk1-jali2" width="28" height="28" patternUnits="userSpaceOnUse"><path d="M14 0L28 14L14 28L0 14Z" fill="none" stroke="#332D9C" stroke-width="1.4"></path><circle cx="14" cy="14" r="2.2" fill="#3A34A8"></circle></pattern></defs>
+          <rect width="360" height="300" fill="url(#dk1-jali2)"></rect>
+          <circle cx="300" cy="250" r="110" fill="#2E2890"></circle>
+          <path d="M0 6Q60 34 120 6Q180 34 240 6Q300 34 360 6" fill="none" stroke="#F2B33D" stroke-width="2"></path>
+          <path d="M-10 270C70 270 90 200 170 205S280 270 380 245" fill="none" stroke="#F2B33D" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" opacity="0.7"></path>
+        </svg>
+        <sc-for list="{{toran}}" as="tz" hint-placeholder-count="15">
+          <div style="position: absolute; left: {{tz.left}}; top: {{tz.top}}; width: 20px; display: flex; flex-direction: column; align-items: center">
+            <span style="width: 1.5px; height: 7px; background: #F2B33D"></span>
+            <sc-if value="{{tz.flower}}" hint-placeholder-val="{{true}}"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="#F59E0B"></circle><circle cx="10" cy="10" r="6.5" fill="#F97316"></circle><circle cx="10" cy="10" r="2.8" fill="#FCD34D"></circle></svg></sc-if>
+            <sc-if value="{{tz.leaf}}" hint-placeholder-val="{{false}}"><svg width="11" height="20" viewBox="0 0 12 22" aria-hidden="true"><path d="M6 0C12 7 11 15 6 22C1 15 0 7 6 0Z" fill="#16A34A"></path></svg></sc-if>
+          </div>
+        </sc-for>
+        <svg width="140" height="130" viewBox="0 0 140 130" aria-hidden="true" style="position: absolute; right: 8px; bottom: 30px">
+          <path d="M40 60L68 74L40 88L12 74Z" fill="#ABA6FF"></path><path d="M12 74L40 88V120L12 106Z" fill="#5B54D6"></path><path d="M40 88L68 74V106L40 120Z" fill="#4038B0"></path>
+          <path d="M98 66L126 80L98 94L70 80Z" fill="#ABA6FF"></path><path d="M70 80L98 94V126L70 112Z" fill="#5B54D6"></path><path d="M98 94L126 80V112L98 126Z" fill="#4038B0"></path>
+          <path d="M69 30L97 44L69 58L41 44Z" fill="#F2B33D"></path><path d="M41 44L69 58V90L41 76Z" fill="#D99A1E"></path><path d="M69 58L97 44V76L69 90Z" fill="#B97F10"></path>
+        </svg>
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="position: absolute; top: 44px; right: 14px; height: 36px; padding: 0 12px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: rgba(14,13,26,0.35); color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+        <div style="position: absolute; left: 20px; top: 92px; display: flex; flex-direction: column; gap: 14px">
+          <svg width="56" height="56" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#3730A3" stroke="#ABA6FF" stroke-width="2"></rect><circle cx="23" cy="38" r="9" fill="none" stroke="#FFFFFF" stroke-width="5"></circle><path d="M32 16V47M40 16V47" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path><path d="M50 27L40 37L51 47" fill="none" stroke="#F2B33D" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+          <span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 26px; color: #FFFFFF">Distribute<span style="color: #F2B33D">Karo</span></span>
+        </div>
+      </div>
+      <div style="flex: 1; padding: 22px 20px 20px; display: flex; flex-direction: column; gap: 16px">
+        <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 28px; line-height: 32px">{{s.welcomeTitle}}</h1>
+        <div style="display: flex; flex-direction: column; gap: 12px">
+          <sc-for list="{{features}}" as="f" hint-placeholder-count="3">
+            <div style="display: flex; gap: 12px; align-items: center">
+              <span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: {{f.bg}}; color: {{f.fg}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{f.icon}}"></path></svg></span>
+              <span style="display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 16px; font-weight: 700">{{f.title}}</span><span style="font-size: 14px; color: var(--text2)">{{f.text}}</span></span>
+            </div>
+          </sc-for>
+        </div>
+        <div style="margin-top: auto; display: flex; flex-direction: column; gap: 10px">
+          <button onClick="{{goSignup}}" style="height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.createAccount}}</button>
+          <button onClick="{{goLogin}}" style="height: 52px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--primary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.logIn}}</button>
+          <span style="text-align: center; font-size: 12px; line-height: 16px; color: var(--text2)">{{s.terms}}</span>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-03 SIGN UP -->
+  <sc-if value="{{scr.signup}}" hint-placeholder-val="{{false}}">
+    <div style="height: 800px; display: flex; flex-direction: column">
+      <div style="height: 56px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; justify-content: space-between">
+        <button onClick="{{goWelcome}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 4px 20px 16px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 28px; line-height: 32px">{{s.signupTitle}}</h1>
+          <p style="margin: 0; font-size: 15px; line-height: 21px; color: var(--text2)">{{s.signupSub}}</p>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{su.phoneBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: {{su.phoneLabel}}">{{s.mobile}}</span>
+            <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 16px; font-weight: 700; color: var(--text2)">+91</span><input value="{{su.phone}}" onChange="{{onSuPhone}}" inputmode="numeric" autocomplete="tel-national" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 600; letter-spacing: 0.03em; color: var(--text); outline: none"></span>
+          </span>
+          <sc-if value="{{su.phoneErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errPhone}}</span></sc-if>
+          <sc-if value="{{su.exists}}" hint-placeholder-val="{{false}}">
+            <span style="font-size: 13px; padding: 0 14px; color: var(--danger); display: flex; flex-wrap: wrap; align-items: center; gap: 4px">{{s.errExists}}<button onClick="{{existsLogin}}" style="height: 32px; padding: 0 4px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{s.loginInstead}}</button></span>
+          </sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{su.pwBorder}}; padding: 6px 4px 6px 14px; display: flex; align-items: center">
+            <span style="flex: 1; display: flex; flex-direction: column">
+              <span style="font-size: 12px; font-weight: 600; color: {{su.pwLabel}}">{{s.password}}</span>
+              <input type="{{su.pwType}}" value="{{su.pw}}" onChange="{{onSuPw}}" autocomplete="new-password" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+            </span>
+            <button onClick="{{toggleSuPw}}" aria-label="{{su.eyeLabel}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 22px; background: transparent; color: var(--text2); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{su.eye}}"></path></svg></button>
+          </span>
+          <span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 0 2px">
+            <span style="height: 4px; border-radius: 2px; background: {{su.bar1}}"></span><span style="height: 4px; border-radius: 2px; background: {{su.bar2}}"></span><span style="height: 4px; border-radius: 2px; background: {{su.bar3}}"></span>
+          </span>
+          <span style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px; padding: 0 2px">
+            <span style="color: {{su.hintFg}}">{{su.hint}}</span>
+            <span style="font-weight: 700; color: {{su.strengthFg}}">{{su.strengthLabel}}</span>
+          </span>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{su.pw2Border}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: {{su.pw2Label}}">{{s.confirmPw}}</span>
+            <input type="{{su.pwType}}" value="{{su.pw2}}" onChange="{{onSuPw2}}" autocomplete="new-password" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+          </span>
+          <sc-if value="{{su.matchErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errMatch}}</span></sc-if>
+        </label>
+        <label style="display: flex; align-items: center; gap: 12px; min-height: 44px; font-size: 14px; line-height: 19px; color: {{su.termsFg}}">
+          <input type="checkbox" checked="{{su.terms}}" onChange="{{onSuTerms}}" style="width: 22px; height: 22px; flex: none; margin: 0; accent-color: #3730A3">
+          {{s.agree}}
+        </label>
+      </div>
+      <div style="flex: none; padding: 12px 20px 18px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); border-top: 1px solid var(--outline)">
+        <button onClick="{{submitSignup}}" style="height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.createAccount}}</button>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 4px; font-size: 14px; color: var(--text2)">{{s.haveAccount}}<button onClick="{{goLogin}}" style="height: 36px; padding: 0 4px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.logIn}}</button></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-04 LOG IN -->
+  <sc-if value="{{scr.login}}" hint-placeholder-val="{{false}}">
+    <div style="height: 800px; display: flex; flex-direction: column">
+      <div style="height: 56px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; justify-content: space-between">
+        <button onClick="{{goWelcome}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 4px 20px 16px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 28px; line-height: 32px">{{s.loginTitle}}</h1>
+          <p style="margin: 0; font-size: 15px; line-height: 21px; color: var(--text2)">{{s.loginSub}}</p>
+        </div>
+        <sc-if value="{{li.notice}}" hint-placeholder-val="{{false}}">
+          <div role="status" style="border-radius: 14px; padding: 12px 14px; background: var(--successBg); color: var(--successFg); font-size: 14px; font-weight: 600; display: flex; gap: 10px; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{s.resetDone}}</div>
+        </sc-if>
+        <sc-if value="{{li.locked}}" hint-placeholder-val="{{false}}">
+          <div role="alert" style="border-radius: 14px; padding: 12px 14px; background: var(--dangerBg); color: var(--dangerFg); display: flex; gap: 10px; align-items: flex-start">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"></path></svg>
+            <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700">{{li.lockedText}}</span><span style="font-size: 13px; line-height: 18px">{{s.lockedHelp}}</span></span>
+          </div>
+        </sc-if>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{li.phoneBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: {{li.phoneLabel}}">{{s.mobile}}</span>
+            <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 16px; font-weight: 700; color: var(--text2)">+91</span><input value="{{li.phone}}" onChange="{{onLiPhone}}" inputmode="numeric" autocomplete="username" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 600; letter-spacing: 0.03em; color: var(--text); outline: none"></span>
+          </span>
+          <sc-if value="{{li.phoneErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errPhone}}</span></sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{li.pwBorder}}; padding: 6px 4px 6px 14px; display: flex; align-items: center">
+            <span style="flex: 1; display: flex; flex-direction: column">
+              <span style="font-size: 12px; font-weight: 600; color: {{li.pwLabel}}">{{s.password}}</span>
+              <input type="{{li.pwType}}" value="{{li.pw}}" onChange="{{onLiPw}}" autocomplete="current-password" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+            </span>
+            <button onClick="{{toggleLiPw}}" aria-label="{{li.eyeLabel}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 22px; background: transparent; color: var(--text2); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{li.eye}}"></path></svg></button>
+          </span>
+          <sc-if value="{{li.invalid}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errInvalid}}</span></sc-if>
+          <sc-if value="{{li.showAttempts}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--warnFg)">{{li.attemptsText}}</span></sc-if>
+        </label>
+        <button onClick="{{goReset}}" style="align-self: flex-end; height: 40px; padding: 0 6px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.forgot}}</button>
+      </div>
+      <div style="flex: none; padding: 12px 20px 18px; display: flex; flex-direction: column; gap: 6px; background: var(--bg); border-top: 1px solid var(--outline)">
+        <button onClick="{{submitLogin}}" style="height: 52px; border-radius: 999px; border: 0; background: {{li.btnBg}}; color: {{li.btnFg}}; font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.logIn}}</button>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 4px; font-size: 14px; color: var(--text2)">{{s.noAccount}}<button onClick="{{goSignup}}" style="height: 36px; padding: 0 4px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.createAccount}}</button></div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== SIGNING IN -->
+  <sc-if value="{{scr.signingIn}}" hint-placeholder-val="{{false}}">
+    <div style="height: 800px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 18px; padding: 24px; box-sizing: border-box; text-align: center">
+      <svg width="72" height="72" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#3730A3"></rect><circle cx="23" cy="38" r="9" fill="none" stroke="#FFFFFF" stroke-width="5"></circle><path d="M32 16V47M40 16V47" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path><path d="M50 27L40 37L51 47" fill="none" stroke="#F2B33D" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 26px">{{s.welcomeName}}</h1>
+      <svg width="40" height="40" viewBox="0 0 40 40" role="img" aria-label="{{s.signingIn}}"><circle cx="20" cy="20" r="16" fill="none" stroke-width="4" style="stroke: var(--field)"></circle><path d="M20 4a16 16 0 0 1 16 16" fill="none" stroke-width="4" stroke-linecap="round" style="stroke: var(--primary)"><animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="0.9s" repeatCount="indefinite"></animateTransform></path></svg>
+      <span style="font-size: 15px; color: var(--text2)">{{s.signingIn}}</span>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-05 RESET -->
+  <sc-if value="{{scr.reset}}" hint-placeholder-val="{{false}}">
+    <div style="height: 800px; display: flex; flex-direction: column">
+      <div style="height: 56px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; justify-content: space-between">
+        <button onClick="{{goLogin}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 4px 20px 16px; display: flex; flex-direction: column; gap: 14px">
+        <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 28px; line-height: 32px">{{s.resetTitle}}</h1>
+        <div style="border-radius: 16px; padding: 14px; background: var(--pc); color: var(--opc); display: flex; gap: 12px; align-items: flex-start">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8v.01"></path></svg>
+          <span style="font-size: 14px; line-height: 20px">{{s.resetInfo}}</span>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{rs.phoneBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.mobile}}</span>
+            <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 16px; font-weight: 700; color: var(--text2)">+91</span><input value="{{rs.phone}}" onChange="{{onRsPhone}}" inputmode="numeric" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 600; color: var(--text); outline: none"></span>
+          </span>
+          <sc-if value="{{rs.phoneErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errPhone}}</span></sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{rs.codeBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.resetCode}}</span>
+            <input value="{{rs.code}}" onChange="{{onRsCode}}" autocomplete="one-time-code" placeholder="K7Q2-M9XD" style="border: 0; background: transparent; padding: 0; font-family: ui-monospace, monospace; font-size: 18px; font-weight: 700; letter-spacing: 0.12em; color: var(--text); outline: none; width: 100%">
+          </span>
+          <sc-if value="{{rs.codeErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errCode}}</span></sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{rs.pwBorder}}; padding: 6px 4px 6px 14px; display: flex; align-items: center">
+            <span style="flex: 1; display: flex; flex-direction: column">
+              <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.newPw}}</span>
+              <input type="{{rs.pwType}}" value="{{rs.pw}}" onChange="{{onRsPw}}" autocomplete="new-password" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+            </span>
+            <button onClick="{{toggleRsPw}}" aria-label="{{rs.eyeLabel}}" style="width: 44px; height: 44px; flex: none; border: 0; border-radius: 22px; background: transparent; color: var(--text2); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{rs.eye}}"></path></svg></button>
+          </span>
+          <span style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 4px; padding: 0 2px">
+            <span style="height: 4px; border-radius: 2px; background: {{rs.bar1}}"></span><span style="height: 4px; border-radius: 2px; background: {{rs.bar2}}"></span><span style="height: 4px; border-radius: 2px; background: {{rs.bar3}}"></span>
+          </span>
+          <span style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px; padding: 0 2px">
+            <span style="color: {{rs.hintFg}}">{{rs.hint}}</span><span style="font-weight: 700; color: {{rs.strengthFg}}">{{rs.strengthLabel}}</span>
+          </span>
+        </label>
+      </div>
+      <div style="flex: none; padding: 12px 20px 18px; background: var(--bg); border-top: 1px solid var(--outline)">
+        <button onClick="{{submitReset}}" style="width: 100%; height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.resetBtn}}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-06 ONBOARDING -->
+  <sc-if value="{{scr.onboarding}}" hint-placeholder-val="{{false}}">
+    <div style="height: 800px; display: flex; flex-direction: column">
+      <div style="height: 56px; flex: none; padding: 0 12px 0 20px; display: flex; align-items: center; justify-content: space-between">
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: var(--primary)">{{s.accountCreated}}</span>
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 0 20px 16px; display: flex; flex-direction: column; gap: 14px">
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 28px; line-height: 32px">{{s.obTitle}}</h1>
+          <p style="margin: 0; font-size: 15px; line-height: 21px; color: var(--text2)">{{s.obSub}}</p>
+        </div>
+        <div style="display: flex; align-items: center; gap: 14px">
+          <button onClick="{{toggleLogo}}" aria-label="{{ob.logoLabel}}" style="width: 84px; height: 84px; flex: none; border-radius: 24px; border: {{ob.logoBorder}}; background: {{ob.logoBg}}; color: {{ob.logoFg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 28px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+            <sc-if value="{{ob.hasLogo}}" hint-placeholder-val="{{false}}">{{ob.initials}}</sc-if>
+            <sc-if value="{{ob.noLogo}}" hint-placeholder-val="{{true}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path></svg></sc-if>
+          </button>
+          <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700">{{ob.logoLabel}}</span><span style="font-size: 13px; color: var(--text2)">{{s.logoHint}}</span></span>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{ob.bizBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.businessName}}</span>
+            <input value="{{ob.biz}}" onChange="{{onObBiz}}" autocomplete="organization" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+          </span>
+          <sc-if value="{{ob.bizErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errBizName}}</span></sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{ob.ownerBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.ownerName}}</span>
+            <input value="{{ob.owner}}" onChange="{{onObOwner}}" autocomplete="name" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+          </span>
+          <sc-if value="{{ob.ownerErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.required}}</span></sc-if>
+        </label>
+        <div style="min-height: 58px; box-sizing: border-box; border-radius: 14px; border: 1.5px dashed var(--outline2); padding: 6px 14px; display: flex; align-items: center; justify-content: space-between; gap: 10px">
+          <span style="display: flex; flex-direction: column"><span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.phoneLocked}}</span><span style="font-size: 17px; font-weight: 600">{{ob.phoneDisplay}}</span></span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--text2)"><path d="M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"></path></svg>
+        </div>
+        <div style="display: flex; align-items: center; gap: 10px; margin-top: 4px"><span style="font-size: 13px; font-weight: 700; letter-spacing: 0.05em; color: var(--text2)">{{s.optionalDetails}}</span><span style="flex: 1; height: 1px; background: var(--outline)"></span></div>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{ob.emailBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.email}}</span>
+            <input type="email" value="{{ob.email}}" onChange="{{onObEmail}}" autocomplete="email" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+          </span>
+          <sc-if value="{{ob.emailErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errEmail}}</span></sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid transparent; padding: 8px 14px; display: flex; flex-direction: column">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.address}}</span>
+            <textarea value="{{ob.addr}}" onChange="{{onObAddr}}" rows="2" autocomplete="street-address" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; line-height: 23px; color: var(--text); outline: none; width: 100%; resize: none"></textarea>
+          </span>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{ob.gstBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">GSTIN</span>
+            <input value="{{ob.gstin}}" onChange="{{onObGst}}" maxlength="15" placeholder="08AAKCS1234F1Z5" style="border: 0; background: transparent; padding: 0; font-family: ui-monospace, monospace; font-size: 16px; letter-spacing: 0.04em; color: var(--text); outline: none; width: 100%">
+          </span>
+          <sc-if value="{{ob.gstErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errGstin}}</span></sc-if>
+        </label>
+      </div>
+      <div style="flex: none; padding: 12px 20px 18px; background: var(--bg); border-top: 1px solid var(--outline)">
+        <button onClick="{{submitOnboarding}}" style="width: 100%; height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.saveContinue}}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== DONE -->
+  <sc-if value="{{scr.done}}" hint-placeholder-val="{{false}}">
+    <div style="height: 800px; display: flex; flex-direction: column; position: relative">
+      <svg width="360" height="40" viewBox="0 0 360 40" aria-hidden="true" style="position: absolute; top: 0; left: 0"><path d="M0 6Q60 34 120 6Q180 34 240 6Q300 34 360 6" fill="none" stroke="#F2B33D" stroke-width="2"></path></svg>
+      <sc-for list="{{toran}}" as="tz" hint-placeholder-count="15">
+        <div style="position: absolute; left: {{tz.left}}; top: {{tz.top}}; width: 20px; display: flex; flex-direction: column; align-items: center">
+          <span style="width: 1.5px; height: 7px; background: #F2B33D"></span>
+          <sc-if value="{{tz.flower}}" hint-placeholder-val="{{true}}"><svg width="18" height="18" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="#F59E0B"></circle><circle cx="10" cy="10" r="6.5" fill="#F97316"></circle><circle cx="10" cy="10" r="2.8" fill="#FCD34D"></circle></svg></sc-if>
+          <sc-if value="{{tz.leaf}}" hint-placeholder-val="{{false}}"><svg width="11" height="20" viewBox="0 0 12 22" aria-hidden="true"><path d="M6 0C12 7 11 15 6 22C1 15 0 7 6 0Z" fill="#16A34A"></path></svg></sc-if>
+        </div>
+      </sc-for>
+      <div style="flex: 1; padding: 84px 20px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px">
+        <span style="width: 84px; height: 84px; border-radius: 42px; background: var(--successBg); color: var(--successFg); display: flex; align-items: center; justify-content: center"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+        <h1 role="status" style="margin: 4px 0 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 28px; line-height: 32px">{{s.doneTitle}}</h1>
+        <p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--text2); max-width: 300px">{{s.doneSub}}</p>
+        <div style="margin-top: 10px; width: 100%; border-radius: 22px; overflow: hidden; background: var(--surface); text-align: left">
+          <div style="height: 92px; position: relative; background: #241F7A; overflow: hidden">
+            <svg width="320" height="92" viewBox="0 0 320 92" aria-hidden="true" style="position: absolute; inset: 0"><defs><pattern id="dk1-jali3" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 0L20 10L10 20L0 10Z" fill="none" stroke="#332D9C" stroke-width="1.2"></path></pattern></defs><rect width="320" height="92" fill="url(#dk1-jali3)"></rect></svg>
+            <span style="position: absolute; top: 12px; right: 12px; height: 26px; padding: 0 10px; border-radius: 999px; background: #F2B33D; color: #2A1A00; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 5px"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{s.storefrontReady}}</span>
+          </div>
+          <div style="padding: 0 16px 16px; margin-top: -26px; position: relative; display: flex; align-items: flex-end; gap: 12px">
+            <span style="width: 56px; height: 56px; flex: none; border-radius: 16px; background: #F2B33D; color: #2A1A00; border: 3px solid var(--surface); font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center">{{ob.initials}}</span>
+            <span style="display: flex; flex-direction: column; min-width: 0; padding-bottom: 2px"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{ob.bizShown}}</span><span style="font-size: 13px; color: var(--text2)">app.distributekaro.in/d/bT7kQ9xZr2Mw</span></span>
+          </div>
+        </div>
+      </div>
+      <div style="flex: none; padding: 12px 20px 18px; display: flex; flex-direction: column; gap: 10px">
+        <a href="#" style="height: 52px; border-radius: 999px; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">{{s.goDash}}</a>
+        <a href="#" style="height: 52px; border-radius: 999px; background: var(--pc); color: var(--opc); font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; text-decoration: none"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2"></path></svg>{{s.shareQr}}</a>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","default":"splash","options":["splash","welcome","signup","signupErr","login","loginErr","locked","reset","onboarding","done"]},"lang":{"editor":"enum","default":"en","options":["en","hi"]},"dark":{"editor":"boolean","default":false},"auto":{"editor":"boolean","default":true},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.initState(props.start ?? 'splash');
+  }
+
+  initState(start) {
+    const now = Date.now();
+    const base = {
+      screen: 'splash', lang: null, now,
+      su: { phone: '', pw: '', pw2: '', terms: false, showPw: false, tried: false },
+      li: { phone: '', pw: '', showPw: false, tried: false, invalid: false, fails: 0, lockedUntil: 0, notice: false },
+      rs: { phone: '', code: '', pw: '', showPw: false, tried: false },
+      ob: { phone: '9812345678', logo: false, biz: '', owner: '', email: '', addr: '', gstin: '', tried: false },
+    };
+    const m = {
+      splash: {}, welcome: { screen: 'welcome' }, signup: { screen: 'signup' },
+      signupErr: { screen: 'signup', su: { phone: '9812345678', pw: 'password', pw2: 'passwrd', terms: false, showPw: false, tried: true } },
+      login: { screen: 'login' },
+      loginErr: { screen: 'login', li: { ...base.li, phone: '9812345678', pw: 'balaji1998', tried: true, invalid: true, fails: 3 } },
+      locked: { screen: 'login', li: { ...base.li, phone: '9812345678', pw: '', tried: false, fails: 5, lockedUntil: now + 14 * 60000 + 52000 } },
+      reset: { screen: 'reset', rs: { ...base.rs, phone: '9812345678' } },
+      onboarding: { screen: 'onboarding' },
+      done: { screen: 'done', ob: { ...base.ob, biz: 'Shree Balaji Traders', owner: 'Ramesh Agarwal', logo: true } },
+    };
+    return { ...base, ...(m[start] ?? {}) };
+  }
+
+  componentDidMount() {
+    this.tick = setInterval(() => this.setState({ now: Date.now() }), 1000);
+    if ((this.props.auto ?? true) && this.state.screen === 'splash') this.splashT = setTimeout(() => this.setState({ screen: 'welcome' }), 1800);
+  }
+  componentWillUnmount() { clearInterval(this.tick); clearTimeout(this.splashT); clearTimeout(this.signT); }
+  componentDidUpdate(prev) {
+    if (prev.start !== this.props.start) this.setState(this.initState(this.props.start ?? 'splash'));
+    else if (prev.lang !== this.props.lang && this.state.lang !== null) this.setState({ lang: null });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const dark = this.props.dark ?? false;
+    const lang = st.lang ?? this.props.lang ?? 'en';
+    const L = { bg: '#F7F6FC', surface: '#EEEDF8', field: '#E3E2F1', outline: '#DCDBEA', outline2: '#8F8EA8',
+      text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF', pc: '#E4E2FB', opc: '#1E1B4B',
+      danger: '#B91C1C', dangerBg: '#FEE2E2', dangerFg: '#991B1B', warn: '#B45309', warnFg: '#92400E', success: '#15803D',
+      successBg: '#DCFCE7', successFg: '#166534', disabled: '#D3D2E3', onDisabled: '#6B6A85' };
+    const D = { bg: '#0E0D1A', surface: '#1A1930', field: '#24223F', outline: '#34324F', outline2: '#7C7A99',
+      text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760', pc: '#2E2A78', opc: '#E4E2FB',
+      danger: '#F87171', dangerBg: '#450A0A', dangerFg: '#FCA5A5', warn: '#FBBF24', warnFg: '#FCD34D', success: '#4ADE80',
+      successBg: '#052E16', successFg: '#86EFAC', disabled: '#2C2A45', onDisabled: '#8E8CA8' };
+    const vars = Object.entries(dark ? D : L).map(([k, v]) => `--${k}: ${v}`).join('; ');
+
+    const T = {
+      en: {
+        langBtn: 'हिंदी', langAria: 'Switch to Hindi', back: 'Back',
+        splashTag: 'Orders from every shop, in one app',
+        welcomeTitle: 'Run your distribution from your phone',
+        features: [['Catalog & stock', 'Know what sold and what is left'], ['Orders via QR', 'Retailers scan, browse and order'], ['Partial accept', 'Confirm exactly what you can supply']],
+        createAccount: 'Create account', logIn: 'Log in', terms: 'By continuing you agree to the Terms and Privacy Policy',
+        signupTitle: 'Create your account', signupSub: 'Use the mobile number your retailers know.',
+        mobile: 'Mobile number', password: 'Password', confirmPw: 'Confirm password', newPw: 'New password',
+        pwHint: 'At least 8 characters. Avoid common passwords.', strength: ['Too weak', 'Okay', 'Strong'],
+        agree: 'I agree to the Terms and Privacy Policy',
+        errPhone: 'Enter a valid 10-digit mobile number', errExists: 'An account with this number already exists.', loginInstead: 'Log in instead',
+        errWeak: 'Choose a stronger password', errCommon: 'This password is too common', errMatch: 'Passwords do not match',
+        haveAccount: 'Already have an account?', noAccount: 'New to DistributeKaro?',
+        loginTitle: 'Welcome back', loginSub: 'Log in with your mobile number and password.', forgot: 'Forgot password?',
+        errInvalid: 'Invalid phone number or password', attemptsLeft: (n) => `${n} attempts left before a 15-minute lock`,
+        locked: (t) => `Too many attempts. Try again in ${t}`, lockedHelp: 'For your safety, login is paused for this number.',
+        show: 'Show password', hide: 'Hide password', required: 'This is required',
+        signingIn: 'Signing you in…', welcomeName: (n) => `Welcome back, ${n}`,
+        resetTitle: 'Reset password', resetInfo: 'Ask DistributeKaro support for a reset code. It works once and expires in 15 minutes.',
+        resetCode: 'Reset code', resetBtn: 'Set new password', errCode: 'Enter the 8-character code', resetDone: 'Password changed. Log in with your new password.',
+        accountCreated: 'ACCOUNT CREATED', obTitle: 'Set up your business', obSub: 'Retailers see this on your storefront and QR card.',
+        addLogo: 'Add logo', changeLogo: 'Change logo', logoHint: 'Optional · JPG, PNG or WebP',
+        businessName: 'Business name', ownerName: 'Owner name', phoneLocked: 'Your login number', optionalDetails: 'OPTIONAL',
+        email: 'Email', address: 'Business address',
+        errEmail: 'Enter a valid email', errGstin: 'GSTIN looks wrong. Example: 08AAKCS1234F1Z5', errBizName: 'Enter at least 2 characters',
+        saveContinue: 'Save and continue',
+        doneTitle: 'Your business is live!', doneSub: 'Add items and retailers, then share your QR so retailers can start ordering.',
+        storefrontReady: 'Storefront ready', goDash: 'Go to dashboard', shareQr: 'Share my QR',
+      },
+      hi: {
+        langBtn: 'English', langAria: 'Switch to English', back: 'वापस',
+        splashTag: 'हर दुकान के ऑर्डर, एक ऐप में',
+        welcomeTitle: 'अपना डिस्ट्रीब्यूशन फ़ोन से चलाएँ',
+        features: [['कैटलॉग और स्टॉक', 'क्या बिका और क्या बचा, सब पता'], ['QR से ऑर्डर', 'रिटेलर स्कैन करें, देखें और ऑर्डर करें'], ['आंशिक स्वीकृति', 'जितना दे सकें, उतना ही कन्फ़र्म करें']],
+        createAccount: 'अकाउंट बनाएँ', logIn: 'लॉग इन करें', terms: 'आगे बढ़कर आप शर्तों और प्राइवेसी पॉलिसी से सहमत हैं',
+        signupTitle: 'अपना अकाउंट बनाएँ', signupSub: 'वही मोबाइल नंबर डालें जो आपके रिटेलर जानते हैं।',
+        mobile: 'मोबाइल नंबर', password: 'पासवर्ड', confirmPw: 'पासवर्ड दोबारा डालें', newPw: 'नया पासवर्ड',
+        pwHint: 'कम से कम 8 अक्षर। आम पासवर्ड न रखें।', strength: ['बहुत कमज़ोर', 'ठीक है', 'मज़बूत'],
+        agree: 'मैं शर्तों और प्राइवेसी पॉलिसी से सहमत हूँ',
+        errPhone: 'सही 10 अंकों का मोबाइल नंबर डालें', errExists: 'इस नंबर से अकाउंट पहले से है।', loginInstead: 'लॉग इन करें',
+        errWeak: 'ज़्यादा मज़बूत पासवर्ड चुनें', errCommon: 'यह पासवर्ड बहुत आम है', errMatch: 'पासवर्ड मेल नहीं खाते',
+        haveAccount: 'पहले से अकाउंट है?', noAccount: 'DistributeKaro पर नए हैं?',
+        loginTitle: 'फिर से स्वागत है', loginSub: 'मोबाइल नंबर और पासवर्ड से लॉग इन करें।', forgot: 'पासवर्ड भूल गए?',
+        errInvalid: 'मोबाइल नंबर या पासवर्ड गलत है', attemptsLeft: (n) => `15 मिनट के लॉक से पहले ${n} कोशिशें बाकी`,
+        locked: (t) => `बहुत ज़्यादा कोशिशें। ${t} बाद फिर कोशिश करें`, lockedHelp: 'आपकी सुरक्षा के लिए इस नंबर से लॉग इन कुछ देर के लिए रुका है।',
+        show: 'पासवर्ड दिखाएँ', hide: 'पासवर्ड छिपाएँ', required: 'यह ज़रूरी है',
+        signingIn: 'लॉग इन हो रहा है…', welcomeName: (n) => `फिर से स्वागत है, ${n}`,
+        resetTitle: 'पासवर्ड रीसेट करें', resetInfo: 'DistributeKaro सपोर्ट से रीसेट कोड माँगें। यह एक ही बार चलेगा और 15 मिनट में खत्म हो जाएगा।',
+        resetCode: 'रीसेट कोड', resetBtn: 'नया पासवर्ड सेट करें', errCode: '8 अक्षरों का कोड डालें', resetDone: 'पासवर्ड बदल गया। नए पासवर्ड से लॉग इन करें।',
+        accountCreated: 'अकाउंट बन गया', obTitle: 'अपना बिज़नेस सेट करें', obSub: 'रिटेलर इसे आपके स्टोरफ़्रंट और QR कार्ड पर देखेंगे।',
+        addLogo: 'लोगो जोड़ें', changeLogo: 'लोगो बदलें', logoHint: 'वैकल्पिक · JPG, PNG या WebP',
+        businessName: 'बिज़नेस का नाम', ownerName: 'मालिक का नाम', phoneLocked: 'आपका लॉग इन नंबर', optionalDetails: 'वैकल्पिक',
+        email: 'ईमेल', address: 'बिज़नेस का पता',
+        errEmail: 'सही ईमेल डालें', errGstin: 'GSTIN गलत लग रहा है। उदाहरण: 08AAKCS1234F1Z5', errBizName: 'कम से कम 2 अक्षर डालें',
+        saveContinue: 'सेव करें और आगे बढ़ें',
+        doneTitle: 'आपका बिज़नेस लाइव है!', doneSub: 'आइटम और रिटेलर जोड़ें, फिर QR शेयर करें ताकि रिटेलर ऑर्डर शुरू कर सकें।',
+        storefrontReady: 'स्टोरफ़्रंट तैयार', goDash: 'डैशबोर्ड पर जाएँ', shareQr: 'मेरा QR शेयर करें',
+      },
+    };
+    const t = T[lang];
+
+    // ---------- helpers
+    const EXISTING = '9812345678';            // fixtures/distributor-me.json
+    const DEMO_PW = 'balaji@1998';
+    const COMMON = ['password', '12345678', '123456789', 'qwerty123', 'password1', 'iloveyou', 'india123', 'abcd1234'];
+    const digits = (v) => v.replace(/\D/g, '').slice(0, 10);
+    const validPhone = (p) => /^[6-9]\d{9}$/.test(p);
+    const fmt = (p) => (p ? `+91 ${p.slice(0, 5)} ${p.slice(5)}` : '');
+    const EYE = 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z';
+    const EYE_OFF = 'M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.1 3.9M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2';
+    const err = (c) => (c ? 'var(--danger)' : 'transparent');
+    const strength = (pw, phone) => {
+      if (!pw) return { score: -1, common: false };
+      const common = COMMON.includes(pw.toLowerCase()) || pw === phone;
+      if (common || pw.length < 8) return { score: 0, common };
+      const pts = (pw.length >= 12 ? 1 : 0) + (/[A-Za-z]/.test(pw) && /\d/.test(pw) ? 1 : 0) + (/[^A-Za-z0-9]/.test(pw) ? 1 : 0);
+      return { score: pts <= 1 ? 1 : 2, common: false };
+    };
+    const meter = (pw, phone, tried) => {
+      const { score, common } = strength(pw, phone);
+      const col = score === 0 ? 'var(--danger)' : score === 1 ? 'var(--warn)' : 'var(--success)';
+      const bad = tried && score < 1;
+      return {
+        bar1: score >= 0 ? col : 'var(--field)', bar2: score >= 1 ? col : 'var(--field)', bar3: score >= 2 ? col : 'var(--field)',
+        strengthLabel: score >= 0 ? t.strength[score] : '', strengthFg: col,
+        hint: bad ? (common ? t.errCommon : t.errWeak) : t.pwHint, hintFg: bad ? 'var(--danger)' : 'var(--text2)',
+        pwBorder: err(bad), pwLabel: bad ? 'var(--danger)' : 'var(--text2)', ok: score >= 1,
+      };
+    };
+    const setSub = (key, patch) => this.setState({ [key]: { ...st[key], ...patch } });
+
+    // ---------- toran (static)
+    const toran = [];
+    [0, 120, 240].forEach((x0, sag) => [0.12, 0.31, 0.5, 0.69, 0.88].forEach((tt, i) => {
+      const k = sag * 5 + i;
+      toran.push({ left: `${x0 + 120 * tt - 10}px`, top: `${6 + 56 * tt * (1 - tt) - 1}px`, flower: k % 2 === 0, leaf: k % 2 === 1 });
+    }));
+    const features = [
+      ['M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8', '#E4E2FB', '#1E1B4B'],
+      ['M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2z', '#FDF0D5', '#7A4A00'],
+      ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 3v18', '#D5F2EE', '#115E59'],
+    ].map(([icon, bg, fg], i) => ({ icon, bg: dark ? ['#2E2A78', '#3A2A08', '#0B3B36'][i] : bg, fg: dark ? ['#E4E2FB', '#F7CF7A', '#99F6E4'][i] : fg, title: t.features[i][0], text: t.features[i][1] }));
+
+    // ---------- sign up
+    const su = st.su;
+    const suMeter = meter(su.pw, su.phone, su.tried);
+    const suPhoneBad = su.tried && !validPhone(su.phone);
+    const suExists = su.tried && su.phone === EXISTING;
+    const suMatchBad = su.tried && su.pw2 !== su.pw;
+    const suTermsBad = su.tried && !su.terms;
+    const suV = {
+      ...suMeter, phone: su.phone, pw: su.pw, pw2: su.pw2, terms: su.terms,
+      phoneErr: suPhoneBad, exists: suExists && !suPhoneBad,
+      phoneBorder: err(suPhoneBad || suExists), phoneLabel: suPhoneBad || suExists ? 'var(--danger)' : 'var(--text2)',
+      matchErr: suMatchBad, pw2Border: err(suMatchBad), pw2Label: suMatchBad ? 'var(--danger)' : 'var(--text2)',
+      termsFg: suTermsBad ? 'var(--danger)' : 'var(--text)',
+      pwType: su.showPw ? 'text' : 'password', eye: su.showPw ? EYE_OFF : EYE, eyeLabel: su.showPw ? t.hide : t.show,
+    };
+
+    // ---------- log in
+    const li = st.li;
+    const lockLeft = Math.max(0, li.lockedUntil - st.now);
+    const locked = lockLeft > 0;
+    const mmss = `${String(Math.floor(lockLeft / 60000)).padStart(2, '0')}:${String(Math.floor((lockLeft % 60000) / 1000)).padStart(2, '0')}`;
+    const liPhoneBad = li.tried && !validPhone(li.phone);
+    const left = 5 - li.fails;
+    const liV = {
+      phone: li.phone, pw: li.pw, notice: li.notice, locked, lockedText: t.locked(mmss),
+      phoneErr: liPhoneBad, phoneBorder: err(liPhoneBad), phoneLabel: liPhoneBad ? 'var(--danger)' : 'var(--text2)',
+      invalid: li.invalid && !locked, pwBorder: err(li.invalid && !locked), pwLabel: li.invalid && !locked ? 'var(--danger)' : 'var(--text2)',
+      showAttempts: li.invalid && !locked && li.fails >= 3 && left > 0, attemptsText: t.attemptsLeft(left),
+      pwType: li.showPw ? 'text' : 'password', eye: li.showPw ? EYE_OFF : EYE, eyeLabel: li.showPw ? t.hide : t.show,
+      btnBg: locked ? 'var(--disabled)' : 'var(--primary)', btnFg: locked ? 'var(--onDisabled)' : 'var(--onPrimary)',
+    };
+
+    // ---------- reset
+    const rs = st.rs;
+    const rsMeter = meter(rs.pw, rs.phone, rs.tried);
+    const codeOk = /^[A-Z0-9]{8}$/.test(rs.code.replace(/-/g, ''));
+    const rsV = {
+      ...rsMeter, phone: rs.phone, code: rs.code, pw: rs.pw,
+      phoneErr: rs.tried && !validPhone(rs.phone), phoneBorder: err(rs.tried && !validPhone(rs.phone)),
+      codeErr: rs.tried && !codeOk, codeBorder: err(rs.tried && !codeOk),
+      pwType: rs.showPw ? 'text' : 'password', eye: rs.showPw ? EYE_OFF : EYE, eyeLabel: rs.showPw ? t.hide : t.show,
+    };
+
+    // ---------- onboarding
+    const ob = st.ob;
+    const initials = (ob.biz.trim() || 'Shree Balaji').split(/\s+/).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+    const bizBad = ob.tried && ob.biz.trim().length < 2;
+    const ownerBad = ob.tried && !ob.owner.trim();
+    const emailBad = ob.tried && ob.email.trim() !== '' && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(ob.email.trim());
+    const gstBad = ob.tried && ob.gstin !== '' && !/^\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(ob.gstin);
+    const obV = {
+      biz: ob.biz, owner: ob.owner, email: ob.email, addr: ob.addr, gstin: ob.gstin,
+      hasLogo: ob.logo, noLogo: !ob.logo, initials, bizShown: ob.biz.trim() || 'Shree Balaji Traders',
+      logoLabel: ob.logo ? t.changeLogo : t.addLogo,
+      logoBg: ob.logo ? '#F2B33D' : 'var(--field)', logoFg: ob.logo ? '#2A1A00' : 'var(--text2)',
+      logoBorder: ob.logo ? '0' : '2px dashed var(--outline2)',
+      phoneDisplay: fmt(ob.phone),
+      bizErr: bizBad, bizBorder: err(bizBad), ownerErr: ownerBad, ownerBorder: err(ownerBad),
+      emailErr: emailBad, emailBorder: err(emailBad), gstErr: gstBad, gstBorder: err(gstBad),
+    };
+
+    const scr = {
+      splash: st.screen === 'splash', welcome: st.screen === 'welcome', signup: st.screen === 'signup', login: st.screen === 'login',
+      signingIn: st.screen === 'signingIn', reset: st.screen === 'reset', onboarding: st.screen === 'onboarding', done: st.screen === 'done',
+    };
+    const go = (screen, extra = {}) => this.setState({ screen, ...extra });
+
+    return {
+      vars, scr, toran, features, su: suV, li: liV, rs: rsV, ob: obV,
+      s: { ...t, welcomeName: t.welcomeName('Ramesh') },
+      toggleLang: () => this.setState({ lang: lang === 'en' ? 'hi' : 'en' }),
+      goWelcome: () => go('welcome'),
+      goSignup: () => go('signup', { su: { ...st.su, tried: false } }),
+      goLogin: () => go('login', { li: { ...st.li, tried: false, invalid: false, notice: false } }),
+      goReset: () => go('reset', { rs: { ...st.rs, phone: st.li.phone || st.rs.phone, tried: false } }),
+      existsLogin: () => go('login', { li: { ...st.li, phone: su.phone, tried: false, invalid: false } }),
+
+      onSuPhone: (e) => setSub('su', { phone: digits(e.target.value) }),
+      onSuPw: (e) => setSub('su', { pw: e.target.value }),
+      onSuPw2: (e) => setSub('su', { pw2: e.target.value }),
+      onSuTerms: (e) => setSub('su', { terms: e.target.checked }),
+      toggleSuPw: (e) => { e.preventDefault(); setSub('su', { showPw: !su.showPw }); },
+      submitSignup: () => {
+        const ok = validPhone(su.phone) && su.phone !== EXISTING && suMeter.ok && su.pw === su.pw2 && su.terms;
+        if (!ok) return setSub('su', { tried: true });
+        return go('onboarding', { ob: { ...st.ob, phone: su.phone, tried: false } });
+      },
+
+      onLiPhone: (e) => setSub('li', { phone: digits(e.target.value), invalid: false }),
+      onLiPw: (e) => setSub('li', { pw: e.target.value, invalid: false }),
+      toggleLiPw: (e) => { e.preventDefault(); setSub('li', { showPw: !li.showPw }); },
+      submitLogin: () => {
+        if (locked) return null;
+        if (!validPhone(li.phone) || !li.pw) return setSub('li', { tried: true, invalid: !!li.pw && validPhone(li.phone) });
+        if (li.phone === EXISTING && li.pw === DEMO_PW) {
+          clearTimeout(this.signT);
+          return go('signingIn', { li: { ...li, fails: 0, invalid: false } });
+        }
+        const fails = li.fails + 1;
+        return setSub('li', { tried: true, invalid: true, notice: false, fails, lockedUntil: fails >= 5 ? Date.now() + 15 * 60000 : 0 });
+      },
+
+      onRsPhone: (e) => setSub('rs', { phone: digits(e.target.value) }),
+      onRsCode: (e) => {
+        const raw = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 8);
+        setSub('rs', { code: raw.length > 4 ? `${raw.slice(0, 4)}-${raw.slice(4)}` : raw });
+      },
+      onRsPw: (e) => setSub('rs', { pw: e.target.value }),
+      toggleRsPw: (e) => { e.preventDefault(); setSub('rs', { showPw: !rs.showPw }); },
+      submitReset: () => {
+        if (!(validPhone(rs.phone) && codeOk && rsMeter.ok)) return setSub('rs', { tried: true });
+        return go('login', { li: { ...st.li, phone: rs.phone, pw: '', tried: false, invalid: false, fails: 0, lockedUntil: 0, notice: true } });
+      },
+
+      toggleLogo: () => setSub('ob', { logo: !ob.logo }),
+      onObBiz: (e) => setSub('ob', { biz: e.target.value }),
+      onObOwner: (e) => setSub('ob', { owner: e.target.value }),
+      onObEmail: (e) => setSub('ob', { email: e.target.value }),
+      onObAddr: (e) => setSub('ob', { addr: e.target.value }),
+      onObGst: (e) => setSub('ob', { gstin: e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '').slice(0, 15) }),
+      submitOnboarding: () => {
+        const ok = ob.biz.trim().length >= 2 && ob.owner.trim() && !(ob.email.trim() && !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(ob.email.trim()))
+          && !(ob.gstin && !/^\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]$/.test(ob.gstin));
+        if (!ok) return setSub('ob', { tried: true });
+        return go('done');
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

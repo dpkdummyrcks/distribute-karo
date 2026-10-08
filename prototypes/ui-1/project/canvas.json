@@ -1,0 +1,16 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-08T19:00:00Z" },
+  "title": "DistributeKaro UI-1 Sign-up & Onboarding",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 2100, "h": 2000, "title": "All screens & states · D-01…D-06", "is_interactive": true },
+    "Flow.dc.html": { "x": 2180, "y": 0, "w": 360, "h": 800, "title": "Clickable flow · start here", "is_interactive": true, "radius": 28 }
+  },
+  "order": ["Main.dc.html", "Flow.dc.html"],
+  "notes": {
+    "title": { "x": 0, "y": -300, "text": "UI-1 · Distributor sign-up, login & onboarding", "kind": "title1", "maxW": 2540 }
+  },
+  "designSystems": []
+}
