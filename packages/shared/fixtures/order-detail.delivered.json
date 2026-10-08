@@ -1,0 +1,92 @@
+{
+  "id": "0199c4e2-0053-7053-8053-000000000053",
+  "orderNo": 1034,
+  "status": "DELIVERED",
+  "retailer": {
+    "id": "0199c4e2-0027-7027-8027-000000000027",
+    "name": "Sunita Gupta",
+    "shopName": "Gupta Kirana",
+    "locationLabel": "Vaishali Nagar"
+  },
+  "lineCount": 3,
+  "totalRequestedPaise": 697000,
+  "totalAcceptedPaise": 697000,
+  "newDevice": false,
+  "createdAt": "2026-10-06T04:30:00.000Z",
+  "updatedAt": "2026-10-06T12:45:00.000Z",
+  "note": null,
+  "rejectionReason": null,
+  "lines": [
+    {
+      "id": "0199c4e2-0054-7054-8054-000000000054",
+      "itemId": "0199c4e2-0002-7002-8002-000000000002",
+      "name": "Aashirvaad Shudh Chakki Atta 10 kg",
+      "unit": "PACK",
+      "ratePaise": 46500,
+      "requestedQty": "8",
+      "acceptedQty": "8",
+      "requestedPaise": 372000,
+      "acceptedPaise": 372000,
+      "lineNote": null
+    },
+    {
+      "id": "0199c4e2-0055-7055-8055-000000000055",
+      "itemId": "0199c4e2-0007-7007-8007-000000000007",
+      "name": "Fortune Sunflower Oil",
+      "unit": "L",
+      "ratePaise": 15500,
+      "requestedQty": "20",
+      "acceptedQty": "20",
+      "requestedPaise": 310000,
+      "acceptedPaise": 310000,
+      "lineNote": null
+    },
+    {
+      "id": "0199c4e2-0056-7056-8056-000000000056",
+      "itemId": "0199c4e2-0024-7024-8024-000000000024",
+      "name": "Haldi Powder (loose)",
+      "unit": "G",
+      "ratePaise": 30,
+      "requestedQty": "500",
+      "acceptedQty": "500",
+      "requestedPaise": 15000,
+      "acceptedPaise": 15000,
+      "lineNote": null
+    }
+  ],
+  "events": [
+    {
+      "id": "0199c4e2-0057-7057-8057-000000000057",
+      "fromStatus": null,
+      "toStatus": "PENDING",
+      "actorType": "RETAILER",
+      "note": null,
+      "createdAt": "2026-10-06T04:30:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0058-7058-8058-000000000058",
+      "fromStatus": "PENDING",
+      "toStatus": "ACCEPTED",
+      "actorType": "DISTRIBUTOR",
+      "note": null,
+      "createdAt": "2026-10-06T05:00:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0059-7059-8059-000000000059",
+      "fromStatus": "ACCEPTED",
+      "toStatus": "DISPATCHED",
+      "actorType": "DISTRIBUTOR",
+      "note": null,
+      "createdAt": "2026-10-06T08:30:00.000Z"
+    },
+    {
+      "id": "0199c4e2-005a-705a-805a-00000000005a",
+      "fromStatus": "DISPATCHED",
+      "toStatus": "DELIVERED",
+      "actorType": "DISTRIBUTOR",
+      "note": null,
+      "createdAt": "2026-10-06T12:45:00.000Z"
+    }
+  ],
+  "allowedActions": []
+}

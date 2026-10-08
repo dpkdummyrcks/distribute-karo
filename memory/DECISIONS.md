@@ -121,10 +121,10 @@ The PWA is served at `/`, the retailer entry is `/d/<slug>`, and Caddy proxies `
   - featured products (max 12, picked from the catalog)
   - service areas, business hours and an about text
 - **Calls to action, the same for everyone:** *Order now* (phone entry; registered numbers go to the catalog), *Request to become a retailer*, *Send an enquiry*. A signed-in retailer sees "Welcome back, <shop> · Continue ordering" instead of *Order now*.
-- **Public browsing:** visitors can open "All products". Its visibility is a distributor setting, `publicCatalogMode` = `OFF` | `WITHOUT_PRICES` | `WITH_PRICES` (default → QG). **Stock is never public.**
+- **Public browsing:** visitors can always open "All products" (name, image, unit, category). **No prices and no stock in public, ever**, and there's no setting for it (QG). Rates appear only after a registered retailer enters.
 - A storefront with no content yet still renders well from the profile alone (name, logo, categories from the catalog), so a new distributor's QR works on day one.
 - Supersedes QC.
-- **Security:** public endpoints are read-only and return only storefront fields plus active items (name, unit, image, category, price only if `WITH_PRICES`). Rate limit 60/min per IP. Images go through the same signed `/media` path.
+- **Security:** public endpoints are read-only and return only storefront fields plus active items (name, unit, image, category; never price or stock). Rate limit 60/min per IP. Images go through the same signed `/media` path.
 
 ---
 
@@ -144,11 +144,11 @@ The PWA is served at `/`, the retailer entry is `/d/<slug>`, and Caddy proxies `
 | QA | Stock tracking? | Yes, distributor-only: sold vs remaining — ADR-016 |
 | QE | Sold at acceptance or delivery? | **At acceptance** |
 | QF | Auto-hide at 0 stock? | **No**, retailers still see and can order it |
-| QC | Catalog on the public page? | Replaced by ADR-017 storefront + `publicCatalogMode` |
+| QC | Catalog on the public page? | Replaced by ADR-017 storefront + public products |
+| QG | Public prices? | **Never.** One public version without prices, no distributor toggle |
 
 ## Open questions
 | # | Question | Assumption used until answered |
 |---|---|---|
 | QB | Distributor forgot password in Phase 1 (no SMS/email)? | Admin CLI `pnpm admin:reset-password <phone>` prints a one-time reset code (15 min) the distributor enters in the app; OTP/email reset in Phase 2 |
-| QG | Default for public product browsing: hide prices (`WITHOUT_PRICES`, "Join to see rates") or show them (`WITH_PRICES`)? | `WITHOUT_PRICES`: rates are a reason to join and stay private from competitors; the distributor can switch |
 | QD | When a distributor approves an access request, add the retailer straight away or open the pre-filled retailer form first? | Open the pre-filled form (distributor can add photo/location), then save |

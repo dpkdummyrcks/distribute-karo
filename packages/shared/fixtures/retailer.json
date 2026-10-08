@@ -1,0 +1,19 @@
+{
+  "id": "0199c4e2-0025-7025-8025-000000000025",
+  "name": "Rakesh Sharma",
+  "shopName": "Sharma General Store",
+  "phone": "+919828011111",
+  "email": null,
+  "address": "Shop 4, Malviya Nagar Main Rd, Jaipur",
+  "shopPhotoUrl": "https://app.distributekaro.in/media/img/shop/0199c4e2-0026-7026-8026-000000000026.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+  "location": {
+    "lat": 26.853,
+    "lng": 75.805,
+    "label": "Malviya Nagar"
+  },
+  "isActive": true,
+  "source": "MANUAL",
+  "lastOrderAt": "2026-10-08T05:12:00.000Z",
+  "createdAt": "2026-06-30T09:30:00.000Z",
+  "updatedAt": "2026-10-05T09:30:00.000Z"
+}

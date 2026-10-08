@@ -1,0 +1,199 @@
+{
+  "today": {
+    "orderCount": 4,
+    "requestedPaise": 4122075,
+    "acceptedPaise": 1579600
+  },
+  "counts": {
+    "orders": {
+      "PENDING": 2,
+      "ACCEPTED": 2,
+      "PARTIALLY_ACCEPTED": 1,
+      "REJECTED": 1,
+      "CANCELLED": 1,
+      "DISPATCHED": 1,
+      "DELIVERED": 2
+    },
+    "accessRequestsPending": 2,
+    "enquiriesNew": 2
+  },
+  "sales": {
+    "todaySoldPaise": 1579600,
+    "last7dSoldPaise": 4283600
+  },
+  "lowStockItems": [
+    {
+      "id": "0199c4e2-0009-7009-8009-000000000009",
+      "name": "Toor Dal",
+      "sku": null,
+      "unit": "KG",
+      "ratePaise": 13800,
+      "stockQty": "6.5",
+      "lowStockThreshold": "50",
+      "stockStatus": "LOW",
+      "category": "Pulses",
+      "description": "Premium unpolished",
+      "imageUrl": null,
+      "isActive": true,
+      "createdAt": "2026-06-24T06:30:00.000Z",
+      "updatedAt": "2026-10-04T04:00:00.000Z"
+    },
+    {
+      "id": "0199c4e2-000a-700a-800a-00000000000a",
+      "name": "Basmati Rice (loose)",
+      "sku": null,
+      "unit": "KG",
+      "ratePaise": 9600,
+      "stockQty": "0",
+      "lowStockThreshold": "50",
+      "stockStatus": "OUT",
+      "category": "Staples",
+      "description": null,
+      "imageUrl": null,
+      "isActive": true,
+      "createdAt": "2026-06-25T06:30:00.000Z",
+      "updatedAt": "2026-10-03T04:00:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0011-7011-8011-000000000011",
+      "name": "Amul Butter 500 g",
+      "sku": "AMUL-BTR-500",
+      "unit": "PCS",
+      "ratePaise": 27500,
+      "stockQty": "48",
+      "lowStockThreshold": "50",
+      "stockStatus": "LOW",
+      "category": "Dairy",
+      "description": null,
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0012-7012-8012-000000000012.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+      "isActive": true,
+      "createdAt": "2026-06-29T06:30:00.000Z",
+      "updatedAt": "2026-10-05T04:00:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0016-7016-8016-000000000016",
+      "name": "Vim Dishwash Bar 200 g (pack of 4)",
+      "sku": "VIM-BAR-4",
+      "unit": "PACK",
+      "ratePaise": 8800,
+      "stockQty": "9",
+      "lowStockThreshold": "20",
+      "stockStatus": "LOW",
+      "category": "Home Care",
+      "description": null,
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0017-7017-8017-000000000017.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+      "isActive": true,
+      "createdAt": "2026-07-02T06:30:00.000Z",
+      "updatedAt": "2026-10-08T04:00:00.000Z"
+    },
+    {
+      "id": "0199c4e2-001e-701e-801e-00000000001e",
+      "name": "Bru Instant Coffee 200 g",
+      "sku": "BRU-200",
+      "unit": "PCS",
+      "ratePaise": 38500,
+      "stockQty": "0",
+      "lowStockThreshold": "10",
+      "stockStatus": "OUT",
+      "category": "Beverages",
+      "description": null,
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-001f-701f-801f-00000000001f.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+      "isActive": true,
+      "createdAt": "2026-07-06T06:30:00.000Z",
+      "updatedAt": "2026-10-04T04:00:00.000Z"
+    }
+  ],
+  "recentOrders": [
+    {
+      "id": "0199c4e2-002e-702e-802e-00000000002e",
+      "orderNo": 1040,
+      "status": "PENDING",
+      "retailer": {
+        "id": "0199c4e2-0025-7025-8025-000000000025",
+        "name": "Rakesh Sharma",
+        "shopName": "Sharma General Store",
+        "locationLabel": "Malviya Nagar"
+      },
+      "lineCount": 5,
+      "totalRequestedPaise": 1373075,
+      "totalAcceptedPaise": null,
+      "newDevice": false,
+      "createdAt": "2026-10-08T05:12:00.000Z",
+      "updatedAt": "2026-10-08T05:12:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0035-7035-8035-000000000035",
+      "orderNo": 1039,
+      "status": "PENDING",
+      "retailer": {
+        "id": "0199c4e2-002b-702b-802b-00000000002b",
+        "name": "Imran Khan",
+        "shopName": "New Bharat Mart",
+        "locationLabel": "Mansarovar"
+      },
+      "lineCount": 4,
+      "totalRequestedPaise": 897000,
+      "totalAcceptedPaise": null,
+      "newDevice": true,
+      "createdAt": "2026-10-08T03:45:00.000Z",
+      "updatedAt": "2026-10-08T03:45:00.000Z"
+    },
+    {
+      "id": "0199c4e2-003b-703b-803b-00000000003b",
+      "orderNo": 1038,
+      "status": "PARTIALLY_ACCEPTED",
+      "retailer": {
+        "id": "0199c4e2-0027-7027-8027-000000000027",
+        "name": "Sunita Gupta",
+        "shopName": "Gupta Kirana",
+        "locationLabel": "Vaishali Nagar"
+      },
+      "lineCount": 3,
+      "totalRequestedPaise": 1248000,
+      "totalAcceptedPaise": 975600,
+      "newDevice": false,
+      "createdAt": "2026-10-08T02:35:00.000Z",
+      "updatedAt": "2026-10-08T03:10:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0041-7041-8041-000000000041",
+      "orderNo": 1037,
+      "status": "ACCEPTED",
+      "retailer": {
+        "id": "0199c4e2-0029-7029-8029-000000000029",
+        "name": "Amit Jain",
+        "shopName": "Jain Provision Store",
+        "locationLabel": "Raja Park"
+      },
+      "lineCount": 3,
+      "totalRequestedPaise": 604000,
+      "totalAcceptedPaise": 604000,
+      "newDevice": false,
+      "createdAt": "2026-10-08T02:00:00.000Z",
+      "updatedAt": "2026-10-08T02:25:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0047-7047-8047-000000000047",
+      "orderNo": 1036,
+      "status": "ACCEPTED",
+      "retailer": {
+        "id": "0199c4e2-002d-702d-802d-00000000002d",
+        "name": "Pooja Verma",
+        "shopName": "Om Sai Kirana",
+        "locationLabel": "Jagatpura"
+      },
+      "lineCount": 2,
+      "totalRequestedPaise": 280000,
+      "totalAcceptedPaise": 280000,
+      "newDevice": false,
+      "createdAt": "2026-10-07T11:40:00.000Z",
+      "updatedAt": "2026-10-07T12:30:00.000Z"
+    }
+  ],
+  "setup": {
+    "hasProfile": true,
+    "itemCount": 20,
+    "retailerCount": 6,
+    "qrShared": true
+  }
+}

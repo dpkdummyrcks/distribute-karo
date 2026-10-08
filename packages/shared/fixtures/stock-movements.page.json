@@ -1,0 +1,91 @@
+{
+  "data": [
+    {
+      "id": "0199c4e2-007a-707a-807a-00000000007a",
+      "type": "SALE",
+      "deltaQty": "-37",
+      "balanceAfter": "6.5",
+      "amountPaise": 510600,
+      "order": {
+        "id": "0199c4e2-003b-703b-803b-00000000003b",
+        "orderNo": 1038,
+        "retailerName": "Gupta Kirana"
+      },
+      "reason": null,
+      "createdAt": "2026-10-08T09:45:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0079-7079-8079-000000000079",
+      "type": "ADJUSTMENT",
+      "deltaQty": "-1.5",
+      "balanceAfter": "43.5",
+      "amountPaise": null,
+      "order": null,
+      "reason": "Damaged — bag torn in storage",
+      "createdAt": "2026-10-07T08:45:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0078-7078-8078-000000000078",
+      "type": "SALE",
+      "deltaQty": "-75",
+      "balanceAfter": "45",
+      "amountPaise": 1035000,
+      "order": {
+        "id": "0199c4e2-004c-704c-804c-00000000004c",
+        "orderNo": 1035,
+        "retailerName": "Sharma General Store"
+      },
+      "reason": null,
+      "createdAt": "2026-10-07T07:45:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0077-7077-8077-000000000077",
+      "type": "RESTOCK",
+      "deltaQty": "60",
+      "balanceAfter": "120",
+      "amountPaise": null,
+      "order": null,
+      "reason": "Received from Agarwal Mills, bill #A-5521",
+      "createdAt": "2026-09-26T06:45:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0075-7075-8075-000000000075",
+      "type": "SALE",
+      "deltaQty": "-40",
+      "balanceAfter": "60",
+      "amountPaise": 552000,
+      "order": {
+        "id": "0199c4e2-0076-7076-8076-000000000076",
+        "orderNo": 1030,
+        "retailerName": "Jain Provision Store"
+      },
+      "reason": null,
+      "createdAt": "2026-09-18T05:45:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0073-7073-8073-000000000073",
+      "type": "SALE",
+      "deltaQty": "-50",
+      "balanceAfter": "100",
+      "amountPaise": 690000,
+      "order": {
+        "id": "0199c4e2-0074-7074-8074-000000000074",
+        "orderNo": 1028,
+        "retailerName": "Sharma General Store"
+      },
+      "reason": null,
+      "createdAt": "2026-09-08T04:45:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0072-7072-8072-000000000072",
+      "type": "OPENING",
+      "deltaQty": "150",
+      "balanceAfter": "150",
+      "amountPaise": null,
+      "order": null,
+      "reason": null,
+      "createdAt": "2026-08-29T03:45:00.000Z"
+    }
+  ],
+  "nextCursor": null
+}

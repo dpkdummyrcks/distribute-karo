@@ -1,0 +1,64 @@
+{
+  "id": "0199c4e2-0067-7067-8067-000000000067",
+  "orderNo": 1031,
+  "status": "CANCELLED",
+  "retailer": {
+    "id": "0199c4e2-0025-7025-8025-000000000025",
+    "name": "Rakesh Sharma",
+    "shopName": "Sharma General Store",
+    "locationLabel": "Malviya Nagar"
+  },
+  "lineCount": 2,
+  "totalRequestedPaise": 192000,
+  "totalAcceptedPaise": null,
+  "newDevice": false,
+  "createdAt": "2026-10-04T06:30:00.000Z",
+  "updatedAt": "2026-10-04T06:50:00.000Z",
+  "note": null,
+  "rejectionReason": null,
+  "lines": [
+    {
+      "id": "0199c4e2-0068-7068-8068-000000000068",
+      "itemId": "0199c4e2-000b-700b-800b-00000000000b",
+      "name": "Parle-G 80 g (box of 48)",
+      "unit": "BOX",
+      "ratePaise": 48000,
+      "requestedQty": "2",
+      "acceptedQty": null,
+      "requestedPaise": 96000,
+      "acceptedPaise": null,
+      "lineNote": null
+    },
+    {
+      "id": "0199c4e2-0069-7069-8069-000000000069",
+      "itemId": "0199c4e2-000d-700d-800d-00000000000d",
+      "name": "Britannia Good Day Cashew 200 g",
+      "unit": "PCS",
+      "ratePaise": 4000,
+      "requestedQty": "24",
+      "acceptedQty": null,
+      "requestedPaise": 96000,
+      "acceptedPaise": null,
+      "lineNote": null
+    }
+  ],
+  "events": [
+    {
+      "id": "0199c4e2-006a-706a-806a-00000000006a",
+      "fromStatus": null,
+      "toStatus": "PENDING",
+      "actorType": "RETAILER",
+      "note": null,
+      "createdAt": "2026-10-04T06:30:00.000Z"
+    },
+    {
+      "id": "0199c4e2-006b-706b-806b-00000000006b",
+      "fromStatus": "PENDING",
+      "toStatus": "CANCELLED",
+      "actorType": "RETAILER",
+      "note": null,
+      "createdAt": "2026-10-04T06:50:00.000Z"
+    }
+  ],
+  "allowedActions": []
+}

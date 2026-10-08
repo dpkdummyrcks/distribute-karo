@@ -1,0 +1,141 @@
+{
+  "distributor": {
+    "businessName": "Shree Balaji Traders",
+    "logoUrl": null,
+    "coverUrl": "https://app.distributekaro.in/media/img/cover/0199c4e2-007b-707b-807b-00000000007b.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+    "tagline": "Jaipur's trusted wholesale partner since 1998",
+    "about": "Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city."
+  },
+  "highlights": [
+    {
+      "icon": "truck",
+      "title": "Same-day delivery",
+      "text": "Order by 2 PM, get it today"
+    },
+    {
+      "icon": "credit",
+      "title": "7-day credit",
+      "text": "For regular retailers"
+    },
+    {
+      "icon": "tag",
+      "title": "Wholesale rates",
+      "text": "Best prices, updated daily"
+    },
+    {
+      "icon": "box",
+      "title": "500+ products",
+      "text": "Staples, FMCG & home care"
+    },
+    {
+      "icon": "phone",
+      "title": "Order from your phone",
+      "text": "No calls, no notebooks"
+    },
+    {
+      "icon": "shield",
+      "title": "Genuine products",
+      "text": "Direct from brand depots"
+    }
+  ],
+  "categories": [
+    "Beverages",
+    "Biscuits",
+    "Dairy",
+    "Edible Oil",
+    "Home Care",
+    "Instant Food",
+    "Personal Care",
+    "Pulses",
+    "Snacks",
+    "Spices",
+    "Staples"
+  ],
+  "brands": [
+    "Aashirvaad",
+    "Tata",
+    "Fortune",
+    "Parle",
+    "Britannia",
+    "Nestlé",
+    "Amul",
+    "HUL",
+    "Colgate",
+    "Dettol",
+    "Haldiram's",
+    "Everest"
+  ],
+  "serviceAreas": [
+    "Malviya Nagar",
+    "Vaishali Nagar",
+    "Mansarovar",
+    "Raja Park",
+    "Sanganer",
+    "Jagatpura",
+    "C-Scheme",
+    "Pratap Nagar"
+  ],
+  "businessHours": "Mon–Sat · 8 AM – 8 PM",
+  "featuredItems": [
+    {
+      "id": "0199c4e2-0002-7002-8002-000000000002",
+      "name": "Aashirvaad Shudh Chakki Atta 10 kg",
+      "unit": "PACK",
+      "category": "Staples",
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0003-7003-8003-000000000003.webp?X-Amz-Expires=7200&X-Amz-Signature=…"
+    },
+    {
+      "id": "0199c4e2-0007-7007-8007-000000000007",
+      "name": "Fortune Sunflower Oil",
+      "unit": "L",
+      "category": "Edible Oil",
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0008-7008-8008-000000000008.webp?X-Amz-Expires=7200&X-Amz-Signature=…"
+    },
+    {
+      "id": "0199c4e2-000b-700b-800b-00000000000b",
+      "name": "Parle-G 80 g (box of 48)",
+      "unit": "BOX",
+      "category": "Biscuits",
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-000c-700c-800c-00000000000c.webp?X-Amz-Expires=7200&X-Amz-Signature=…"
+    },
+    {
+      "id": "0199c4e2-000f-700f-800f-00000000000f",
+      "name": "Maggi 2-Minute Noodles 70 g",
+      "unit": "DOZEN",
+      "category": "Instant Food",
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0010-7010-8010-000000000010.webp?X-Amz-Expires=7200&X-Amz-Signature=…"
+    },
+    {
+      "id": "0199c4e2-0011-7011-8011-000000000011",
+      "name": "Amul Butter 500 g",
+      "unit": "PCS",
+      "category": "Dairy",
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0012-7012-8012-000000000012.webp?X-Amz-Expires=7200&X-Amz-Signature=…"
+    },
+    {
+      "id": "0199c4e2-0014-7014-8014-000000000014",
+      "name": "Surf Excel Easy Wash 1 kg",
+      "unit": "PCS",
+      "category": "Home Care",
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0015-7015-8015-000000000015.webp?X-Amz-Expires=7200&X-Amz-Signature=…"
+    },
+    {
+      "id": "0199c4e2-001c-701c-801c-00000000001c",
+      "name": "Red Label Tea 1 kg",
+      "unit": "PCS",
+      "category": "Beverages",
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-001d-701d-801d-00000000001d.webp?X-Amz-Expires=7200&X-Amz-Signature=…"
+    },
+    {
+      "id": "0199c4e2-0020-7020-8020-000000000020",
+      "name": "Haldiram's Aloo Bhujia 1 kg",
+      "unit": "PCS",
+      "category": "Snacks",
+      "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0021-7021-8021-000000000021.webp?X-Amz-Expires=7200&X-Amz-Signature=…"
+    }
+  ],
+  "viewer": {
+    "retailerName": "Rakesh Sharma",
+    "shopName": "Sharma General Store"
+  }
+}

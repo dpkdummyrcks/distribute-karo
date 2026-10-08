@@ -1,0 +1,56 @@
+[
+  {
+    "ratePaise": 4250,
+    "qty": "2.5",
+    "qtyMilli": 2500,
+    "linePaise": 10625
+  },
+  {
+    "ratePaise": 13800,
+    "qty": "37",
+    "qtyMilli": 37000,
+    "linePaise": 510600
+  },
+  {
+    "ratePaise": 30,
+    "qty": "250",
+    "qtyMilli": 250000,
+    "linePaise": 7500
+  },
+  {
+    "ratePaise": 15500,
+    "qty": "1.333",
+    "qtyMilli": 1333,
+    "linePaise": 20662
+  },
+  {
+    "ratePaise": 9999,
+    "qty": "0.001",
+    "qtyMilli": 1,
+    "linePaise": 10
+  },
+  {
+    "ratePaise": 1,
+    "qty": "0.5",
+    "qtyMilli": 500,
+    "linePaise": 1
+  },
+  {
+    "ratePaise": 1,
+    "qty": "0.499",
+    "qtyMilli": 499,
+    "linePaise": 0
+  },
+  {
+    "ratePaise": 46500,
+    "qty": "10",
+    "qtyMilli": 10000,
+    "linePaise": 465000
+  },
+  {
+    "ratePaise": 5400,
+    "qty": "0.75",
+    "qtyMilli": 750,
+    "linePaise": 4050
+  }
+]

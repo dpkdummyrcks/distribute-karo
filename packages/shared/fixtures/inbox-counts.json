@@ -1,0 +1,13 @@
+{
+  "orders": {
+    "PENDING": 2,
+    "ACCEPTED": 2,
+    "PARTIALLY_ACCEPTED": 1,
+    "REJECTED": 1,
+    "CANCELLED": 1,
+    "DISPATCHED": 1,
+    "DELIVERED": 2
+  },
+  "accessRequestsPending": 2,
+  "enquiriesNew": 2
+}

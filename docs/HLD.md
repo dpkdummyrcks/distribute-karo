@@ -24,7 +24,7 @@ The distributor accepts each order fully or partially, or rejects it, then marks
 | Object storage | MinIO | **Garage** | ADR-004 |
 | Delivery | UI prototypes first | **Artifacts with a review loop per batch** | ADR-005 |
 | New features | — | **Access requests + enquiries** inbox in the distributor app | ADR-013 |
-| QR landing | Distributor name/logo card | **Public storefront** (cover, highlights, brands, featured products, service areas), optional public product browsing, CTAs for everyone | ADR-017 |
+| QR landing | Distributor name/logo card | **Public storefront** (cover, highlights, brands, featured products, service areas), public product browsing (no prices), CTAs for everyone | ADR-017 |
 
 ## 3. System context
 ```mermaid
@@ -134,7 +134,7 @@ sequenceDiagram
 ## 9. Revised acceptance criteria
 1. A distributor can sign up with phone + password, add items and retailers, and show a QR on a real Android device.
 2. A registered retailer scans the QR, enters their number, is let in, and places an order (with decimal quantities where the unit allows).
-3. Anyone scanning the QR sees the distributor's storefront (and products, if the distributor allows). An unregistered number cannot order or see the ordering catalog/rates (unless shown publicly) or any stock. It can only send an enquiry or an access request, and these show up in the distributor app.
+3. Anyone scanning the QR sees the distributor's storefront and product list **without prices**. An unregistered number cannot order, see rates or see any stock. It can only send an enquiry or an access request, and these show up in the distributor app.
 4. Approving an access request creates a retailer who can then log in.
 5. The distributor partially accepts an order, stock and the sold/remaining report update correctly, and the retailer sees requested vs accepted (and never stock).
 6. Two concurrent acceptances cannot oversell stock; concurrent decision/cancel on one order: exactly one wins (proven by test). Cross-tenant access is impossible (proven by test).

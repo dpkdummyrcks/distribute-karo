@@ -1,0 +1,8 @@
+{
+  "type": "https://distributekaro.in/problems/slug-invalid",
+  "title": "This QR code is no longer valid",
+  "status": 404,
+  "code": "SLUG_INVALID",
+  "detail": "Ask your distributor for their latest QR code.",
+  "traceId": "01J9Z3K8V4QX7M2N"
+}

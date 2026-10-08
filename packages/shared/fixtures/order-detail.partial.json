@@ -1,0 +1,78 @@
+{
+  "id": "0199c4e2-003b-703b-803b-00000000003b",
+  "orderNo": 1038,
+  "status": "PARTIALLY_ACCEPTED",
+  "retailer": {
+    "id": "0199c4e2-0027-7027-8027-000000000027",
+    "name": "Sunita Gupta",
+    "shopName": "Gupta Kirana",
+    "locationLabel": "Vaishali Nagar"
+  },
+  "lineCount": 3,
+  "totalRequestedPaise": 1248000,
+  "totalAcceptedPaise": 975600,
+  "newDevice": false,
+  "createdAt": "2026-10-08T02:35:00.000Z",
+  "updatedAt": "2026-10-08T03:10:00.000Z",
+  "note": null,
+  "rejectionReason": null,
+  "lines": [
+    {
+      "id": "0199c4e2-003c-703c-803c-00000000003c",
+      "itemId": "0199c4e2-0009-7009-8009-000000000009",
+      "name": "Toor Dal",
+      "unit": "KG",
+      "ratePaise": 13800,
+      "requestedQty": "40",
+      "acceptedQty": "37",
+      "requestedPaise": 552000,
+      "acceptedPaise": 510600,
+      "lineNote": "Only 37 kg available today"
+    },
+    {
+      "id": "0199c4e2-003d-703d-803d-00000000003d",
+      "itemId": "0199c4e2-0002-7002-8002-000000000002",
+      "name": "Aashirvaad Shudh Chakki Atta 10 kg",
+      "unit": "PACK",
+      "ratePaise": 46500,
+      "requestedQty": "10",
+      "acceptedQty": "10",
+      "requestedPaise": 465000,
+      "acceptedPaise": 465000,
+      "lineNote": null
+    },
+    {
+      "id": "0199c4e2-003e-703e-803e-00000000003e",
+      "itemId": "0199c4e2-001e-701e-801e-00000000001e",
+      "name": "Bru Instant Coffee 200 g",
+      "unit": "PCS",
+      "ratePaise": 38500,
+      "requestedQty": "6",
+      "acceptedQty": "0",
+      "requestedPaise": 231000,
+      "acceptedPaise": 0,
+      "lineNote": "Out of stock — expected next week"
+    }
+  ],
+  "events": [
+    {
+      "id": "0199c4e2-003f-703f-803f-00000000003f",
+      "fromStatus": null,
+      "toStatus": "PENDING",
+      "actorType": "RETAILER",
+      "note": null,
+      "createdAt": "2026-10-08T02:35:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0040-7040-8040-000000000040",
+      "fromStatus": "PENDING",
+      "toStatus": "PARTIALLY_ACCEPTED",
+      "actorType": "DISTRIBUTOR",
+      "note": null,
+      "createdAt": "2026-10-08T03:10:00.000Z"
+    }
+  ],
+  "allowedActions": [
+    "DISPATCH"
+  ]
+}

@@ -1,0 +1,14 @@
+{
+  "type": "https://distributekaro.in/problems/item-unavailable",
+  "title": "Some items are no longer available",
+  "status": 422,
+  "code": "ITEM_UNAVAILABLE",
+  "detail": null,
+  "traceId": "01J9Z3K8V4QX7M2N",
+  "errors": [
+    {
+      "path": "lines[2].itemId",
+      "message": "Everest Garam Masala 100 g is currently unavailable"
+    }
+  ]
+}

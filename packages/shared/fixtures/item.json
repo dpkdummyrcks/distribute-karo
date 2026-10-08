@@ -1,0 +1,16 @@
+{
+  "id": "0199c4e2-0009-7009-8009-000000000009",
+  "name": "Toor Dal",
+  "sku": null,
+  "unit": "KG",
+  "ratePaise": 13800,
+  "stockQty": "6.5",
+  "lowStockThreshold": "50",
+  "stockStatus": "LOW",
+  "category": "Pulses",
+  "description": "Premium unpolished",
+  "imageUrl": null,
+  "isActive": true,
+  "createdAt": "2026-06-24T06:30:00.000Z",
+  "updatedAt": "2026-10-04T04:00:00.000Z"
+}

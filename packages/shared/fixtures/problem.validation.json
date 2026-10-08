@@ -1,0 +1,18 @@
+{
+  "type": "https://distributekaro.in/problems/validation-failed",
+  "title": "Some fields need attention",
+  "status": 422,
+  "code": "VALIDATION_FAILED",
+  "detail": null,
+  "traceId": "01J9Z3K8V4QX7M2N",
+  "errors": [
+    {
+      "path": "name",
+      "message": "Name is required"
+    },
+    {
+      "path": "ratePaise",
+      "message": "Rate must be 0 or more"
+    }
+  ]
+}

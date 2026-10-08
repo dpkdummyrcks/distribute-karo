@@ -1,0 +1,32 @@
+{
+  "today": {
+    "orderCount": 0,
+    "requestedPaise": 0,
+    "acceptedPaise": 0
+  },
+  "counts": {
+    "orders": {
+      "PENDING": 0,
+      "ACCEPTED": 0,
+      "PARTIALLY_ACCEPTED": 0,
+      "REJECTED": 0,
+      "CANCELLED": 0,
+      "DISPATCHED": 0,
+      "DELIVERED": 0
+    },
+    "accessRequestsPending": 0,
+    "enquiriesNew": 0
+  },
+  "sales": {
+    "todaySoldPaise": 0,
+    "last7dSoldPaise": 0
+  },
+  "lowStockItems": [],
+  "recentOrders": [],
+  "setup": {
+    "hasProfile": true,
+    "itemCount": 0,
+    "retailerCount": 0,
+    "qrShared": false
+  }
+}

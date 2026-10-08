@@ -1,0 +1,19 @@
+{
+  "type": "https://distributekaro.in/problems/insufficient-stock",
+  "title": "Not enough stock for some lines",
+  "status": 409,
+  "code": "INSUFFICIENT_STOCK",
+  "detail": null,
+  "traceId": "01J9Z3K8V4QX7M2N",
+  "errors": [
+    {
+      "path": "lines[2]",
+      "lineId": "0199c4e2-0031-7031-8031-000000000031",
+      "itemId": "0199c4e2-0009-7009-8009-000000000009",
+      "requested": "50",
+      "accepted": "50",
+      "available": "6.5",
+      "message": "Only 6.5 kg in stock"
+    }
+  ]
+}

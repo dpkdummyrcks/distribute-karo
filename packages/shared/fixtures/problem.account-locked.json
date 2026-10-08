@@ -1,0 +1,9 @@
+{
+  "type": "https://distributekaro.in/problems/account-locked",
+  "title": "Too many attempts",
+  "status": 429,
+  "code": "ACCOUNT_LOCKED",
+  "detail": "Try again in 15 minutes.",
+  "traceId": "01J9Z3K8V4QX7M2N",
+  "retryAfterSec": 900
+}

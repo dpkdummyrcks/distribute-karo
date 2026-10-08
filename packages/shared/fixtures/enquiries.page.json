@@ -1,0 +1,29 @@
+{
+  "data": [
+    {
+      "id": "0199c4e2-006f-706f-806f-00000000006f",
+      "phone": "+919828099999",
+      "name": "Kavita Joshi",
+      "message": "Do you supply Patanjali products? I run a small store in Sodala.",
+      "status": "NEW",
+      "createdAt": "2026-10-08T02:50:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0070-7070-8070-000000000070",
+      "phone": "+919829010101",
+      "name": "Suresh Yadav",
+      "message": "What is the minimum order for delivery to Bagru?",
+      "status": "NEW",
+      "createdAt": "2026-10-07T11:15:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0071-7071-8071-000000000071",
+      "phone": "+919829020202",
+      "name": "Anil Mathur",
+      "message": "Do you give credit to new shops?",
+      "status": "READ",
+      "createdAt": "2026-10-05T05:40:00.000Z"
+    }
+  ],
+  "nextCursor": null
+}

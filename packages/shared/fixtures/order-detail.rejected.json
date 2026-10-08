@@ -1,0 +1,64 @@
+{
+  "id": "0199c4e2-005b-705b-805b-00000000005b",
+  "orderNo": 1033,
+  "status": "REJECTED",
+  "retailer": {
+    "id": "0199c4e2-002b-702b-802b-00000000002b",
+    "name": "Imran Khan",
+    "shopName": "New Bharat Mart",
+    "locationLabel": "Mansarovar"
+  },
+  "lineCount": 2,
+  "totalRequestedPaise": 360800,
+  "totalAcceptedPaise": 0,
+  "newDevice": false,
+  "createdAt": "2026-10-06T15:15:00.000Z",
+  "updatedAt": "2026-10-06T15:30:00.000Z",
+  "note": null,
+  "rejectionReason": "We don't deliver to Mansarovar on Sundays. Please reorder on Monday.",
+  "lines": [
+    {
+      "id": "0199c4e2-005c-705c-805c-00000000005c",
+      "itemId": "0199c4e2-0020-7020-8020-000000000020",
+      "name": "Haldiram's Aloo Bhujia 1 kg",
+      "unit": "PCS",
+      "ratePaise": 26000,
+      "requestedQty": "10",
+      "acceptedQty": "0",
+      "requestedPaise": 260000,
+      "acceptedPaise": 0,
+      "lineNote": null
+    },
+    {
+      "id": "0199c4e2-005d-705d-805d-00000000005d",
+      "itemId": "0199c4e2-000f-700f-800f-00000000000f",
+      "name": "Maggi 2-Minute Noodles 70 g",
+      "unit": "DOZEN",
+      "ratePaise": 16800,
+      "requestedQty": "6",
+      "acceptedQty": "0",
+      "requestedPaise": 100800,
+      "acceptedPaise": 0,
+      "lineNote": null
+    }
+  ],
+  "events": [
+    {
+      "id": "0199c4e2-005e-705e-805e-00000000005e",
+      "fromStatus": null,
+      "toStatus": "PENDING",
+      "actorType": "RETAILER",
+      "note": null,
+      "createdAt": "2026-10-06T15:15:00.000Z"
+    },
+    {
+      "id": "0199c4e2-005f-705f-805f-00000000005f",
+      "fromStatus": "PENDING",
+      "toStatus": "REJECTED",
+      "actorType": "DISTRIBUTOR",
+      "note": "We don't deliver to Mansarovar on Sundays. Please reorder on Monday.",
+      "createdAt": "2026-10-06T15:30:00.000Z"
+    }
+  ],
+  "allowedActions": []
+}

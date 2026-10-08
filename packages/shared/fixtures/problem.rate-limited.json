@@ -1,0 +1,9 @@
+{
+  "type": "https://distributekaro.in/problems/rate-limited",
+  "title": "Too many requests",
+  "status": 429,
+  "code": "RATE_LIMITED",
+  "detail": "Please wait a moment and try again.",
+  "traceId": "01J9Z3K8V4QX7M2N",
+  "retryAfterSec": 60
+}

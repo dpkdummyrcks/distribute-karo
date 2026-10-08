@@ -1,0 +1,16 @@
+{
+  "result": "AUTHENTICATED",
+  "session": {
+    "accessToken": "eyJhbGciOiJFZERTQSIsImtpZCI6ImsxIn0.…retailer…",
+    "accessTokenExpiresAt": "2026-10-08T05:30:00.000Z",
+    "retailer": {
+      "id": "0199c4e2-0025-7025-8025-000000000025",
+      "name": "Rakesh Sharma",
+      "shopName": "Sharma General Store"
+    },
+    "distributor": {
+      "businessName": "Shree Balaji Traders",
+      "logoUrl": null
+    }
+  }
+}

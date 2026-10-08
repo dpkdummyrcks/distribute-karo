@@ -125,7 +125,6 @@ storefronts (                                    -- 1:1 with distributors (ADR-0
   highlights jsonb NOT NULL DEFAULT '[]',          -- [{icon, title, text}] max 6
   brands text[] NOT NULL DEFAULT '{}', service_areas text[] NOT NULL DEFAULT '{}',
   business_hours text, featured_item_ids uuid[] NOT NULL DEFAULT '{}',   -- max 12, filtered to active at read
-  public_catalog_mode text NOT NULL DEFAULT 'WITHOUT_PRICES' CHECK (public_catalog_mode IN ('OFF','WITHOUT_PRICES','WITH_PRICES')),
   published bool NOT NULL DEFAULT true
 )
 
@@ -307,7 +306,7 @@ Base `/v1`. `D` = distributor bearer (aud `dk-distributor`). `R` = retailer bear
 | POST `/d/orders/:id/status` | D | `{to:"DISPATCHED"\|"DELIVERED", note?}` | 200 `OrderDetail` |
 | POST `/d/uploads/presign` | D | `{purpose:"ITEM_IMAGE"\|"SHOP_PHOTO"\|"LOGO"\|"COVER", contentType, contentLength}` | 200 `Presign` |
 | GET `/r/:slug` | – (optional R) | – | 200 `Storefront` / 404 `SLUG_INVALID` (with a valid R token, adds `viewer`) |
-| GET `/r/:slug/public-catalog` | – | `?q&category&cursor&limit` | 200 `Page<PublicCatalogItem>` / 404 if mode `OFF` |
+| GET `/r/:slug/public-catalog` | – | `?q&category&cursor&limit` | 200 `Page<PublicCatalogItem>` |
 | POST `/r/:slug/auth/identify` | – | `{phone, deviceId}` | 200 `IdentifyResult` (+ `Set-Cookie` when authenticated) |
 | POST `/r/:slug/auth/refresh` | cookie | header `X-DK-CSRF: 1` | 200 `RetailerSession` |
 | POST `/r/:slug/auth/logout` | R | – | 204 |
@@ -410,13 +409,12 @@ type PublicDistributor = { businessName: string; logoUrl: string | null };      
 type Highlight = { icon: "truck"|"credit"|"tag"|"box"|"clock"|"star"|"shield"|"phone"; title: string; text: string | null };
 type Storefront = { distributor: PublicDistributor & { coverUrl: string | null; tagline: string | null; about: string | null };
   highlights: Highlight[]; categories: string[]; brands: string[]; serviceAreas: string[]; businessHours: string | null;
-  featuredItems: PublicCatalogItem[]; publicCatalogMode: "OFF"|"WITHOUT_PRICES"|"WITH_PRICES";
+  featuredItems: PublicCatalogItem[];
   viewer: { retailerName: string; shopName: string | null } | null };      // non-null when a valid retailer session is present
-type PublicCatalogItem = { id: string; name: string; unit: Unit; category: string | null; imageUrl: string | null;
-  ratePaise: number | null };                                              // null unless WITH_PRICES; never stock
+type PublicCatalogItem = { id: string; name: string; unit: Unit; category: string | null; imageUrl: string | null };  // never price or stock (QG)
 type StorefrontInput = { tagline?: string|null; about?: string|null; coverUploadId?: string|null;
   highlights: Highlight[]; brands: string[]; serviceAreas: string[]; businessHours?: string|null;
-  featuredItemIds: string[]; publicCatalogMode: Storefront["publicCatalogMode"]; published: boolean };
+  featuredItemIds: string[]; published: boolean };
 type StorefrontAdmin = StorefrontInput & { coverUrl: string | null; previewUrl: string /* = qrUrl */ };
 type RetailerSession = { accessToken: string; accessTokenExpiresAt: string;
   retailer: { id: string; name: string; shopName: string | null }; distributor: PublicDistributor };
@@ -438,7 +436,7 @@ type PlaceOrderInput = { lines: { itemId: string; qty: Qty }[]; note?: string|nu
 - **Catalog & stock:** `items.page.json`, `item.json`, `categories.json`, `stock-movements.page.json`, `stock-report.json`.
 - **Retailers, requests, enquiries:** `retailers.page.json`, `retailer.json`, `access-requests.page.json`, `enquiries.page.json`, `inbox-counts.json`.
 - **Orders:** `orders.page.json`, `order-detail.{pending,partial,accepted,rejected,dispatched,delivered,cancelled}.json`.
-- **Retailer side:** `storefront.json`, `storefront.minimal.json`, `storefront.signed-in.json`, `public-catalog.page.json`, `public-catalog.page.no-prices.json`, `public-distributor.json`, `identify.authenticated.json`, `identify.not-registered.json`, `identify.not-registered-pending.json`, `catalog.json`, `retailer-orders.page.json`, `retailer-order-detail.json`.
+- **Retailer side:** `storefront.json`, `storefront.minimal.json`, `storefront.signed-in.json`, `public-catalog.page.json`, `public-distributor.json`, `identify.authenticated.json`, `identify.not-registered.json`, `identify.not-registered-pending.json`, `catalog.json`, `retailer-orders.page.json`, `retailer-order-detail.json`.
 - **Shared:** `empty.page.json`, `qty-money-vectors.json`, `problem.{validation,invalid-credentials,account-locked,rate-limited,slug-invalid,request-pending,item-unavailable,insufficient-stock}.json`.
 
 ## 7. Auth details
@@ -488,7 +486,7 @@ Headers: `RateLimit-Policy` and `RateLimit` (IETF draft), plus `Retry-After` on 
 - Env (Zod, fail fast): `DATABASE_URL, VALKEY_URL, S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY, S3_SECRET_KEY, PUBLIC_BASE_URL, JWT_PRIVATE_KEY, JWT_PUBLIC_KEY, HMAC_SECRET, TRUSTED_PROXIES, NODE_ENV`.
 
 ## 11. Retailer web internals
-- **Routes:** `/d/$slug` (**storefront**, for everyone; *Order now* opens a phone sheet) → `/d/$slug/products` (public catalog per mode) → `/d/$slug/welcome` (not registered: Request access / Enquire) → `/d/$slug/request` → `/d/$slug/enquire` → `/d/$slug/catalog` → `/d/$slug/cart` → `/d/$slug/orders` → `/d/$slug/orders/$id` (`?placed=1` shows the confirmation). Bottom nav after login: Catalog · Cart · Orders.
+- **Routes:** `/d/$slug` (**storefront**, for everyone; *Order now* opens a phone sheet) → `/d/$slug/products` (public products, no prices) → `/d/$slug/welcome` (not registered: Request access / Enquire) → `/d/$slug/request` → `/d/$slug/enquire` → `/d/$slug/catalog` → `/d/$slug/cart` → `/d/$slug/orders` → `/d/$slug/orders/$id` (`?placed=1` shows the confirmation). Bottom nav after login: Catalog · Cart · Orders.
 - **State:** TanStack Query for server data. The cart is a Zustand store persisted per slug as `{itemId, qty}` (prices always come from the catalog). The access token lives in memory. `deviceId` is a random UUID in localStorage.
 - **Qty input:** a stepper uses the unit's step. Tapping the number opens a numeric keypad (`inputmode="decimal"` only for decimal units).
 - **Service worker:** precache the shell. Images are stale-while-revalidate. `/v1/*` is NetworkOnly.
@@ -519,7 +517,7 @@ Headers: `RateLimit-Policy` and `RateLimit` (IETF draft), plus `Retry-After` on 
 |---|---|
 | 1 | Android Compose UI tests (MockWebServer) for signup → item → retailer → QR; manual device checklist |
 | 2 | Playwright: QR URL → identify → catalog → order with a decimal qty → history |
-| 3 | API: identify unknown phone → `NOT_REGISTERED`, no cookie; catalog without token → 401; storefront/public catalog never contain stock fields and contain `ratePaise` only when `WITH_PRICES`; mode `OFF` → 404; access request/enquiry visible to the owning distributor only |
+| 3 | API: identify unknown phone → `NOT_REGISTERED`, no cookie; catalog without token → 401; storefront/public catalog responses contain no `ratePaise` and no stock fields (schema test); access request/enquiry visible to the owning distributor only |
 | 4 | API: approve request → retailer exists → identify → `AUTHENTICATED` |
 | 5 | API: partial decision → stock decremented, SALE movements written, line/total paise per vectors; retailer view shows requested vs accepted and no stock fields; stock report sold/remaining correct |
 | 6 | Testcontainers PG: two orders ∥ accepted over limited stock → no oversell, stock = Σ movements; decision ∥ cancel and decision ∥ decision → exactly one wins; cross-tenant ids → 404; RLS raw-query test returns 0 rows |

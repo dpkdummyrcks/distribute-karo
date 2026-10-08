@@ -1,0 +1,100 @@
+{
+  "id": "0199c4e2-002e-702e-802e-00000000002e",
+  "orderNo": 1040,
+  "status": "PENDING",
+  "retailer": {
+    "id": "0199c4e2-0025-7025-8025-000000000025",
+    "name": "Rakesh Sharma",
+    "shopName": "Sharma General Store",
+    "locationLabel": "Malviya Nagar"
+  },
+  "lineCount": 5,
+  "totalRequestedPaise": 1373075,
+  "totalAcceptedPaise": null,
+  "newDevice": false,
+  "createdAt": "2026-10-08T05:12:00.000Z",
+  "updatedAt": "2026-10-08T05:12:00.000Z",
+  "note": "Please send before 5 PM",
+  "rejectionReason": null,
+  "lines": [
+    {
+      "id": "0199c4e2-002f-702f-802f-00000000002f",
+      "itemId": "0199c4e2-0002-7002-8002-000000000002",
+      "name": "Aashirvaad Shudh Chakki Atta 10 kg",
+      "unit": "PACK",
+      "ratePaise": 46500,
+      "requestedQty": "5",
+      "acceptedQty": null,
+      "requestedPaise": 232500,
+      "acceptedPaise": null,
+      "lineNote": null,
+      "availableStockQty": "120"
+    },
+    {
+      "id": "0199c4e2-0030-7030-8030-000000000030",
+      "itemId": "0199c4e2-0006-7006-8006-000000000006",
+      "name": "Sugar (loose)",
+      "unit": "KG",
+      "ratePaise": 4250,
+      "requestedQty": "25.5",
+      "acceptedQty": null,
+      "requestedPaise": 108375,
+      "acceptedPaise": null,
+      "lineNote": null,
+      "availableStockQty": "850.5"
+    },
+    {
+      "id": "0199c4e2-0031-7031-8031-000000000031",
+      "itemId": "0199c4e2-0009-7009-8009-000000000009",
+      "name": "Toor Dal",
+      "unit": "KG",
+      "ratePaise": 13800,
+      "requestedQty": "50",
+      "acceptedQty": null,
+      "requestedPaise": 690000,
+      "acceptedPaise": null,
+      "lineNote": null,
+      "availableStockQty": "6.5"
+    },
+    {
+      "id": "0199c4e2-0032-7032-8032-000000000032",
+      "itemId": "0199c4e2-000f-700f-800f-00000000000f",
+      "name": "Maggi 2-Minute Noodles 70 g",
+      "unit": "DOZEN",
+      "ratePaise": 16800,
+      "requestedQty": "4",
+      "acceptedQty": null,
+      "requestedPaise": 67200,
+      "acceptedPaise": null,
+      "lineNote": null,
+      "availableStockQty": "85"
+    },
+    {
+      "id": "0199c4e2-0033-7033-8033-000000000033",
+      "itemId": "0199c4e2-0011-7011-8011-000000000011",
+      "name": "Amul Butter 500 g",
+      "unit": "PCS",
+      "ratePaise": 27500,
+      "requestedQty": "10",
+      "acceptedQty": null,
+      "requestedPaise": 275000,
+      "acceptedPaise": null,
+      "lineNote": null,
+      "availableStockQty": "48"
+    }
+  ],
+  "events": [
+    {
+      "id": "0199c4e2-0034-7034-8034-000000000034",
+      "fromStatus": null,
+      "toStatus": "PENDING",
+      "actorType": "RETAILER",
+      "note": "Please send before 5 PM",
+      "createdAt": "2026-10-08T05:12:00.000Z"
+    }
+  ],
+  "allowedActions": [
+    "ACCEPT",
+    "REJECT"
+  ]
+}

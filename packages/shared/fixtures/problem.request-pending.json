@@ -1,0 +1,8 @@
+{
+  "type": "https://distributekaro.in/problems/request-already-pending",
+  "title": "Request already sent",
+  "status": 409,
+  "code": "REQUEST_ALREADY_PENDING",
+  "detail": "The distributor will add you soon.",
+  "traceId": "01J9Z3K8V4QX7M2N"
+}

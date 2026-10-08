@@ -1,0 +1,78 @@
+{
+  "id": "0199c4e2-0041-7041-8041-000000000041",
+  "orderNo": 1037,
+  "status": "ACCEPTED",
+  "retailer": {
+    "id": "0199c4e2-0029-7029-8029-000000000029",
+    "name": "Amit Jain",
+    "shopName": "Jain Provision Store",
+    "locationLabel": "Raja Park"
+  },
+  "lineCount": 3,
+  "totalRequestedPaise": 604000,
+  "totalAcceptedPaise": 604000,
+  "newDevice": false,
+  "createdAt": "2026-10-08T02:00:00.000Z",
+  "updatedAt": "2026-10-08T02:25:00.000Z",
+  "note": null,
+  "rejectionReason": null,
+  "lines": [
+    {
+      "id": "0199c4e2-0042-7042-8042-000000000042",
+      "itemId": "0199c4e2-001c-701c-801c-00000000001c",
+      "name": "Red Label Tea 1 kg",
+      "unit": "PCS",
+      "ratePaise": 52000,
+      "requestedQty": "4",
+      "acceptedQty": "4",
+      "requestedPaise": 208000,
+      "acceptedPaise": 208000,
+      "lineNote": null
+    },
+    {
+      "id": "0199c4e2-0043-7043-8043-000000000043",
+      "itemId": "0199c4e2-0018-7018-8018-000000000018",
+      "name": "Colgate Strong Teeth 200 g",
+      "unit": "PCS",
+      "ratePaise": 11000,
+      "requestedQty": "24",
+      "acceptedQty": "24",
+      "requestedPaise": 264000,
+      "acceptedPaise": 264000,
+      "lineNote": null
+    },
+    {
+      "id": "0199c4e2-0044-7044-8044-000000000044",
+      "itemId": "0199c4e2-001a-701a-801a-00000000001a",
+      "name": "Dettol Original Soap 125 g (pack of 4)",
+      "unit": "PACK",
+      "ratePaise": 22000,
+      "requestedQty": "6",
+      "acceptedQty": "6",
+      "requestedPaise": 132000,
+      "acceptedPaise": 132000,
+      "lineNote": null
+    }
+  ],
+  "events": [
+    {
+      "id": "0199c4e2-0045-7045-8045-000000000045",
+      "fromStatus": null,
+      "toStatus": "PENDING",
+      "actorType": "RETAILER",
+      "note": null,
+      "createdAt": "2026-10-08T02:00:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0046-7046-8046-000000000046",
+      "fromStatus": "PENDING",
+      "toStatus": "ACCEPTED",
+      "actorType": "DISTRIBUTOR",
+      "note": null,
+      "createdAt": "2026-10-08T02:25:00.000Z"
+    }
+  ],
+  "allowedActions": [
+    "DISPATCH"
+  ]
+}

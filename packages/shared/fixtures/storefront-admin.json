@@ -1,0 +1,75 @@
+{
+  "tagline": "Jaipur's trusted wholesale partner since 1998",
+  "about": "Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city.",
+  "highlights": [
+    {
+      "icon": "truck",
+      "title": "Same-day delivery",
+      "text": "Order by 2 PM, get it today"
+    },
+    {
+      "icon": "credit",
+      "title": "7-day credit",
+      "text": "For regular retailers"
+    },
+    {
+      "icon": "tag",
+      "title": "Wholesale rates",
+      "text": "Best prices, updated daily"
+    },
+    {
+      "icon": "box",
+      "title": "500+ products",
+      "text": "Staples, FMCG & home care"
+    },
+    {
+      "icon": "phone",
+      "title": "Order from your phone",
+      "text": "No calls, no notebooks"
+    },
+    {
+      "icon": "shield",
+      "title": "Genuine products",
+      "text": "Direct from brand depots"
+    }
+  ],
+  "brands": [
+    "Aashirvaad",
+    "Tata",
+    "Fortune",
+    "Parle",
+    "Britannia",
+    "Nestlé",
+    "Amul",
+    "HUL",
+    "Colgate",
+    "Dettol",
+    "Haldiram's",
+    "Everest"
+  ],
+  "serviceAreas": [
+    "Malviya Nagar",
+    "Vaishali Nagar",
+    "Mansarovar",
+    "Raja Park",
+    "Sanganer",
+    "Jagatpura",
+    "C-Scheme",
+    "Pratap Nagar"
+  ],
+  "businessHours": "Mon–Sat · 8 AM – 8 PM",
+  "coverUploadId": null,
+  "featuredItemIds": [
+    "0199c4e2-0002-7002-8002-000000000002",
+    "0199c4e2-0007-7007-8007-000000000007",
+    "0199c4e2-000b-700b-800b-00000000000b",
+    "0199c4e2-000f-700f-800f-00000000000f",
+    "0199c4e2-0011-7011-8011-000000000011",
+    "0199c4e2-0014-7014-8014-000000000014",
+    "0199c4e2-001c-701c-801c-00000000001c",
+    "0199c4e2-0020-7020-8020-000000000020"
+  ],
+  "published": true,
+  "coverUrl": "https://app.distributekaro.in/media/img/cover/0199c4e2-007b-707b-807b-00000000007b.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+  "previewUrl": "https://app.distributekaro.in/d/bT7kQ9xZr2Mw"
+}

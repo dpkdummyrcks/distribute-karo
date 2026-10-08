@@ -1,0 +1,311 @@
+{
+  "from": "2026-09-08T18:30:00.000Z",
+  "to": "2026-10-08T18:30:00.000Z",
+  "totals": {
+    "soldPaise": 27414225,
+    "itemsSold": 19
+  },
+  "data": [
+    {
+      "item": {
+        "id": "0199c4e2-0007-7007-8007-000000000007",
+        "name": "Fortune Sunflower Oil",
+        "unit": "L",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0008-7008-8008-000000000008.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Edible Oil",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "260",
+      "soldPaise": 4030000,
+      "restockedQty": "130",
+      "adjustedQty": "0",
+      "remainingQty": "320"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0002-7002-8002-000000000002",
+        "name": "Aashirvaad Shudh Chakki Atta 10 kg",
+        "unit": "PACK",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0003-7003-8003-000000000003.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Staples",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "64",
+      "soldPaise": 2976000,
+      "restockedQty": "32",
+      "adjustedQty": "0",
+      "remainingQty": "120"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0009-7009-8009-000000000009",
+        "name": "Toor Dal",
+        "unit": "KG",
+        "imageUrl": null,
+        "category": "Pulses",
+        "stockStatus": "LOW"
+      },
+      "soldQty": "202",
+      "soldPaise": 2787600,
+      "restockedQty": "0",
+      "adjustedQty": "-1.5",
+      "remainingQty": "6.5"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-000b-700b-800b-00000000000b",
+        "name": "Parle-G 80 g (box of 48)",
+        "unit": "BOX",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-000c-700c-800c-00000000000c.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Biscuits",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "41",
+      "soldPaise": 1968000,
+      "restockedQty": "20.5",
+      "adjustedQty": "0",
+      "remainingQty": "64"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0006-7006-8006-000000000006",
+        "name": "Sugar (loose)",
+        "unit": "KG",
+        "imageUrl": null,
+        "category": "Staples",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "412.5",
+      "soldPaise": 1753125,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "850.5"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-000a-700a-800a-00000000000a",
+        "name": "Basmati Rice (loose)",
+        "unit": "KG",
+        "imageUrl": null,
+        "category": "Staples",
+        "stockStatus": "OUT"
+      },
+      "soldQty": "180",
+      "soldPaise": 1728000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "0"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0011-7011-8011-000000000011",
+        "name": "Amul Butter 500 g",
+        "unit": "PCS",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0012-7012-8012-000000000012.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Dairy",
+        "stockStatus": "LOW"
+      },
+      "soldQty": "61",
+      "soldPaise": 1677500,
+      "restockedQty": "30.5",
+      "adjustedQty": "0",
+      "remainingQty": "48"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-001c-701c-801c-00000000001c",
+        "name": "Red Label Tea 1 kg",
+        "unit": "PCS",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-001d-701d-801d-00000000001d.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Beverages",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "27",
+      "soldPaise": 1404000,
+      "restockedQty": "13.5",
+      "adjustedQty": "0",
+      "remainingQty": "60"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0014-7014-8014-000000000014",
+        "name": "Surf Excel Easy Wash 1 kg",
+        "unit": "PCS",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0015-7015-8015-000000000015.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Home Care",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "96",
+      "soldPaise": 1344000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "150"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-000d-700d-800d-00000000000d",
+        "name": "Britannia Good Day Cashew 200 g",
+        "unit": "PCS",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-000e-700e-800e-00000000000e.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Biscuits",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "330",
+      "soldPaise": 1320000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "600"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0018-7018-8018-000000000018",
+        "name": "Colgate Strong Teeth 200 g",
+        "unit": "PCS",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0019-7019-8019-000000000019.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Personal Care",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "120",
+      "soldPaise": 1320000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "230"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0004-7004-8004-000000000004",
+        "name": "Tata Salt 1 kg (case of 25)",
+        "unit": "CASE",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0005-7005-8005-000000000005.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Staples",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "18",
+      "soldPaise": 1080000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "40"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-000f-700f-800f-00000000000f",
+        "name": "Maggi 2-Minute Noodles 70 g",
+        "unit": "DOZEN",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0010-7010-8010-000000000010.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Instant Food",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "52",
+      "soldPaise": 873600,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "85"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0013-7013-8013-000000000013",
+        "name": "Amul Taaza Toned Milk",
+        "unit": "L",
+        "imageUrl": null,
+        "category": "Dairy",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "140",
+      "soldPaise": 756000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "200"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-001a-701a-801a-00000000001a",
+        "name": "Dettol Original Soap 125 g (pack of 4)",
+        "unit": "PACK",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-001b-701b-801b-00000000001b.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Personal Care",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "33",
+      "soldPaise": 726000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "75"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0020-7020-8020-000000000020",
+        "name": "Haldiram's Aloo Bhujia 1 kg",
+        "unit": "PCS",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0021-7021-8021-000000000021.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Snacks",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "22",
+      "soldPaise": 572000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "44"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-001e-701e-801e-00000000001e",
+        "name": "Bru Instant Coffee 200 g",
+        "unit": "PCS",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-001f-701f-801f-00000000001f.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Beverages",
+        "stockStatus": "OUT"
+      },
+      "soldQty": "14",
+      "soldPaise": 539000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "0"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0016-7016-8016-000000000016",
+        "name": "Vim Dishwash Bar 200 g (pack of 4)",
+        "unit": "PACK",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0017-7017-8017-000000000017.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Home Care",
+        "stockStatus": "LOW"
+      },
+      "soldQty": "38",
+      "soldPaise": 334400,
+      "restockedQty": "19",
+      "adjustedQty": "0",
+      "remainingQty": "9"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0024-7024-8024-000000000024",
+        "name": "Haldi Powder (loose)",
+        "unit": "G",
+        "imageUrl": null,
+        "category": "Spices",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "7500",
+      "soldPaise": 225000,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "25000"
+    },
+    {
+      "item": {
+        "id": "0199c4e2-0022-7022-8022-000000000022",
+        "name": "Everest Garam Masala 100 g",
+        "unit": "PCS",
+        "imageUrl": "https://app.distributekaro.in/media/img/item/0199c4e2-0023-7023-8023-000000000023.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+        "category": "Spices",
+        "stockStatus": "IN_STOCK"
+      },
+      "soldQty": "0",
+      "soldPaise": 0,
+      "restockedQty": "0",
+      "adjustedQty": "0",
+      "remainingQty": "300"
+    }
+  ],
+  "nextCursor": null
+}

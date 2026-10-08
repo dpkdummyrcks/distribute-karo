@@ -1,0 +1,80 @@
+{
+  "id": "0199c4e2-004c-704c-804c-00000000004c",
+  "orderNo": 1035,
+  "status": "DISPATCHED",
+  "distributor": {
+    "businessName": "Shree Balaji Traders"
+  },
+  "lineCount": 3,
+  "totalRequestedPaise": 1355500,
+  "totalAcceptedPaise": 1313000,
+  "createdAt": "2026-10-07T05:50:00.000Z",
+  "updatedAt": "2026-10-07T11:00:00.000Z",
+  "note": null,
+  "rejectionReason": null,
+  "lines": [
+    {
+      "id": "0199c4e2-004d-704d-804d-00000000004d",
+      "itemId": "0199c4e2-0009-7009-8009-000000000009",
+      "name": "Toor Dal",
+      "unit": "KG",
+      "ratePaise": 13800,
+      "requestedQty": "75",
+      "acceptedQty": "75",
+      "requestedPaise": 1035000,
+      "acceptedPaise": 1035000,
+      "lineNote": null
+    },
+    {
+      "id": "0199c4e2-004e-704e-804e-00000000004e",
+      "itemId": "0199c4e2-0006-7006-8006-000000000006",
+      "name": "Sugar (loose)",
+      "unit": "KG",
+      "ratePaise": 4250,
+      "requestedQty": "50",
+      "acceptedQty": "40",
+      "requestedPaise": 212500,
+      "acceptedPaise": 170000,
+      "lineNote": "40 kg now, rest on Friday"
+    },
+    {
+      "id": "0199c4e2-004f-704f-804f-00000000004f",
+      "itemId": "0199c4e2-0013-7013-8013-000000000013",
+      "name": "Amul Taaza Toned Milk",
+      "unit": "L",
+      "ratePaise": 5400,
+      "requestedQty": "20",
+      "acceptedQty": "20",
+      "requestedPaise": 108000,
+      "acceptedPaise": 108000,
+      "lineNote": null
+    }
+  ],
+  "events": [
+    {
+      "id": "0199c4e2-0050-7050-8050-000000000050",
+      "fromStatus": null,
+      "toStatus": "PENDING",
+      "actorType": "RETAILER",
+      "note": null,
+      "createdAt": "2026-10-07T05:50:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0051-7051-8051-000000000051",
+      "fromStatus": "PENDING",
+      "toStatus": "PARTIALLY_ACCEPTED",
+      "actorType": "DISTRIBUTOR",
+      "note": null,
+      "createdAt": "2026-10-07T06:35:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0052-7052-8052-000000000052",
+      "fromStatus": "PARTIALLY_ACCEPTED",
+      "toStatus": "DISPATCHED",
+      "actorType": "DISTRIBUTOR",
+      "note": null,
+      "createdAt": "2026-10-07T11:00:00.000Z"
+    }
+  ],
+  "allowedActions": []
+}

@@ -1,0 +1,119 @@
+{
+  "data": [
+    {
+      "id": "0199c4e2-0025-7025-8025-000000000025",
+      "name": "Rakesh Sharma",
+      "shopName": "Sharma General Store",
+      "phone": "+919828011111",
+      "email": null,
+      "address": "Shop 4, Malviya Nagar Main Rd, Jaipur",
+      "shopPhotoUrl": "https://app.distributekaro.in/media/img/shop/0199c4e2-0026-7026-8026-000000000026.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+      "location": {
+        "lat": 26.853,
+        "lng": 75.805,
+        "label": "Malviya Nagar"
+      },
+      "isActive": true,
+      "source": "MANUAL",
+      "lastOrderAt": "2026-10-08T05:12:00.000Z",
+      "createdAt": "2026-06-30T09:30:00.000Z",
+      "updatedAt": "2026-10-05T09:30:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0027-7027-8027-000000000027",
+      "name": "Sunita Gupta",
+      "shopName": "Gupta Kirana",
+      "phone": "+919828022222",
+      "email": null,
+      "address": "B-12, Vaishali Nagar, Jaipur",
+      "shopPhotoUrl": "https://app.distributekaro.in/media/img/shop/0199c4e2-0028-7028-8028-000000000028.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+      "location": {
+        "lat": 26.9115,
+        "lng": 75.7432,
+        "label": "Vaishali Nagar"
+      },
+      "isActive": true,
+      "source": "MANUAL",
+      "lastOrderAt": "2026-10-08T02:35:00.000Z",
+      "createdAt": "2026-07-09T09:30:00.000Z",
+      "updatedAt": "2026-10-05T09:30:00.000Z"
+    },
+    {
+      "id": "0199c4e2-0029-7029-8029-000000000029",
+      "name": "Amit Jain",
+      "shopName": "Jain Provision Store",
+      "phone": "+919828033333",
+      "email": null,
+      "address": "Raja Park Market, Jaipur",
+      "shopPhotoUrl": "https://app.distributekaro.in/media/img/shop/0199c4e2-002a-702a-802a-00000000002a.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+      "location": {
+        "lat": 26.8925,
+        "lng": 75.8275,
+        "label": "Raja Park"
+      },
+      "isActive": true,
+      "source": "MANUAL",
+      "lastOrderAt": "2026-10-08T02:00:00.000Z",
+      "createdAt": "2026-07-18T09:30:00.000Z",
+      "updatedAt": "2026-10-05T09:30:00.000Z"
+    },
+    {
+      "id": "0199c4e2-002b-702b-802b-00000000002b",
+      "name": "Imran Khan",
+      "shopName": "New Bharat Mart",
+      "phone": "+919828044444",
+      "email": null,
+      "address": "Sector 3, Mansarovar, Jaipur",
+      "shopPhotoUrl": null,
+      "location": {
+        "lat": 26.8697,
+        "lng": 75.7633,
+        "label": "Mansarovar"
+      },
+      "isActive": true,
+      "source": "MANUAL",
+      "lastOrderAt": "2026-10-08T03:45:00.000Z",
+      "createdAt": "2026-07-27T09:30:00.000Z",
+      "updatedAt": "2026-10-05T09:30:00.000Z"
+    },
+    {
+      "id": "0199c4e2-002c-702c-802c-00000000002c",
+      "name": "Mohan Lal Meena",
+      "shopName": "Shiv Shakti Traders",
+      "phone": "+919828055555",
+      "email": null,
+      "address": "Near Bus Stand, Sanganer, Jaipur",
+      "shopPhotoUrl": null,
+      "location": {
+        "lat": 26.8217,
+        "lng": 75.7926,
+        "label": "Sanganer"
+      },
+      "isActive": false,
+      "source": "MANUAL",
+      "lastOrderAt": null,
+      "createdAt": "2026-08-05T09:30:00.000Z",
+      "updatedAt": "2026-10-05T09:30:00.000Z"
+    },
+    {
+      "id": "0199c4e2-002d-702d-802d-00000000002d",
+      "name": "Pooja Verma",
+      "shopName": "Om Sai Kirana",
+      "phone": "+919828066666",
+      "email": null,
+      "address": "Jagatpura Phatak, Jaipur",
+      "shopPhotoUrl": null,
+      "location": {
+        "lat": 26.8315,
+        "lng": 75.8655,
+        "label": "Jagatpura"
+      },
+      "isActive": true,
+      "source": "ACCESS_REQUEST",
+      "lastOrderAt": "2026-10-07T11:40:00.000Z",
+      "createdAt": "2026-08-14T09:30:00.000Z",
+      "updatedAt": "2026-10-05T09:30:00.000Z"
+    }
+  ],
+  "nextCursor": null
+}
