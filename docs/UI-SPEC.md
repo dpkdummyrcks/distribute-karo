@@ -24,7 +24,7 @@
 | success / warning / danger | `#15803D` / `#B45309` / `#B91C1C` | `#4ADE80` / `#FBBF24` / `#F87171` |
 | radius | sm 8 · md 12 · lg 16 · full | |
 | spacing | 4-pt scale | |
-| type | Inter; display 28/34, title 20/28, body 16/24, label 14/20, caption 12/16 | |
+| type | Anek Latin (display/headline/title) + Mukta (body/label/caption), see ADR-018; display 36/40, headline 28/34, title 20/28, body 16/24, label 14/20, caption 12/16 | |
 
 **Status chips:** PENDING amber · ACCEPTED green · PARTIALLY_ACCEPTED teal · REJECTED red · CANCELLED slate · DISPATCHED blue · DELIVERED emerald. Each pairs colour with an icon. Request chips: PENDING amber · APPROVED green · REJECTED red. The "New device" flag is an outline chip with an info icon. Stock badges (distributor only): In stock (neutral) · Low (amber) · Out (red).
 

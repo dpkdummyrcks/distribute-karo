@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Distributor app kit</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3730A3}a:hover{color:#1E1B4B}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B33D;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1000px; box-sizing: border-box; padding: 48px 64px; font-family: 'Mukta', system-ui, sans-serif; display: flex; flex-direction: column; gap: 20px; {{vars}}; background: var(--board); color: var(--text)">
+
+  <header style="display: flex; align-items: baseline; justify-content: space-between">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; color: var(--text2)">UI-0 · DISTRIBUTOR APP · ANDROID MATERIAL 3</div>
+      <h1 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 36px">Component kit</h1>
+    </div>
+    <p style="margin: 0; font-size: 15px; color: var(--text2)">Tap chips, tabs, steppers and the eye icon · Dark mode in Tweaks</p>
+  </header>
+
+  <div style="display: flex; justify-content: space-between; align-items: flex-start">
+
+    <!-- ===================================== FRAME 1 · Catalog list -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 14px; font-weight: 600; color: var(--text2)">List · chips · badges · FAB · nav bar</div>
+      <div style="width: 360px; height: 800px; border-radius: 28px; overflow: hidden; background: var(--bg); border: 1px solid var(--outline); display: flex; flex-direction: column; position: relative">
+        <div style="height: 64px; padding: 0 4px 0 16px; display: flex; align-items: center; justify-content: space-between">
+          <h2 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 22px">Catalog</h2>
+          <div style="display: flex">
+            <button aria-label="Search" style="width: 48px; height: 48px; border: 0; background: transparent; color: var(--text); border-radius: 24px; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg></button>
+            <button aria-label="Sort" style="width: 48px; height: 48px; border: 0; background: transparent; color: var(--text); border-radius: 24px; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M4 17l3 3 3-3M17 20V4M14 7l3-3 3 3"></path></svg></button>
+          </div>
+        </div>
+        <div style="padding: 0 16px 12px">
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1px solid var(--outline2); border-radius: 999px; overflow: hidden; height: 40px">
+            <button onClick="{{segItems}}" style="border: 0; font-size: 14px; font-weight: 600; background: {{segItemsBg}}; color: {{segItemsFg}}">Items</button>
+            <button onClick="{{segReport}}" style="border: 0; border-left: 1px solid var(--outline2); font-size: 14px; font-weight: 600; background: {{segReportBg}}; color: {{segReportFg}}">Stock report</button>
+          </div>
+        </div>
+
+        <sc-if value="{{showItems}}" hint-placeholder-val="{{true}}">
+          <div style="padding: 0 16px 8px">
+            <label style="height: 48px; border-radius: 999px; background: var(--sv); display: flex; align-items: center; gap: 10px; padding: 0 16px; color: var(--text2)">
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg>
+              <input aria-label="Search items" placeholder="Search 20 items" style="flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 16px; color: var(--text)">
+            </label>
+          </div>
+          <div style="display: flex; gap: 8px; padding: 4px 16px 8px; overflow: hidden">
+            <sc-for list="{{filters}}" as="f" hint-placeholder-count="4">
+              <button onClick="{{f.pick}}" style="flex: none; height: 32px; padding: 0 12px; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}">{{f.label}}</button>
+            </sc-for>
+          </div>
+          <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column">
+            <sc-for list="{{shownItems}}" as="it" hint-placeholder-count="6">
+              <div style="display: flex; gap: 12px; padding: 10px 16px; align-items: center; opacity: {{it.opacity}}">
+                <div style="width: 48px; height: 48px; flex: none; border-radius: 12px; background: var(--pc); color: var(--opc); font-family: 'Anek Latin'; font-weight: 700; font-size: 17px; display: flex; align-items: center; justify-content: center">{{it.initials}}</div>
+                <div style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+                  <div style="font-size: 16px; font-weight: 600; line-height: 20px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.name}}</div>
+                  <div style="font-size: 14px; color: var(--text2); line-height: 18px">{{it.rate}}</div>
+                  <div style="display: flex; gap: 6px; align-items: center">
+                    <span style="display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px 0 6px; border-radius: 6px; font-size: 12px; font-weight: 600; background: {{it.bbg}}; color: {{it.bfg}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.bicon}}"></path></svg>{{it.badge}}</span>
+                    <sc-if value="{{it.inactive}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; font-weight: 600; color: var(--text2)">Unavailable</span></sc-if>
+                  </div>
+                </div>
+              </div>
+            </sc-for>
+            <sc-if value="{{noItems}}" hint-placeholder-val="{{false}}">
+              <div style="padding: 40px 24px; text-align: center; color: var(--text2); font-size: 15px">No items match this filter.</div>
+            </sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{showReport}}" hint-placeholder-val="{{false}}">
+          <div style="padding: 0 16px 8px; display: flex; gap: 8px">
+            <span style="height: 32px; padding: 0 12px; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--outline2); display: inline-flex; align-items: center; color: var(--text2)">Today</span>
+            <span style="height: 32px; padding: 0 12px; border-radius: 8px; font-size: 14px; font-weight: 600; border: 1px solid var(--outline2); display: inline-flex; align-items: center; color: var(--text2)">7 days</span>
+            <span style="height: 32px; padding: 0 12px; border-radius: 8px; font-size: 14px; font-weight: 600; background: var(--pc); color: var(--opc); display: inline-flex; align-items: center">30 days</span>
+          </div>
+          <div style="margin: 4px 16px 8px; padding: 14px 16px; border-radius: 16px; background: var(--pc); color: var(--opc); display: flex; justify-content: space-between; align-items: baseline">
+            <span style="font-size: 14px; font-weight: 600">Sold in 30 days</span>
+            <span style="font-size: 22px; font-weight: 700">₹2,74,142.25</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 80px 76px; padding: 6px 16px; font-size: 12px; font-weight: 600; color: var(--text2); letter-spacing: 0.04em">
+            <span>ITEM</span><span style="text-align: right">SOLD</span><span style="text-align: right">LEFT</span>
+          </div>
+          <sc-for list="{{report}}" as="r" hint-placeholder-count="6">
+            <div style="display: grid; grid-template-columns: 1fr 80px 76px; gap: 0; padding: 10px 16px; border-top: 1px solid var(--outline); align-items: center">
+              <div style="min-width: 0; display: flex; flex-direction: column">
+                <span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span>
+                <span style="font-size: 13px; color: var(--text2)">{{r.soldAmt}}</span>
+              </div>
+              <span style="text-align: right; font-size: 14px; font-weight: 600">{{r.sold}}</span>
+              <span style="text-align: right; font-size: 14px; font-weight: 700; color: {{r.leftFg}}">{{r.left}}</span>
+            </div>
+          </sc-for>
+        </sc-if>
+
+        <button style="position: absolute; right: 16px; bottom: 96px; height: 56px; padding: 0 20px 0 16px; border: 0; border-radius: 16px; background: var(--pc); color: var(--opc); font-size: 16px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 4px 10px rgba(20,18,60,0.18)">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>Add item
+        </button>
+
+        <nav style="height: 80px; flex: none; margin-top: auto; background: var(--surface2); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center">
+          <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+            <button onClick="{{n.pick}}" aria-label="{{n.label}}" style="border: 0; background: transparent; height: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: {{n.fg}}">
+              <span style="position: relative; width: 64px; height: 32px; border-radius: 16px; background: {{n.pill}}; display: flex; align-items: center; justify-content: center">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.icon}}"></path></svg>
+                <sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 0; right: 12px; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: var(--danger); color: var(--onDanger); font-size: 11px; font-weight: 700; line-height: 16px; text-align: center">{{n.badge}}</span></sc-if>
+              </span>
+              <span style="font-size: 12px; font-weight: 600">{{n.label}}</span>
+            </button>
+          </sc-for>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ===================================== FRAME 2 · Partial accept -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 14px; font-weight: 600; color: var(--text2)">Order decision · decimal steppers capped by stock</div>
+      <div style="width: 360px; height: 800px; border-radius: 28px; overflow: hidden; background: var(--bg); border: 1px solid var(--outline); display: flex; flex-direction: column">
+        <div style="height: 64px; padding: 0 16px 0 4px; display: flex; align-items: center; gap: 4px; flex: none">
+          <button aria-label="Back" style="width: 48px; height: 48px; border: 0; background: transparent; color: var(--text); border-radius: 24px; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+          <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+            <span style="font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 20px; line-height: 24px">Order #1040</span>
+            <span style="font-size: 13px; color: var(--text2)">Sharma General Store · 10:42 AM</span>
+          </div>
+          <span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 10px 0 7px; border-radius: 999px; font-size: 13px; font-weight: 600; background: var(--pendBg); color: var(--pendFg)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"></path></svg>Pending</span>
+        </div>
+        <div style="margin: 0 16px 8px; padding: 10px 14px; border-radius: 12px; background: var(--sv); font-size: 14px; color: var(--text2); flex: none">
+          <span style="font-weight: 600; color: var(--text)">Note:</span> Please send before 5 PM
+        </div>
+        <div style="padding: 4px 16px 6px; display: flex; justify-content: space-between; align-items: center; flex: none">
+          <span style="font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: var(--text2)">5 LINES · SET ACCEPTED QTY</span>
+          <button onClick="{{fillAll}}" style="height: 36px; padding: 0 10px; border: 0; background: transparent; color: var(--primary); font-size: 14px; font-weight: 600; border-radius: 18px">Fill from stock</button>
+        </div>
+        <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 8px; padding: 0 16px">
+          <sc-for list="{{lines}}" as="l" hint-placeholder-count="5">
+            <div style="background: var(--surface); border: 1px solid var(--outline); border-radius: 16px; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px">
+              <div style="display: flex; justify-content: space-between; gap: 8px; align-items: baseline">
+                <span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{l.name}}</span>
+                <span style="font-size: 15px; font-weight: 700; flex: none">{{l.amount}}</span>
+              </div>
+              <div style="display: flex; justify-content: space-between; align-items: center; gap: 8px">
+                <div style="display: flex; flex-direction: column; font-size: 13px; line-height: 17px">
+                  <span style="color: var(--text2)">Asked {{l.req}} · {{l.rate}}</span>
+                  <span style="font-weight: 600; color: {{l.stockFg}}">{{l.stockText}}</span>
+                </div>
+                <div style="display: flex; align-items: center; gap: 4px; flex: none">
+                  <button onClick="{{l.dec}}" aria-label="Decrease {{l.name}}" style="width: 40px; height: 40px; border-radius: 12px; border: 1px solid var(--outline2); background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+                  <div style="width: 64px; text-align: center; display: flex; flex-direction: column; line-height: 1">
+                    <span style="font-size: 17px; font-weight: 700">{{l.acc}}</span>
+                    <span style="font-size: 11px; color: var(--text2); margin-top: 2px">{{l.unit}}</span>
+                  </div>
+                  <button onClick="{{l.inc}}" aria-label="Increase {{l.name}}" style="width: 40px; height: 40px; border-radius: 12px; border: 0; background: {{l.incBg}}; color: {{l.incFg}}; display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+                </div>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex: none; background: var(--surface2); padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 10px; margin-top: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: baseline">
+            <span style="font-size: 14px; color: var(--text2)">Accepting <span style="font-weight: 700; color: var(--text); font-size: 18px">{{accTotal}}</span></span>
+            <span style="font-size: 13px; color: var(--text2)">of {{reqTotal}} asked</span>
+          </div>
+          <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 10px">
+            <button style="height: 48px; border-radius: 999px; border: 1px solid var(--danger); background: transparent; color: var(--danger); font-size: 15px; font-weight: 600">Reject</button>
+            <button style="height: 48px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 15px; font-weight: 600">{{confirmLabel}}</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================== FRAME 3 · Forms & feedback -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="font-size: 14px; font-weight: 600; color: var(--text2)">Fields · buttons · snackbar · empty · loading</div>
+      <div style="width: 360px; height: 800px; border-radius: 28px; overflow: hidden; background: var(--bg); border: 1px solid var(--outline); display: flex; flex-direction: column; padding: 0 16px 16px; box-sizing: border-box; gap: 14px">
+        <div style="height: 56px; display: flex; align-items: center; flex: none">
+          <h2 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 22px">Log in</h2>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <label for="ak-phone" style="font-size: 13px; font-weight: 600; color: var(--text2)">Phone number</label>
+          <div style="height: 52px; border: 1px solid var(--outline2); border-radius: 12px; display: flex; align-items: center; padding: 0 14px; gap: 10px">
+            <span style="font-size: 16px; font-weight: 600; color: var(--text2)">+91</span>
+            <span style="width: 1px; height: 24px; background: var(--outline)"></span>
+            <input id="ak-phone" inputmode="numeric" value="98123 45678" readonly style="flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 16px; color: var(--text)">
+          </div>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 4px">
+          <label for="ak-pw" style="font-size: 13px; font-weight: 600; color: var(--danger)">Password</label>
+          <div style="height: 52px; border: 2px solid var(--danger); border-radius: 12px; display: flex; align-items: center; padding: 0 4px 0 13px">
+            <input id="ak-pw" type="{{pwType}}" value="balaji@1998" readonly style="flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 16px; color: var(--text)">
+            <button onClick="{{togglePw}}" aria-label="{{pwLabel}}" style="width: 44px; height: 44px; border: 0; background: transparent; color: var(--text2); border-radius: 22px; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{pwIcon}}"></path></svg></button>
+          </div>
+          <span style="font-size: 13px; color: var(--danger)">Invalid phone number or password</span>
+        </div>
+        <button style="height: 48px; flex: none; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 600">Log in</button>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px">
+          <button style="height: 40px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 14px; font-weight: 600">Filled</button>
+          <button style="height: 40px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--pc); color: var(--opc); font-size: 14px; font-weight: 600">Tonal</button>
+          <button style="height: 40px; padding: 0 16px; border-radius: 999px; border: 1px solid var(--outline2); background: transparent; color: var(--primary); font-size: 14px; font-weight: 600">Outlined</button>
+          <button style="height: 40px; padding: 0 12px; border-radius: 999px; border: 0; background: transparent; color: var(--primary); font-size: 14px; font-weight: 600">Text</button>
+          <button style="height: 40px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--danger); color: var(--onDanger); font-size: 14px; font-weight: 600">Delete item</button>
+        </div>
+        <div style="border-radius: 8px; background: var(--inv); color: var(--onInv); padding: 0 8px 0 16px; height: 48px; display: flex; align-items: center; justify-content: space-between; font-size: 14px; flex: none">
+          <span>Order #1040 accepted · stock updated</span>
+          <button style="height: 40px; padding: 0 10px; border: 0; background: transparent; color: var(--invPrimary); font-size: 14px; font-weight: 700; border-radius: 20px">View</button>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; flex: 1; min-height: 0">
+          <div style="border: 1px solid var(--outline); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 6px">
+            <span style="width: 52px; height: 52px; border-radius: 26px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 13l3-8h12l3 8v6H3zM3 13h5l1 3h6l1-3h5"></path></svg></span>
+            <span style="font-size: 15px; font-weight: 700">No pending orders</span>
+            <span style="font-size: 12px; color: var(--text2); line-height: 16px">New orders from retailers show up here</span>
+            <button style="margin-top: 4px; height: 36px; padding: 0 12px; border-radius: 999px; border: 0; background: var(--pc); color: var(--opc); font-size: 13px; font-weight: 600">Share my QR</button>
+          </div>
+          <div style="border: 1px solid var(--outline); border-radius: 16px; padding: 14px; display: flex; flex-direction: column; gap: 14px" aria-label="Loading">
+            <sc-for list="{{skeleton}}" as="s" hint-placeholder-count="4">
+              <div style="display: flex; gap: 8px; align-items: center">
+                <div style="width: 32px; height: 32px; border-radius: 8px; background: var(--sv); flex: none"></div>
+                <div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+                  <div style="height: 10px; border-radius: 5px; background: var(--sv); width: {{s.w1}}"></div>
+                  <div style="height: 8px; border-radius: 4px; background: var(--sv); width: {{s.w2}}"></div>
+                </div>
+              </div>
+            </sc-for>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { seg: 'items', filter: 'all', nav: 'catalog', showPw: false, acc: null };
+  }
+
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const L = { board: '#ECECF3', bg: '#FBFBFE', surface: '#FFFFFF', surface2: '#F1F0F8', sv: '#EEEEF6', outline: '#E0DFEB', outline2: '#8F8EA8',
+      text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF', pc: '#E4E2FB', opc: '#1E1B4B',
+      danger: '#B91C1C', onDanger: '#FFFFFF', dangerBg: '#FEE2E2', dangerFg: '#991B1B', warnBg: '#FEF3C7', warnFg: '#92400E',
+      pendBg: '#FEF3C7', pendFg: '#92400E', inv: '#2B2A40', onInv: '#F2F1FA', invPrimary: '#ABA6FF' };
+    const D = { board: '#05050B', bg: '#0E0D1A', surface: '#17162A', surface2: '#1C1B31', sv: '#222039', outline: '#2C2A45', outline2: '#7C7A99',
+      text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760', pc: '#2E2A78', opc: '#E4E2FB',
+      danger: '#F87171', onDanger: '#2A0606', dangerBg: '#450A0A', dangerFg: '#FCA5A5', warnBg: '#422006', warnFg: '#FCD34D',
+      pendBg: '#422006', pendFg: '#FCD34D', inv: '#EEEDF7', onInv: '#16152B', invPrimary: '#3730A3' };
+    const t = dark ? D : L;
+    const vars = Object.entries(t).map(([k, v]) => `--${k}: ${v}`).join('; ');
+
+    const inr = (paise) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(paise / 100);
+    const fq = (milli) => { const s = (milli / 1000).toFixed(3).replace(/\.?0+$/, ''); return s === '' ? '0' : s; };
+    const ICON = {
+      box: 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8',
+      alert: 'M12 3.5l9 16H3zM12 10v4M12 17v.01',
+      xCircle: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9 9l6 6M15 9l-6 6',
+    };
+
+    // ---------- frame 1: items (from fixtures/items.page.json)
+    const unitLbl = { PACK: 'pack', KG: 'kg', PCS: 'pcs', CASE: 'case', L: 'L', BOX: 'box', DOZEN: 'dozen', G: 'g' };
+    const raw = [
+      ['Aashirvaad Shudh Chakki Atta 10 kg', 'At', 46500, 'PACK', 'Staples', '120', 'IN_STOCK', true],
+      ['Toor Dal', 'TD', 13800, 'KG', 'Pulses', '6.5', 'LOW', true],
+      ['Basmati Rice (loose)', 'BR', 9600, 'KG', 'Staples', '0', 'OUT', true],
+      ['Amul Butter 500 g', 'AB', 27500, 'PCS', 'Dairy', '48', 'LOW', true],
+      ['Sugar (loose)', 'Su', 4250, 'KG', 'Staples', '850.5', 'IN_STOCK', true],
+      ['Bru Instant Coffee 200 g', 'BC', 38500, 'PCS', 'Beverages', '0', 'OUT', true],
+      ['Everest Garam Masala 100 g', 'GM', 8200, 'PCS', 'Spices', '300', 'IN_STOCK', false],
+    ];
+    const badge = (st, q, u) => st === 'OUT'
+      ? { badge: 'Out of stock', bbg: 'var(--dangerBg)', bfg: 'var(--dangerFg)', bicon: ICON.xCircle }
+      : st === 'LOW'
+        ? { badge: `Low · ${q} ${u}`, bbg: 'var(--warnBg)', bfg: 'var(--warnFg)', bicon: ICON.alert }
+        : { badge: `${q} ${u} left`, bbg: 'var(--sv)', bfg: 'var(--text2)', bicon: ICON.box };
+    const items = raw.map(([name, initials, rate, unit, cat, q, st, active]) => ({
+      name, initials, st, active,
+      rate: `${inr(rate)} / ${unitLbl[unit]} · ${cat}`,
+      inactive: !active, opacity: active ? 1 : 0.55,
+      ...badge(st, q, unitLbl[unit]),
+    }));
+    const f = this.state.filter;
+    const shownItems = items.filter((i) => f === 'all' || (f === 'low' && i.st === 'LOW') || (f === 'out' && i.st === 'OUT') || (f === 'off' && !i.active));
+    const filters = [['all', 'All 20'], ['low', 'Low stock'], ['out', 'Out of stock'], ['off', 'Unavailable']].map(([id, label]) => {
+      const on = f === id;
+      return { label, pick: () => this.setState({ filter: id }),
+        bg: on ? 'var(--pc)' : 'transparent', fg: on ? 'var(--opc)' : 'var(--text2)', border: on ? 'var(--pc)' : 'var(--outline2)' };
+    });
+    const report = [
+      ['Fortune Sunflower Oil', '260 L', 4030000, '320 L', 'IN'],
+      ['Aashirvaad Atta 10 kg', '64 pack', 2976000, '120 pack', 'IN'],
+      ['Toor Dal', '202 kg', 2787600, '6.5 kg', 'LOW'],
+      ['Parle-G (box of 48)', '41 box', 1968000, '64 box', 'IN'],
+      ['Sugar (loose)', '412.5 kg', 1753125, '850.5 kg', 'IN'],
+      ['Basmati Rice (loose)', '180 kg', 1728000, '0 kg', 'OUT'],
+    ].map(([name, sold, paise, left, st]) => ({ name, sold, soldAmt: inr(paise), left,
+      leftFg: st === 'OUT' ? 'var(--danger)' : st === 'LOW' ? 'var(--warnFg)' : 'var(--text)' }));
+    const seg = this.state.seg;
+    const navDefs = [
+      ['home', 'Home', 'M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', 0],
+      ['orders', 'Orders', 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', 2],
+      ['catalog', 'Catalog', ICON.box, 0],
+      ['retailers', 'Retailers', 'M4 9l1.5-5h13L20 9M4 9h16v11H4zM4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M10 20v-5h4v5', 4],
+      ['more', 'More', 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z', 0],
+    ];
+    const nav = navDefs.map(([id, label, icon, b]) => {
+      const on = this.state.nav === id;
+      return { label, icon, badge: b, hasBadge: b > 0, pick: () => this.setState({ nav: id }),
+        pill: on ? 'var(--pc)' : 'transparent', fg: on ? 'var(--text)' : 'var(--text2)' };
+    });
+
+    // ---------- frame 2: order #1040 (fixtures/order-detail.pending.json)
+    const defs = [
+      { k: 'atta', name: 'Aashirvaad Atta 10 kg', unit: 'pack', rate: 46500, req: 5000, stock: 120000, step: 1000 },
+      { k: 'sugar', name: 'Sugar (loose)', unit: 'kg', rate: 4250, req: 25500, stock: 850500, step: 500 },
+      { k: 'toor', name: 'Toor Dal', unit: 'kg', rate: 13800, req: 50000, stock: 6500, step: 500 },
+      { k: 'maggi', name: 'Maggi Noodles 70 g', unit: 'dozen', rate: 16800, req: 4000, stock: 85000, step: 1000 },
+      { k: 'butter', name: 'Amul Butter 500 g', unit: 'pcs', rate: 27500, req: 10000, stock: 48000, step: 1000 },
+    ];
+    const cap = (d) => Math.min(d.req, d.stock);
+    const acc = this.state.acc ?? Object.fromEntries(defs.map((d) => [d.k, cap(d)]));
+    const setAcc = (k, v) => this.setState({ acc: { ...acc, [k]: v } });
+    const pay = (rate, milli) => Math.floor((rate * milli + 500) / 1000);
+    let reqT = 0, accT = 0, allFull = true, allZero = true;
+    const lines = defs.map((d) => {
+      const a = acc[d.k];
+      reqT += pay(d.rate, d.req); accT += pay(d.rate, a);
+      if (a !== d.req) allFull = false;
+      if (a !== 0) allZero = false;
+      const short = d.stock < d.req;
+      const atCap = a >= cap(d);
+      return {
+        name: d.name, unit: d.unit, acc: fq(a),
+        req: `${fq(d.req)} ${d.unit}`, rate: `${inr(d.rate)}/${d.unit}`,
+        amount: inr(pay(d.rate, a)),
+        stockText: short ? `Only ${fq(d.stock)} ${d.unit} in stock` : `${fq(d.stock)} ${d.unit} in stock`,
+        stockFg: short ? 'var(--warnFg)' : 'var(--text2)',
+        incBg: atCap ? 'var(--sv)' : 'var(--primary)', incFg: atCap ? 'var(--text2)' : 'var(--onPrimary)',
+        dec: () => setAcc(d.k, Math.max(0, a - d.step)),
+        inc: () => setAcc(d.k, Math.min(cap(d), a + d.step)),
+      };
+    });
+
+    const showPw = this.state.showPw;
+    return {
+      vars,
+      segItems: () => this.setState({ seg: 'items' }), segReport: () => this.setState({ seg: 'report' }),
+      segItemsBg: seg === 'items' ? 'var(--pc)' : 'transparent', segItemsFg: seg === 'items' ? 'var(--opc)' : 'var(--text2)',
+      segReportBg: seg === 'report' ? 'var(--pc)' : 'transparent', segReportFg: seg === 'report' ? 'var(--opc)' : 'var(--text2)',
+      showItems: seg === 'items', showReport: seg === 'report',
+      filters, shownItems, noItems: shownItems.length === 0, report, nav,
+      lines, accTotal: inr(accT), reqTotal: inr(reqT),
+      confirmLabel: allFull ? 'Accept all' : allZero ? 'Nothing accepted' : 'Confirm partial',
+      fillAll: () => this.setState({ acc: Object.fromEntries(defs.map((d) => [d.k, cap(d)])) }),
+      pwType: showPw ? 'text' : 'password', pwLabel: showPw ? 'Hide password' : 'Show password',
+      pwIcon: showPw
+        ? 'M3 3l18 18M10.6 5.1A10 10 0 0 1 12 5c6.5 0 10 7 10 7a17 17 0 0 1-3.1 3.9M6.6 6.6A17 17 0 0 0 2 12s3.5 7 10 7a9.7 9.7 0 0 0 5.4-1.6M9.9 9.9a3 3 0 0 0 4.2 4.2'
+        : 'M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z',
+      togglePw: () => this.setState({ showPw: !showPw }),
+      skeleton: [{ w1: '80%', w2: '50%' }, { w1: '65%', w2: '40%' }, { w1: '90%', w2: '55%' }, { w1: '70%', w2: '35%' }],
+    };
+  }
+}
+</script>
+</body>
+</html>

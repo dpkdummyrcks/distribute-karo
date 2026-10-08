@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DistributeKaro tokens</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3730A3}a:hover{color:#1E1B4B}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1200px; box-sizing: border-box; padding: 56px 64px; background: #F6F6FA; color: #16152B; font-family: 'Mukta', system-ui, sans-serif; display: flex; flex-direction: column; gap: 32px">
+
+  <header style="display: flex; align-items: baseline; justify-content: space-between">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; color: #4A4966">UI-0 · TOKENS</div>
+      <h1 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 44px; line-height: 1.05">Colour, type &amp; status</h1>
+    </div>
+    <p style="margin: 0; font-size: 16px; color: #4A4966">One tokens.json → Tailwind CSS (web) + Compose theme (Android)</p>
+  </header>
+
+  <!-- colour: light + dark -->
+  <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px">
+    <section style="background: #FFFFFF; border: 1px solid #E3E2EE; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+      <h2 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 22px">Light</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+        <sc-for list="{{light}}" as="s" hint-placeholder-count="16">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <div style="height: 52px; border-radius: 12px; border: 1px solid #D7D6E4; background: {{s.hex}}"></div>
+            <div style="font-size: 14px; font-weight: 600; line-height: 1.2">{{s.name}}</div>
+            <div style="font-size: 12px; color: #4A4966; font-family: ui-monospace, monospace">{{s.hex}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+    <section style="background: #17162A; border: 1px solid #34324F; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 16px; color: #EEEDF7">
+      <h2 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 22px">Dark</h2>
+      <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 12px">
+        <sc-for list="{{dark}}" as="s" hint-placeholder-count="16">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <div style="height: 52px; border-radius: 12px; border: 1px solid #34324F; background: {{s.hex}}"></div>
+            <div style="font-size: 14px; font-weight: 600; line-height: 1.2">{{s.name}}</div>
+            <div style="font-size: 12px; color: #B9B8D0; font-family: ui-monospace, monospace">{{s.hex}}</div>
+          </div>
+        </sc-for>
+      </div>
+    </section>
+  </div>
+
+  <!-- status chips -->
+  <section style="background: #FFFFFF; border: 1px solid #E3E2EE; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+    <div style="display: flex; align-items: baseline; justify-content: space-between">
+      <h2 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 22px">Status &amp; badges</h2>
+      <span style="font-size: 14px; color: #4A4966">Colour always paired with an icon and a word</span>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+      <span style="width: 120px; font-size: 13px; font-weight: 600; color: #4A4966">Orders · light</span>
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="7">
+        <span style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px 0 9px; border-radius: 999px; font-size: 14px; font-weight: 600; background: {{c.lbg}}; color: {{c.lfg}}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>{{c.label}}
+        </span>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center; background: #17162A; border-radius: 14px; padding: 12px">
+      <span style="width: 108px; font-size: 13px; font-weight: 600; color: #B9B8D0">Orders · dark</span>
+      <sc-for list="{{chips}}" as="c" hint-placeholder-count="7">
+        <span style="display: inline-flex; align-items: center; gap: 6px; height: 30px; padding: 0 12px 0 9px; border-radius: 999px; font-size: 14px; font-weight: 600; background: {{c.dbg}}; color: {{c.dfg}}">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>{{c.label}}
+        </span>
+      </sc-for>
+    </div>
+    <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
+      <span style="width: 120px; font-size: 13px; font-weight: 600; color: #4A4966">Stock · app only</span>
+      <sc-for list="{{stock}}" as="c" hint-placeholder-count="3">
+        <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 8px; border-radius: 8px; font-size: 13px; font-weight: 600; background: {{c.lbg}}; color: {{c.lfg}}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>{{c.label}}
+        </span>
+      </sc-for>
+      <span style="width: 24px"></span>
+      <span style="width: 92px; font-size: 13px; font-weight: 600; color: #4A4966">Requests</span>
+      <sc-for list="{{requests}}" as="c" hint-placeholder-count="3">
+        <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 8px; border-radius: 999px; font-size: 13px; font-weight: 600; background: {{c.lbg}}; color: {{c.lfg}}">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>{{c.label}}
+        </span>
+      </sc-for>
+      <span style="width: 24px"></span>
+      <span style="display: inline-flex; align-items: center; gap: 6px; height: 28px; padding: 0 10px 0 8px; border-radius: 8px; font-size: 13px; font-weight: 600; border: 1.5px solid #6B6A85; color: #4A4966">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 3h10v18H7zM11 18h2"></path></svg>New device
+      </span>
+    </div>
+  </section>
+
+  <!-- type + shape + formatting -->
+  <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 32px; flex: 1; min-height: 0">
+    <section style="grid-column: span 2; background: #FFFFFF; border: 1px solid #E3E2EE; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: baseline; justify-content: space-between">
+        <h2 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 22px">Type</h2>
+        <span style="font-size: 14px; color: #4A4966">Anek Latin (display) · Mukta (UI &amp; body, has Devanagari)</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 150px 1fr; row-gap: 10px; column-gap: 16px; align-items: baseline">
+        <span style="font-size: 13px; color: #4A4966">Display · 36/40</span><span style="font-family: 'Anek Latin'; font-weight: 700; font-size: 36px; line-height: 40px">Shree Balaji Traders</span>
+        <span style="font-size: 13px; color: #4A4966">Headline · 28/34</span><span style="font-family: 'Anek Latin'; font-weight: 700; font-size: 28px; line-height: 34px">Today's orders</span>
+        <span style="font-size: 13px; color: #4A4966">Title · 20/28</span><span style="font-family: 'Anek Latin'; font-weight: 600; font-size: 20px; line-height: 28px">Toor Dal · premium unpolished</span>
+        <span style="font-size: 13px; color: #4A4966">Body · 16/24</span><span style="font-size: 16px; line-height: 24px">Order by 2 PM for same-day delivery in Jaipur.</span>
+        <span style="font-size: 13px; color: #4A4966">Body · Hindi</span><span style="font-size: 16px; line-height: 24px">दोपहर 2 बजे तक ऑर्डर करें, उसी दिन डिलीवरी पाएं।</span>
+        <span style="font-size: 13px; color: #4A4966">Label · 14/20</span><span style="font-size: 14px; line-height: 20px; font-weight: 600">Accept all · Partial · Reject</span>
+        <span style="font-size: 13px; color: #4A4966">Number · 22/28</span><span style="font-size: 22px; line-height: 28px; font-weight: 700; font-variant-numeric: tabular-nums">₹1,25,000.50</span>
+        <span style="font-size: 13px; color: #4A4966">Caption · 12/16</span><span style="font-size: 12px; line-height: 16px; font-weight: 500; color: #4A4966">Updated 5 min ago</span>
+      </div>
+    </section>
+
+    <section style="background: #FFFFFF; border: 1px solid #E3E2EE; border-radius: 24px; padding: 24px; display: flex; flex-direction: column; gap: 16px">
+      <h2 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 22px">Shape &amp; format</h2>
+      <div style="display: flex; gap: 10px; align-items: flex-end">
+        <div style="display: flex; flex-direction: column; gap: 4px; align-items: center"><div style="width: 44px; height: 44px; background: #E4E2FB; border-radius: 8px"></div><span style="font-size: 12px; color: #4A4966">8</span></div>
+        <div style="display: flex; flex-direction: column; gap: 4px; align-items: center"><div style="width: 44px; height: 44px; background: #E4E2FB; border-radius: 12px"></div><span style="font-size: 12px; color: #4A4966">12</span></div>
+        <div style="display: flex; flex-direction: column; gap: 4px; align-items: center"><div style="width: 44px; height: 44px; background: #E4E2FB; border-radius: 16px"></div><span style="font-size: 12px; color: #4A4966">16</span></div>
+        <div style="display: flex; flex-direction: column; gap: 4px; align-items: center"><div style="width: 44px; height: 44px; background: #E4E2FB; border-radius: 24px"></div><span style="font-size: 12px; color: #4A4966">24</span></div>
+        <div style="display: flex; flex-direction: column; gap: 4px; align-items: center"><div style="width: 44px; height: 44px; background: #E4E2FB; border-radius: 999px"></div><span style="font-size: 12px; color: #4A4966">full</span></div>
+      </div>
+      <div style="display: flex; gap: 6px; align-items: flex-end">
+        <sc-for list="{{space}}" as="sp" hint-placeholder-count="7">
+          <div style="display: flex; flex-direction: column; gap: 4px; align-items: center"><div style="width: {{sp.px}}; height: {{sp.px}}; background: #3730A3; border-radius: 2px"></div><span style="font-size: 11px; color: #4A4966">{{sp.n}}</span></div>
+        </sc-for>
+      </div>
+      <div style="display: flex; flex-direction: column; gap: 6px; font-size: 15px">
+        <div style="display: flex; justify-content: space-between"><span style="color: #4A4966">Money</span><span style="font-weight: 600">₹1,25,000.50</span></div>
+        <div style="display: flex; justify-content: space-between"><span style="color: #4A4966">Rate</span><span style="font-weight: 600">₹42.50 / kg</span></div>
+        <div style="display: flex; justify-content: space-between"><span style="color: #4A4966">Decimal qty</span><span style="font-weight: 600">25.5 kg · 0.75 L · 250 g</span></div>
+        <div style="display: flex; justify-content: space-between"><span style="color: #4A4966">Whole qty</span><span style="font-weight: 600">12 pcs · 4 dozen · 2 case</span></div>
+        <div style="display: flex; justify-content: space-between"><span style="color: #4A4966">Touch target</span><span style="font-weight: 600">48 dp app · 44 px web</span></div>
+      </div>
+    </section>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":1200}}'>
+class Component extends DCLogic {
+  renderVals() {
+    const sw = (pairs) => pairs.map(([name, hex]) => ({ name, hex }));
+    const light = sw([
+      ['background', '#F6F6FA'], ['surface', '#FFFFFF'], ['surfaceVariant', '#EEEEF6'], ['outline', '#D7D6E4'],
+      ['text', '#16152B'], ['text2', '#4A4966'], ['text3', '#6B6A85'], ['primary', '#3730A3'],
+      ['onPrimary', '#FFFFFF'], ['primaryContainer', '#E4E2FB'], ['onPrimaryCont.', '#1E1B4B'], ['accent', '#F2B33D'],
+      ['onAccent', '#2A1A00'], ['success', '#15803D'], ['warning', '#B45309'], ['danger', '#B91C1C'],
+    ]);
+    const dark = sw([
+      ['background', '#0E0D1A'], ['surface', '#17162A'], ['surfaceVariant', '#222039'], ['outline', '#34324F'],
+      ['text', '#EEEDF7'], ['text2', '#B9B8D0'], ['text3', '#9796B0'], ['primary', '#ABA6FF'],
+      ['onPrimary', '#1B1760'], ['primaryContainer', '#2E2A78'], ['onPrimaryCont.', '#E4E2FB'], ['accent', '#F2B33D'],
+      ['onAccent', '#2A1A00'], ['success', '#4ADE80'], ['warning', '#FBBF24'], ['danger', '#F87171'],
+    ]);
+    const I = {
+      clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
+      check: 'M5 12.5l4.5 4.5L19 7.5',
+      half: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 3v18',
+      x: 'M6 6l12 12M18 6L6 18',
+      slash: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM5.6 5.6l12.8 12.8',
+      truck: 'M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+      checkCircle: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l2.8 2.8L16.5 9.5',
+      box: 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8',
+      alert: 'M12 3.5l9 16H3zM12 10v4M12 17v.01',
+      xCircle: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9 9l6 6M15 9l-6 6',
+    };
+    const chips = [
+      { label: 'Pending', icon: I.clock, lbg: '#FEF3C7', lfg: '#92400E', dbg: '#422006', dfg: '#FCD34D' },
+      { label: 'Accepted', icon: I.check, lbg: '#DCFCE7', lfg: '#166534', dbg: '#052E16', dfg: '#86EFAC' },
+      { label: 'Partially accepted', icon: I.half, lbg: '#CCFBF1', lfg: '#115E59', dbg: '#042F2E', dfg: '#5EEAD4' },
+      { label: 'Rejected', icon: I.x, lbg: '#FEE2E2', lfg: '#991B1B', dbg: '#450A0A', dfg: '#FCA5A5' },
+      { label: 'Cancelled', icon: I.slash, lbg: '#E2E8F0', lfg: '#334155', dbg: '#1E293B', dfg: '#CBD5E1' },
+      { label: 'Dispatched', icon: I.truck, lbg: '#DBEAFE', lfg: '#1E40AF', dbg: '#172554', dfg: '#93C5FD' },
+      { label: 'Delivered', icon: I.checkCircle, lbg: '#065F46', lfg: '#FFFFFF', dbg: '#34D399', dfg: '#022C22' },
+    ];
+    const stock = [
+      { label: 'In stock · 120', icon: I.box, lbg: '#EEEEF6', lfg: '#2E2D48' },
+      { label: 'Low · 6.5 kg', icon: I.alert, lbg: '#FEF3C7', lfg: '#92400E' },
+      { label: 'Out of stock', icon: I.xCircle, lbg: '#FEE2E2', lfg: '#991B1B' },
+    ];
+    const requests = [
+      { label: 'Pending', icon: I.clock, lbg: '#FEF3C7', lfg: '#92400E' },
+      { label: 'Approved', icon: I.check, lbg: '#DCFCE7', lfg: '#166534' },
+      { label: 'Rejected', icon: I.x, lbg: '#FEE2E2', lfg: '#991B1B' },
+    ];
+    const space = [4, 8, 12, 16, 24, 32, 48].map((n) => ({ n, px: n + 'px' }));
+    return { light, dark, chips, stock, requests, space };
+  }
+}
+</script>
+</body>
+</html>

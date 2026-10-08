@@ -1,0 +1,60 @@
+{
+  "v": 3,
+  "createdOnFiles": {
+    "v": 1,
+    "at": "2026-10-08T16:00:00Z"
+  },
+  "title": "DistributeKaro UI-0 Design System",
+  "launch": {
+    "view": "canvas"
+  },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": {
+      "x": 0,
+      "y": 0,
+      "w": 1440,
+      "h": 1040,
+      "title": "Brand \u00b7 logo directions"
+    },
+    "Tokens.dc.html": {
+      "x": 1520,
+      "y": 0,
+      "w": 1440,
+      "h": 1200,
+      "title": "Tokens \u00b7 colour, type, status"
+    },
+    "AndroidKit.dc.html": {
+      "x": 0,
+      "y": 1320,
+      "w": 1440,
+      "h": 1000,
+      "title": "Distributor app kit \u00b7 Android M3",
+      "is_interactive": true
+    },
+    "WebKit.dc.html": {
+      "x": 1520,
+      "y": 1320,
+      "w": 1440,
+      "h": 1040,
+      "title": "Retailer web kit \u00b7 PWA",
+      "is_interactive": true
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Tokens.dc.html",
+    "AndroidKit.dc.html",
+    "WebKit.dc.html"
+  ],
+  "notes": {
+    "title": {
+      "x": 0,
+      "y": -300,
+      "text": "UI-0 \u00b7 DistributeKaro design system",
+      "kind": "title1",
+      "maxW": 2960
+    }
+  },
+  "designSystems": []
+}

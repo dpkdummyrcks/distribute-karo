@@ -1,0 +1,347 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Retailer web kit</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3730A3}a:hover{color:#1E1B4B}
+button{font-family:inherit;cursor:pointer}
+button:focus-visible,input:focus-visible{outline:3px solid #F2B33D;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1440px; height: 1040px; box-sizing: border-box; padding: 48px 64px; font-family: 'Mukta', system-ui, sans-serif; display: flex; flex-direction: column; gap: 20px; {{vars}}; background: var(--board); color: var(--text)">
+
+  <header style="display: flex; align-items: baseline; justify-content: space-between">
+    <div style="display: flex; flex-direction: column; gap: 4px">
+      <div style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; color: var(--text2)">UI-0 · RETAILER WEB · PWA</div>
+      <h1 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 36px">Component kit</h1>
+    </div>
+    <p style="margin: 0; font-size: 15px; color: var(--text2)">Try the visitor/signed-in switch, search, steppers and Reorder · Dark mode in Tweaks</p>
+  </header>
+
+  <div style="display: flex; justify-content: space-between; align-items: flex-start">
+
+    <!-- ===================================== FRAME 1 · Storefront -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="display: flex; justify-content: space-between; align-items: center; height: 32px">
+        <span style="font-size: 14px; font-weight: 600; color: var(--text2)">Storefront · public pitch</span>
+        <div style="display: flex; border: 1px solid var(--outline2); border-radius: 999px; overflow: hidden">
+          <button onClick="{{asVisitor}}" style="height: 32px; padding: 0 12px; border: 0; font-size: 13px; font-weight: 600; background: {{visBg}}; color: {{visFg}}">Visitor</button>
+          <button onClick="{{asRetailer}}" style="height: 32px; padding: 0 12px; border: 0; font-size: 13px; font-weight: 600; background: {{retBg}}; color: {{retFg}}">Signed in</button>
+        </div>
+      </div>
+      <div style="width: 390px; height: 844px; border-radius: 32px; overflow: hidden; background: var(--bg); border: 1px solid var(--outline); display: flex; flex-direction: column; position: relative">
+        <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column">
+          <div style="height: 150px; flex: none; background: #2A2580; position: relative; overflow: hidden">
+            <svg width="390" height="150" viewBox="0 0 390 150" aria-hidden="true" style="position: absolute; inset: 0">
+              <path d="M-10 120C60 120 70 40 150 40S260 110 330 80 400 20 410 20" fill="none" stroke="#4B45C2" stroke-width="10" stroke-linecap="round"></path>
+              <path d="M-10 150C80 150 110 90 190 95S300 140 410 120" fill="none" stroke="#3B36A8" stroke-width="10" stroke-linecap="round"></path>
+              <circle cx="150" cy="40" r="9" fill="#F2B33D"></circle>
+              <circle cx="330" cy="80" r="9" fill="#FFFFFF"></circle>
+              <circle cx="190" cy="95" r="6" fill="#ABA6FF"></circle>
+            </svg>
+          </div>
+          <div style="padding: 0 20px; margin-top: -36px; position: relative; display: flex; flex-direction: column; gap: 6px">
+            <div style="width: 72px; height: 72px; border-radius: 20px; background: #F2B33D; color: #2A1A00; border: 4px solid var(--bg); font-family: 'Anek Latin'; font-weight: 700; font-size: 26px; display: flex; align-items: center; justify-content: center">SB</div>
+            <h2 style="margin: 4px 0 0; font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 28px; line-height: 30px">Shree Balaji Traders</h2>
+            <p style="margin: 0; font-size: 16px; line-height: 22px; color: var(--text2)">Jaipur's trusted wholesale partner since 1998</p>
+            <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px">
+              <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: var(--sv); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; color: var(--text2)">Mon–Sat · 8 AM – 8 PM</span>
+              <span style="height: 26px; padding: 0 10px; border-radius: 999px; background: var(--sv); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; color: var(--text2)">8 areas in Jaipur</span>
+            </div>
+          </div>
+          <div style="padding: 18px 20px 0; display: flex; flex-direction: column; gap: 10px">
+            <h3 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 19px">Why order from us</h3>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+              <sc-for list="{{highlights}}" as="h" hint-placeholder-count="6">
+                <div style="background: var(--surface); border: 1px solid var(--outline); border-radius: 16px; padding: 10px 12px; display: flex; gap: 10px; align-items: flex-start">
+                  <span style="width: 32px; height: 32px; flex: none; border-radius: 10px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.icon}}"></path></svg></span>
+                  <div style="display: flex; flex-direction: column; min-width: 0">
+                    <span style="font-size: 14px; font-weight: 700; line-height: 18px">{{h.title}}</span>
+                    <span style="font-size: 12px; line-height: 16px; color: var(--text2)">{{h.text}}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+          <div style="padding: 16px 20px 0; display: flex; flex-direction: column; gap: 8px">
+            <h3 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 600; font-size: 19px">Featured products</h3>
+            <div style="display: flex; gap: 10px">
+              <sc-for list="{{featured}}" as="p" hint-placeholder-count="3">
+                <div style="width: 112px; flex: none; display: flex; flex-direction: column; gap: 4px">
+                  <div style="height: 84px; border-radius: 14px; background: var(--pc); color: var(--opc); font-family: 'Anek Latin'; font-weight: 700; font-size: 22px; display: flex; align-items: center; justify-content: center">{{p.initials}}</div>
+                  <span style="font-size: 13px; font-weight: 600; line-height: 16px; height: 32px; overflow: hidden">{{p.name}}</span>
+                  <span style="align-self: flex-start; font-size: 11px; font-weight: 700; padding: 2px 6px; border-radius: 6px; background: var(--accentSoft); color: var(--accentFg)">Join to see rates</span>
+                </div>
+              </sc-for>
+            </div>
+          </div>
+        </div>
+        <div style="flex: none; background: var(--surface); border-top: 1px solid var(--outline); padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px">
+          <sc-if value="{{signedIn}}" hint-placeholder-val="{{false}}">
+            <span style="font-size: 14px; color: var(--text2)">Welcome back, <span style="font-weight: 700; color: var(--text)">Sharma General Store</span></span>
+            <a href="#" style="height: 48px; border-radius: 14px; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Continue ordering</a>
+          </sc-if>
+          <sc-if value="{{visitor}}" hint-placeholder-val="{{true}}">
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+              <a href="#" style="height: 48px; border-radius: 14px; background: var(--primary); color: var(--onPrimary); font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Order now</a>
+              <a href="#" style="height: 48px; border-radius: 14px; background: #F2B33D; color: #2A1A00; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">Join as retailer</a>
+            </div>
+            <a href="#" style="align-self: center; min-height: 28px; font-size: 14px; font-weight: 600; color: var(--primary)">Have a question? Send an enquiry</a>
+          </sc-if>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===================================== FRAME 2 · Catalog -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="height: 32px; display: flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--text2)">Catalog · search · steppers · cart bar · tabs</div>
+      <div style="width: 390px; height: 844px; border-radius: 32px; overflow: hidden; background: var(--bg); border: 1px solid var(--outline); display: flex; flex-direction: column">
+        <div style="padding: 14px 16px 8px; display: flex; align-items: center; gap: 10px; flex: none">
+          <div style="width: 40px; height: 40px; border-radius: 12px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin'; font-weight: 700; font-size: 16px; display: flex; align-items: center; justify-content: center">SB</div>
+          <div style="display: flex; flex-direction: column; min-width: 0">
+            <span style="font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 18px; line-height: 22px">Shree Balaji Traders</span>
+            <span style="font-size: 13px; color: var(--text2)">Ordering as Sharma General Store</span>
+          </div>
+        </div>
+        <div style="padding: 0 16px 8px; flex: none">
+          <label style="height: 46px; border-radius: 14px; background: var(--sv); display: flex; align-items: center; gap: 10px; padding: 0 14px; color: var(--text2)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg>
+            <input aria-label="Search products" placeholder="Search products" value="{{q}}" onChange="{{onSearch}}" style="flex: 1; min-width: 0; border: 0; background: transparent; font: inherit; font-size: 16px; color: var(--text)">
+          </label>
+        </div>
+        <div style="display: flex; gap: 8px; padding: 0 16px 10px; overflow: hidden; flex: none">
+          <sc-for list="{{cats}}" as="c" hint-placeholder-count="5">
+            <button onClick="{{c.pick}}" style="flex: none; height: 34px; padding: 0 14px; border-radius: 999px; font-size: 14px; font-weight: 600; border: 1px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}">{{c.label}}</button>
+          </sc-for>
+        </div>
+        <div style="flex: 1; overflow: hidden; display: flex; flex-direction: column; gap: 8px; padding: 0 16px">
+          <sc-for list="{{products}}" as="p" hint-placeholder-count="6">
+            <div style="background: var(--surface); border: 1px solid var(--outline); border-radius: 16px; padding: 10px; display: flex; gap: 12px; align-items: center">
+              <div style="width: 52px; height: 52px; flex: none; border-radius: 12px; background: var(--pc); color: var(--opc); font-family: 'Anek Latin'; font-weight: 700; font-size: 17px; display: flex; align-items: center; justify-content: center">{{p.initials}}</div>
+              <div style="flex: 1; min-width: 0; display: flex; flex-direction: column">
+                <span style="font-size: 15px; font-weight: 600; line-height: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.name}}</span>
+                <span style="font-size: 14px; font-weight: 700; color: var(--text)">{{p.rate}}</span>
+              </div>
+              <sc-if value="{{p.empty}}" hint-placeholder-val="{{true}}">
+                <button onClick="{{p.add}}" aria-label="Add {{p.name}}" style="height: 40px; min-width: 76px; padding: 0 14px; border-radius: 12px; border: 1.5px solid var(--primary); background: transparent; color: var(--primary); font-size: 15px; font-weight: 700">Add</button>
+              </sc-if>
+              <sc-if value="{{p.inCart}}" hint-placeholder-val="{{false}}">
+                <div style="display: flex; align-items: center; height: 40px; border-radius: 12px; background: var(--primary); color: var(--onPrimary)">
+                  <button onClick="{{p.dec}}" aria-label="Decrease {{p.name}}" style="width: 40px; height: 40px; border: 0; background: transparent; color: inherit; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+                  <span style="min-width: 56px; text-align: center; font-size: 14px; font-weight: 700">{{p.qty}}</span>
+                  <button onClick="{{p.inc}}" aria-label="Increase {{p.name}}" style="width: 40px; height: 40px; border: 0; background: transparent; color: inherit; display: flex; align-items: center; justify-content: center"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+                </div>
+              </sc-if>
+            </div>
+          </sc-for>
+          <sc-if value="{{noProducts}}" hint-placeholder-val="{{false}}">
+            <div style="padding: 48px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+              <span style="width: 56px; height: 56px; border-radius: 28px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg></span>
+              <span style="font-size: 16px; font-weight: 700">No products found</span>
+              <span style="font-size: 14px; color: var(--text2)">Try another word, or ask the distributor to add it.</span>
+            </div>
+          </sc-if>
+        </div>
+        <sc-if value="{{hasCart}}" hint-placeholder-val="{{true}}">
+          <div style="flex: none; margin: 8px 12px 0; height: 56px; border-radius: 16px; background: var(--inv); color: var(--onInv); display: flex; align-items: center; justify-content: space-between; padding: 0 8px 0 16px">
+            <div style="display: flex; flex-direction: column; line-height: 18px">
+              <span style="font-size: 13px; opacity: 0.85">{{cartCount}}</span>
+              <span style="font-size: 16px; font-weight: 700">{{cartTotal}} <span style="font-size: 12px; font-weight: 500; opacity: 0.8">est.</span></span>
+            </div>
+            <a href="#" style="height: 40px; padding: 0 14px; border-radius: 12px; background: #F2B33D; color: #2A1A00; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px; text-decoration: none">View cart<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+          </div>
+        </sc-if>
+        <nav style="flex: none; height: 64px; margin-top: 8px; border-top: 1px solid var(--outline); background: var(--surface); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
+          <a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--primary); text-decoration: none; font-size: 12px; font-weight: 700"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8"></path></svg>Catalog</a>
+          <a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text2); text-decoration: none; font-size: 12px; font-weight: 600; position: relative"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 11h10.6L20.5 7H6.4M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM17 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path></svg>Cart</a>
+          <a href="#" style="display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: var(--text2); text-decoration: none; font-size: 12px; font-weight: 600"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg>Orders</a>
+        </nav>
+      </div>
+    </div>
+
+    <!-- ===================================== FRAME 3 · Order detail -->
+    <div style="display: flex; flex-direction: column; gap: 10px">
+      <div style="height: 32px; display: flex; align-items: center; font-size: 14px; font-weight: 600; color: var(--text2)">Order detail · timeline · asked vs accepted · toast</div>
+      <div style="width: 390px; height: 844px; border-radius: 32px; overflow: hidden; background: var(--bg); border: 1px solid var(--outline); display: flex; flex-direction: column; position: relative">
+        <div style="height: 60px; padding: 0 16px 0 4px; display: flex; align-items: center; gap: 4px; flex: none">
+          <a href="#" aria-label="Back" style="width: 44px; height: 44px; color: var(--text); border-radius: 22px; display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></a>
+          <span style="flex: 1; font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 20px">Order #1035</span>
+          <span style="display: inline-flex; align-items: center; gap: 5px; height: 28px; padding: 0 11px 0 8px; border-radius: 999px; font-size: 13px; font-weight: 600; background: var(--dispBg); color: var(--dispFg)"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"></path></svg>Dispatched</span>
+        </div>
+        <div style="margin: 0 16px; padding: 14px 16px; border-radius: 16px; background: var(--surface); border: 1px solid var(--outline); display: flex; flex-direction: column; flex: none">
+          <sc-for list="{{timeline}}" as="s" hint-placeholder-count="4">
+            <div style="display: flex; gap: 12px">
+              <div style="display: flex; flex-direction: column; align-items: center; width: 18px">
+                <span style="width: 14px; height: 14px; border-radius: 7px; box-sizing: border-box; margin-top: 3px; background: {{s.dot}}; border: 2px solid {{s.ring}}"></span>
+                <sc-if value="{{s.hasLine}}" hint-placeholder-val="{{true}}"><span style="width: 2px; flex: 1; min-height: 16px; background: {{s.line}}"></span></sc-if>
+              </div>
+              <div style="display: flex; flex-direction: column; padding-bottom: 10px">
+                <span style="font-size: 15px; font-weight: 700; color: {{s.fg}}">{{s.label}}</span>
+                <span style="font-size: 13px; color: var(--text2)">{{s.time}}</span>
+              </div>
+            </div>
+          </sc-for>
+        </div>
+        <div style="padding: 14px 16px 6px; font-size: 13px; font-weight: 600; letter-spacing: 0.04em; color: var(--text2); flex: none">ITEMS · ASKED → ACCEPTED</div>
+        <div style="padding: 0 16px; display: flex; flex-direction: column; gap: 8px; flex: 1; overflow: hidden">
+          <sc-for list="{{orderLines}}" as="l" hint-placeholder-count="3">
+            <div style="background: var(--surface); border: 1px solid {{l.border}}; border-radius: 14px; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px">
+              <div style="display: flex; justify-content: space-between; gap: 8px">
+                <span style="font-size: 15px; font-weight: 600">{{l.name}}</span>
+                <span style="font-size: 15px; font-weight: 700">{{l.amount}}</span>
+              </div>
+              <div style="display: flex; align-items: center; gap: 8px; font-size: 14px">
+                <span style="color: var(--text2); text-decoration: {{l.strike}}">{{l.asked}}</span>
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--text2)"><path d="M5 12h14M13 6l6 6-6 6"></path></svg>
+                <span style="font-weight: 700; color: {{l.accFg}}">{{l.accepted}}</span>
+              </div>
+              <sc-if value="{{l.hasNote}}" hint-placeholder-val="{{false}}">
+                <span style="font-size: 13px; padding: 6px 8px; border-radius: 8px; background: var(--warnBg); color: var(--warnFg)">{{l.note}}</span>
+              </sc-if>
+            </div>
+          </sc-for>
+        </div>
+        <div style="flex: none; background: var(--surface); border-top: 1px solid var(--outline); padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; justify-content: space-between; font-size: 14px; color: var(--text2)"><span>Asked</span><span style="text-decoration: line-through">₹13,555.00</span></div>
+          <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 15px; font-weight: 600">Accepted total</span><span style="font-size: 22px; font-weight: 700">₹13,130.00</span></div>
+          <button onClick="{{reorder}}" style="height: 48px; border-radius: 14px; border: 1.5px solid var(--primary); background: transparent; color: var(--primary); font-size: 16px; font-weight: 700">Reorder these items</button>
+        </div>
+        <sc-if value="{{toast}}" hint-placeholder-val="{{false}}">
+          <div role="status" style="position: absolute; left: 16px; right: 16px; top: 68px; border-radius: 14px; background: var(--inv); color: var(--onInv); padding: 12px 14px; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(20,18,60,0.25)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l2.8 2.8L16.5 9.5"></path></svg>
+            <span style="flex: 1; font-size: 14px; font-weight: 600">3 items added to your cart</span>
+            <button onClick="{{closeToast}}" style="height: 36px; padding: 0 10px; border: 0; background: transparent; color: var(--invPrimary); font-size: 14px; font-weight: 700; border-radius: 10px">OK</button>
+          </div>
+        </sc-if>
+      </div>
+    </div>
+
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1440,"height":1040}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { signedIn: false, q: '', cat: 'All', cart: { atta: 2000, sugar: 10000 }, toast: false };
+  }
+
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const L = { board: '#ECECF3', bg: '#F6F6FA', surface: '#FFFFFF', sv: '#EEEEF6', outline: '#E0DFEB', outline2: '#8F8EA8',
+      text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF', pc: '#E4E2FB', opc: '#1E1B4B',
+      accentSoft: '#FDF0D5', accentFg: '#7A4A00', warnBg: '#FEF3C7', warnFg: '#92400E', dispBg: '#DBEAFE', dispFg: '#1E40AF',
+      inv: '#1E1B4B', onInv: '#F2F1FA', invPrimary: '#ABA6FF', success: '#15803D' };
+    const D = { board: '#05050B', bg: '#0E0D1A', surface: '#17162A', sv: '#222039', outline: '#2C2A45', outline2: '#7C7A99',
+      text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760', pc: '#2E2A78', opc: '#E4E2FB',
+      accentSoft: '#3A2A08', accentFg: '#F7CF7A', warnBg: '#422006', warnFg: '#FCD34D', dispBg: '#172554', dispFg: '#93C5FD',
+      inv: '#EEEDF7', onInv: '#16152B', invPrimary: '#3730A3', success: '#4ADE80' };
+    const t = dark ? D : L;
+    const vars = Object.entries(t).map(([k, v]) => `--${k}: ${v}`).join('; ');
+    const inr = (paise) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(paise / 100);
+    const fq = (milli) => { const s = (milli / 1000).toFixed(3).replace(/\.?0+$/, ''); return s === '' ? '0' : s; };
+    const pay = (rate, milli) => Math.floor((rate * milli + 500) / 1000);
+
+    // ---------- frame 1 (fixtures/storefront.json)
+    const signedIn = this.state.signedIn;
+    const highlights = [
+      ['M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', 'Same-day delivery', 'Order by 2 PM, get it today'],
+      ['M3 6h18v12H3zM3 10h18M7 15h3', '7-day credit', 'For regular retailers'],
+      ['M3 12V4h8l10 10-8 8zM7.5 8.5h.01', 'Wholesale rates', 'Best prices, updated daily'],
+      ['M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8', '500+ products', 'Staples, FMCG & home care'],
+      ['M7 3h10v18H7zM11 18h2', 'Order from your phone', 'No calls, no notebooks'],
+      ['M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5 4.5-5', 'Genuine products', 'Direct from brand depots'],
+    ].map(([icon, title, text]) => ({ icon, title, text }));
+    const featured = [['At', 'Aashirvaad Atta 10 kg'], ['FO', 'Fortune Sunflower Oil'], ['PG', 'Parle-G (box of 48)']].map(([initials, name]) => ({ initials, name }));
+
+    // ---------- frame 2 (fixtures/catalog.json)
+    const defs = [
+      { k: 'atta', name: 'Aashirvaad Shudh Chakki Atta 10 kg', ini: 'At', cat: 'Staples', unit: 'pack', rate: 46500, step: 1000, first: 1000 },
+      { k: 'sugar', name: 'Sugar (loose)', ini: 'Su', cat: 'Staples', unit: 'kg', rate: 4250, step: 500, first: 1000 },
+      { k: 'toor', name: 'Toor Dal', ini: 'TD', cat: 'Pulses', unit: 'kg', rate: 13800, step: 500, first: 1000 },
+      { k: 'oil', name: 'Fortune Sunflower Oil', ini: 'FO', cat: 'Edible Oil', unit: 'L', rate: 15500, step: 500, first: 1000 },
+      { k: 'maggi', name: 'Maggi 2-Minute Noodles 70 g', ini: 'Mg', cat: 'Instant Food', unit: 'dozen', rate: 16800, step: 1000, first: 1000 },
+      { k: 'butter', name: 'Amul Butter 500 g', ini: 'AB', cat: 'Dairy', unit: 'pcs', rate: 27500, step: 1000, first: 1000 },
+      { k: 'haldi', name: 'Haldi Powder (loose)', ini: 'HP', cat: 'Spices', unit: 'g', rate: 30, step: 50000, first: 250000 },
+    ];
+    const cart = this.state.cart;
+    const setQty = (k, v) => { const next = { ...cart }; if (v <= 0) delete next[k]; else next[k] = v; this.setState({ cart: next }); };
+    const q = this.state.q.trim().toLowerCase();
+    const cat = this.state.cat;
+    const products = defs
+      .filter((d) => (cat === 'All' || d.cat === cat) && (!q || d.name.toLowerCase().includes(q)))
+      .map((d) => {
+        const n = cart[d.k] ?? 0;
+        const shownUnit = d.unit === 'g' ? 'g' : d.unit;
+        return {
+          name: d.name, initials: d.ini,
+          rate: d.unit === 'g' ? `${inr(d.rate * 1000)} / kg` : `${inr(d.rate)} / ${d.unit}`,
+          empty: n === 0, inCart: n > 0,
+          qty: d.unit === 'g' ? `${fq(n / 1000 * 1000)} g`.replace(/^(\d+)000 g$/, '$1 kg') : `${fq(n)} ${shownUnit}`,
+          add: () => setQty(d.k, d.first),
+          inc: () => setQty(d.k, n + d.step),
+          dec: () => setQty(d.k, n - d.step),
+        };
+      });
+    const cats = ['All', 'Staples', 'Pulses', 'Dairy', 'Edible Oil', 'Spices'].map((c) => {
+      const on = c === cat;
+      return { label: c, pick: () => this.setState({ cat: c }),
+        bg: on ? 'var(--primary)' : 'transparent', fg: on ? 'var(--onPrimary)' : 'var(--text2)', border: on ? 'var(--primary)' : 'var(--outline2)' };
+    });
+    const keys = Object.keys(cart);
+    const total = keys.reduce((s, k) => s + pay(defs.find((d) => d.k === k).rate, cart[k]), 0);
+
+    // ---------- frame 3 (fixtures/retailer-order-detail.json · #1035)
+    const timeline = [
+      { label: 'Order placed', time: 'Yesterday, 11:20 AM', done: true },
+      { label: 'Partially accepted', time: 'Yesterday, 12:05 PM', done: true },
+      { label: 'Dispatched', time: 'Yesterday, 4:30 PM', done: true },
+      { label: 'Delivered', time: 'Waiting', done: false },
+    ].map((s, i, arr) => ({
+      ...s, hasLine: i < arr.length - 1,
+      dot: s.done ? 'var(--primary)' : 'transparent', ring: s.done ? 'var(--primary)' : 'var(--outline2)',
+      line: arr[i + 1] && arr[i + 1].done ? 'var(--primary)' : 'var(--outline)',
+      fg: s.done ? 'var(--text)' : 'var(--text2)',
+    }));
+    const orderLines = [
+      { name: 'Toor Dal', rate: 13800, asked: 75000, acc: 75000, unit: 'kg', note: null },
+      { name: 'Sugar (loose)', rate: 4250, asked: 50000, acc: 40000, unit: 'kg', note: '40 kg now, rest on Friday' },
+      { name: 'Amul Taaza Toned Milk', rate: 5400, asked: 20000, acc: 20000, unit: 'L', note: null },
+    ].map((l) => {
+      const diff = l.acc !== l.asked;
+      return {
+        name: l.name, amount: inr(pay(l.rate, l.acc)),
+        asked: `${fq(l.asked)} ${l.unit}`, accepted: `${fq(l.acc)} ${l.unit}`,
+        strike: diff ? 'line-through' : 'none', accFg: diff ? 'var(--warnFg)' : 'var(--success)',
+        border: diff ? 'var(--warnFg)' : 'var(--outline)', hasNote: !!l.note, note: l.note,
+      };
+    });
+
+    return {
+      vars,
+      signedIn, visitor: !signedIn,
+      asVisitor: () => this.setState({ signedIn: false }), asRetailer: () => this.setState({ signedIn: true }),
+      visBg: signedIn ? 'transparent' : 'var(--primary)', visFg: signedIn ? 'var(--text2)' : 'var(--onPrimary)',
+      retBg: signedIn ? 'var(--primary)' : 'transparent', retFg: signedIn ? 'var(--onPrimary)' : 'var(--text2)',
+      highlights, featured,
+      q: this.state.q, onSearch: (e) => this.setState({ q: e.target.value }),
+      cats, products, noProducts: products.length === 0,
+      hasCart: keys.length > 0, cartCount: `${keys.length} item${keys.length === 1 ? '' : 's'} in cart`, cartTotal: inr(total),
+      timeline, orderLines,
+      toast: this.state.toast,
+      reorder: () => this.setState({ toast: true }), closeToast: () => this.setState({ toast: false }),
+    };
+  }
+}
+</script>
+</body>
+</html>

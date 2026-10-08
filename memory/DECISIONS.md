@@ -22,6 +22,7 @@
 | ADR-014 | ~~No stock tracking~~ | Superseded by ADR-016 | 2026-10-08 |
 | ADR-015 | Brand name **DistributeKaro**; logo to be designed during UI-0 | Accepted | 2026-10-08 |
 | ADR-017 | **Public storefront** at the QR URL for everyone: distributor's pitch page; existing retailers order from it, new visitors browse, then request access / enquire | Accepted | 2026-10-08 |
+| ADR-018 | Fonts: **Anek Latin** (display) + **Mukta** (UI/body) instead of Inter. Both from Ek Type, OFL, Devanagari companions for Hindi | Proposed (UI-0 review) | 2026-10-08 |
 | ADR-016 | **Distributor-only stock tracking** via a stock ledger: sold vs remaining per item; retailers never see stock and can order freely | Accepted | 2026-10-08 |
 
 ---
