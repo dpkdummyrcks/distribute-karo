@@ -3,7 +3,7 @@
 > Requirements: [`BRIEF.md`](BRIEF.md) · Overrides: [`../memory/DECISIONS.md`](../memory/DECISIONS.md) · Details: [`LLD.md`](LLD.md) · Screens: [`UI-SPEC.md`](UI-SPEC.md)
 
 ## 1. Goal
-Distributors manage their **catalog with private stock tracking** (sold vs remaining) and their retailers from an **Android app**. Retailers scan the distributor's **QR code** and enter their phone number in a **mobile web PWA**:
+Distributors manage their **catalog with private stock tracking** (sold vs remaining) and their retailers from an **Android app**. Retailers scan the distributor's **QR code** and land on the distributor's **storefront**, a pitch page designed to win retailers. From there, in a **mobile web PWA**:
 - **Registered** retailers go straight in and place orders.
 - **Unregistered** visitors can send an enquiry or ask to be added.
 
@@ -24,6 +24,7 @@ The distributor accepts each order fully or partially, or rejects it, then marks
 | Object storage | MinIO | **Garage** | ADR-004 |
 | Delivery | UI prototypes first | **Artifacts with a review loop per batch** | ADR-005 |
 | New features | — | **Access requests + enquiries** inbox in the distributor app | ADR-013 |
+| QR landing | Distributor name/logo card | **Public storefront** (cover, highlights, brands, featured products, service areas), optional public product browsing, CTAs for everyone | ADR-017 |
 
 ## 3. System context
 ```mermaid
@@ -44,8 +45,8 @@ flowchart LR
 ## 4. Components
 | Component | Responsibility | Tech |
 |---|---|---|
-| **Distributor App** | Sign-up/login, onboarding, catalog + stock (restock, adjust, sold/remaining report), retailers, access requests & enquiries, QR, order decisions, dashboard | Kotlin 2.x, Compose, M3, Hilt, Retrofit + OkHttp + kotlinx.serialization, Coil 3, Paging 3, DataStore + Tink, Credential Manager, ZXing |
-| **Retailer PWA** | QR landing, phone entry, public page (enquire/request), catalog, cart, orders, reorder | React 19, Vite, Tailwind v4, shadcn/ui, TanStack Router + Query, RHF + Zod, vite-plugin-pwa |
+| **Distributor App** | Sign-up/login, onboarding, storefront editor, catalog + stock (restock, adjust, sold/remaining report), retailers, access requests & enquiries, QR, order decisions, dashboard | Kotlin 2.x, Compose, M3, Hilt, Retrofit + OkHttp + kotlinx.serialization, Coil 3, Paging 3, DataStore + Tink, Credential Manager, ZXing |
+| **Retailer PWA** | Storefront (public), public product browsing, phone entry, not-registered page (enquire/request), catalog, cart, orders, reorder | React 19, Vite, Tailwind v4, shadcn/ui, TanStack Router + Query, RHF + Zod, vite-plugin-pwa |
 | **API** | Auth, tenancy, business rules, order state machine, requests/enquiries, uploads, OpenAPI | Hono + `@hono/zod-openapi`, Drizzle, `jose`, `@node-rs/argon2`, `sharp`, pino, OTel |
 | **packages/shared** | Zod schemas, DTO types, error codes, order state machine, unit rules, money/qty maths, fixtures | TS |
 | **packages/ui-tokens** | Design tokens + generators (CSS / Kotlin) | TS script |
@@ -88,7 +89,10 @@ sequenceDiagram
 sequenceDiagram
   participant R as Retailer browser
   participant API
-  R->>API: GET /r/{slug}  (public card)
+  R->>API: GET /r/{slug}  (storefront for everyone)
+  opt browse
+    R->>API: GET /r/{slug}/public-catalog
+  end
   R->>API: POST /r/{slug}/auth/identify {phone}
   alt active retailer of this distributor
     API-->>R: AUTHENTICATED + refresh cookie
@@ -130,7 +134,7 @@ sequenceDiagram
 ## 9. Revised acceptance criteria
 1. A distributor can sign up with phone + password, add items and retailers, and show a QR on a real Android device.
 2. A registered retailer scans the QR, enters their number, is let in, and places an order (with decimal quantities where the unit allows).
-3. An unregistered number cannot see the catalog. It can only send an enquiry or an access request, and these show up in the distributor app.
+3. Anyone scanning the QR sees the distributor's storefront (and products, if the distributor allows). An unregistered number cannot order or see the ordering catalog/rates (unless shown publicly) or any stock. It can only send an enquiry or an access request, and these show up in the distributor app.
 4. Approving an access request creates a retailer who can then log in.
 5. The distributor partially accepts an order, stock and the sold/remaining report update correctly, and the retailer sees requested vs accepted (and never stock).
 6. Two concurrent acceptances cannot oversell stock; concurrent decision/cancel on one order: exactly one wins (proven by test). Cross-tenant access is impossible (proven by test).

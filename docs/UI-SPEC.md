@@ -30,7 +30,7 @@
 
 ## 3. Screen inventory
 ### Distributor app (Android, M3)
-Nav bar: **Home · Orders · Catalog · Retailers · More**. The Catalog tab has segments **Items | Stock report**. The Retailers tab has segments **Retailers | Requests (badge) | Enquiries (badge)**. More holds QR, Profile, Settings.
+Nav bar: **Home · Orders · Catalog · Retailers · More**. The Catalog tab has segments **Items | Stock report**. The Retailers tab has segments **Retailers | Requests (badge) | Enquiries (badge)**. More holds QR, **Storefront**, Profile, Settings.
 
 | ID | Screen | Key elements | States | Fixtures |
 |---|---|---|---|---|
@@ -50,6 +50,7 @@ Nav bar: **Home · Orders · Catalog · Retailers · More**. The Catalog tab has
 | D-11 | Add/Edit retailer | shop photo, name*, shop name, phone*, email, address, "Use current location" + label, active switch (deactivation warns that it signs them out) | duplicate phone, location denied | retailer |
 | D-12 | Access requests | cards (name, shop, phone, address, time), **Approve** → D-11 pre-filled (QD), **Reject** (note), Call / WhatsApp | skeleton / empty / error | access-requests.page |
 | D-13 | Enquiries | cards (name, phone, message, time, NEW badge), Call / WhatsApp, Mark read / Close | skeleton / empty / error | enquiries.page |
+| D-14a | Storefront editor | cover image, tagline, highlights editor (icon + title + text, reorder, max 6), brands & service areas (chips), business hours, about, featured products picker (from catalog, max 12), **public products** setting (Off / Without prices / With prices), Publish switch, **Preview** (renders R-01) | validation, saving | storefront-admin |
 | D-14 | My QR | QR card (logo, business name, short URL), Share, Save PNG, Print-friendly view, Rotate (confirm: old QR stops working) | rotating | distributor-me |
 | D-15 | Orders inbox | tabs with counts: Pending · Accepted · Dispatched · Completed · Closed; cards (order no, retailer, shop, ₹, lines, time, status chip, New device flag) | skeleton / empty per tab / error | orders.page, inbox-counts |
 | D-16 | Order detail | header, lines (qty + unit, rate, line ₹, **remaining stock** while PENDING, shortage highlighted), retailer note, totals, timeline; bottom bar per `allowedActions` | all 7 status variants | order-detail.* |
@@ -62,8 +63,10 @@ Bottom nav after login: **Catalog · Cart · Orders**.
 
 | ID | Screen | Key elements | States | Fixtures |
 |---|---|---|---|---|
-| R-01 | Landing + phone | distributor logo + name, "Enter your mobile number", +91 input, Continue | invalid/rotated QR ("This QR is no longer valid"), rate limited | public-distributor, problem.slug-invalid |
-| R-02 | Public page (not registered) | "You're not on <name>'s retailer list yet", two big choices: **Request to get added** / **Send an enquiry**; if a request is already pending: "Request sent on <date>, the distributor will add you" | pending variant | identify.not-registered, identify.not-registered-pending |
+| R-01 | **Storefront** (everyone) | hero (cover, logo, name, tagline), highlight cards ("Why order from us"), categories & brands chips, featured products carousel, service areas, hours, about; **sticky CTA bar**: *Order now* + *Join as retailer*, secondary *Send enquiry*; signed-in variant: "Welcome back, <shop> · Continue ordering" | full / minimal (new distributor, profile only) / signed-in / invalid QR / unpublished | storefront, storefront.minimal, storefront.signed-in, problem.slug-invalid |
+| R-01a | Order-now phone sheet | bottom sheet: "Enter your registered mobile number", +91, Continue → catalog (R-05) or not-registered (R-02) | rate limited | identify.* |
+| R-01b | Public products | search, category chips, product grid (image, name, unit, rate **or** "Join to see rates"), persistent *Join as retailer* CTA; no steppers | with / without prices, skeleton / empty / error | public-catalog.page, public-catalog.page.no-prices |
+| R-02 | Not registered | "You're not on <name>'s retailer list yet", two big choices: **Request to get added** / **Send an enquiry**; if a request is already pending: "Request sent on <date>, the distributor will add you" | pending variant | identify.not-registered, identify.not-registered-pending |
 | R-03 | Request access form | name*, shop name*, phone (prefilled, editable), address, area/landmark; Submit → success state | already pending (409), rate limited | problem.request-pending |
 | R-04 | Enquiry form | name*, phone (prefilled), message* (e.g. "What brands do you carry?"); Submit → success state | rate limited | — |
 | R-05 | Catalog | greeting with shop name, search, category chips, item cards (image, name, ₹rate / unit, stepper with unit step), sticky cart bar (n items · ₹est. total · View cart) | skeleton / empty / error / no results | catalog |
@@ -81,11 +84,11 @@ App bar · nav bar / bottom tabs · segmented tabs with badges · list cell (thu
 | **UI-0** | Logo directions, tokens (light/dark), type, component sheet (M3 + web side by side) | Brand, colour, density, chips, stepper |
 | **UI-1** | D-01…D-06 | Sign-up/login friction, onboarding fields |
 | **UI-2** | D-07…D-09c | Dashboard usefulness, catalog + item form, restock/adjust, stock history, sold-vs-remaining report |
-| **UI-3** | D-10…D-14 | Retailer form, requests/enquiries handling, QR card |
+| **UI-3** | D-10…D-14a | Retailer form, requests/enquiries handling, QR card, storefront editor |
 | **UI-4** | D-15…D-19 | Order decision UX (core flow), settings |
-| **UI-5** | R-01…R-04 | QR entry, not-registered path, forms |
+| **UI-5** | R-01…R-04 | **Storefront appeal** (most important first impression), public products, order-now entry, not-registered path, forms |
 | **UI-6** | R-05…R-09 | Catalog → cart → order → history, requested vs accepted |
-| **UI-7** | Combined clickable prototype, end to end: retailer requests access → distributor approves → retailer orders → distributor partially accepts → retailer sees result | Final sign-off → freeze fixtures as contract v0 |
+| **UI-7** | Combined clickable prototype, end to end: new retailer scans QR → browses storefront → requests access → distributor approves → retailer orders → distributor partially accepts → retailer sees result | Final sign-off → freeze fixtures as contract v0 |
 
 **Each artifact includes:** phone frame(s) (360×780 Android, 390×844 web), a state switcher, a light/dark toggle, working navigation within the batch, and a footer listing the fixtures used.
 

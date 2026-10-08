@@ -119,6 +119,16 @@ stock_movements (                                -- append-only ledger (REVOKE U
   INDEX (distributor_id, item_id, created_at DESC)
   INDEX (distributor_id, type, created_at)                            -- sold-in-period reports
 
+storefronts (                                    -- 1:1 with distributors (ADR-017)
+  distributor_id uuid PRIMARY KEY REFERENCES distributors,
+  tagline text, about text, cover_key text,
+  highlights jsonb NOT NULL DEFAULT '[]',          -- [{icon, title, text}] max 6
+  brands text[] NOT NULL DEFAULT '{}', service_areas text[] NOT NULL DEFAULT '{}',
+  business_hours text, featured_item_ids uuid[] NOT NULL DEFAULT '{}',   -- max 12, filtered to active at read
+  public_catalog_mode text NOT NULL DEFAULT 'WITHOUT_PRICES' CHECK (public_catalog_mode IN ('OFF','WITHOUT_PRICES','WITH_PRICES')),
+  published bool NOT NULL DEFAULT true
+)
+
 access_requests (
   distributor_id uuid NOT NULL, phone text NOT NULL,
   name text NOT NULL, shop_name text NOT NULL, address text, location_label text,
@@ -172,7 +182,7 @@ sessions (                                       -- no RLS; auth module only
 )
   INDEX (subject_type, subject_id) WHERE revoked_at IS NULL
 ```
-**RLS:** enabled + forced on `items, stock_movements, retailers, access_requests, enquiries, orders, order_items, order_events`. Policy: `distributor_id = current_setting('app.distributor_id')::uuid` (USING + WITH CHECK).
+**RLS:** enabled + forced on `items, stock_movements, storefronts, retailers, access_requests, enquiries, orders, order_items, order_events`. Policy: `distributor_id = current_setting('app.distributor_id')::uuid` (USING + WITH CHECK).
 - Roles: `dk_owner` (migrations) and `dk_app` (runtime, no BYPASSRLS).
 - `withTenant(did, tx => …)` runs `select set_config('app.distributor_id', $1, true)` first. Repositories require that tx by type.
 - Public endpoints resolve slug → `did` from `distributors` (no RLS), then enter `withTenant`.
@@ -180,7 +190,7 @@ sessions (                                       -- no RLS; auth module only
 ## 4. Field limits
 - **Names and text:** name / shopName 1–120 · businessName 2–120 · sku ≤ 40 · category ≤ 40 · description ≤ 500 · note / lineNote / reason / message ≤ 500 · email ≤ 254 · address ≤ 300 · locationLabel ≤ 120.
 - **Formats:** gstin `^\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]$` · password 8–128, not in the common list, not equal to the phone.
-- **Numbers:** ratePaise 0–10^10 · qty / stockQty ≤ 9 999 999.999 · adjustment reason 3–200.
+- **Numbers:** ratePaise 0–10^10 · qty / stockQty ≤ 9 999 999.999 · adjustment reason 3–200 · tagline ≤ 80 · about ≤ 1000 · highlight title ≤ 30, text ≤ 80 · brands/serviceAreas ≤ 20 entries × 40 chars · businessHours ≤ 80.
 - **Orders:** 1–100 lines, unique itemIds.
 
 ## 5. Order state machine (`packages/shared/src/orderMachine.ts`)
@@ -290,12 +300,14 @@ Base `/v1`. `D` = distributor bearer (aud `dk-distributor`). `R` = retailer bear
 | GET `/d/enquiries` | D | `?status&cursor&limit` | 200 `Page<Enquiry>` |
 | PATCH `/d/enquiries/:id` | D | `{status: "READ"\|"CLOSED"}` | 200 `Enquiry` |
 | GET `/d/inbox/counts` | D | – | 200 `InboxCounts` |
+| GET / PUT `/d/storefront` | D | `StorefrontInput` (PUT) | 200 `StorefrontAdmin` |
 | GET `/d/orders` | D | `?status=A,B&retailerId&cursor&limit` | 200 `Page<OrderSummary>` |
 | GET `/d/orders/:id` | D | – | 200 `OrderDetail` |
 | POST `/d/orders/:id/decision` | D | `DecisionInput` | 200 `OrderDetail` |
 | POST `/d/orders/:id/status` | D | `{to:"DISPATCHED"\|"DELIVERED", note?}` | 200 `OrderDetail` |
-| POST `/d/uploads/presign` | D | `{purpose:"ITEM_IMAGE"\|"SHOP_PHOTO"\|"LOGO", contentType, contentLength}` | 200 `Presign` |
-| GET `/r/:slug` | – | – | 200 `PublicDistributor` / 404 `SLUG_INVALID` |
+| POST `/d/uploads/presign` | D | `{purpose:"ITEM_IMAGE"\|"SHOP_PHOTO"\|"LOGO"\|"COVER", contentType, contentLength}` | 200 `Presign` |
+| GET `/r/:slug` | – (optional R) | – | 200 `Storefront` / 404 `SLUG_INVALID` (with a valid R token, adds `viewer`) |
+| GET `/r/:slug/public-catalog` | – | `?q&category&cursor&limit` | 200 `Page<PublicCatalogItem>` / 404 if mode `OFF` |
 | POST `/r/:slug/auth/identify` | – | `{phone, deviceId}` | 200 `IdentifyResult` (+ `Set-Cookie` when authenticated) |
 | POST `/r/:slug/auth/refresh` | cookie | header `X-DK-CSRF: 1` | 200 `RetailerSession` |
 | POST `/r/:slug/auth/logout` | R | – | 204 |
@@ -394,7 +406,18 @@ type DecisionInput =
 type Presign = { uploadId: string; url: string; method: "PUT"; headers: Record<string,string>; expiresAt: string };
 
 // ---------- retailer (public + authenticated)
-type PublicDistributor = { businessName: string; logoUrl: string | null };       // nothing else
+type PublicDistributor = { businessName: string; logoUrl: string | null };       // header use
+type Highlight = { icon: "truck"|"credit"|"tag"|"box"|"clock"|"star"|"shield"|"phone"; title: string; text: string | null };
+type Storefront = { distributor: PublicDistributor & { coverUrl: string | null; tagline: string | null; about: string | null };
+  highlights: Highlight[]; categories: string[]; brands: string[]; serviceAreas: string[]; businessHours: string | null;
+  featuredItems: PublicCatalogItem[]; publicCatalogMode: "OFF"|"WITHOUT_PRICES"|"WITH_PRICES";
+  viewer: { retailerName: string; shopName: string | null } | null };      // non-null when a valid retailer session is present
+type PublicCatalogItem = { id: string; name: string; unit: Unit; category: string | null; imageUrl: string | null;
+  ratePaise: number | null };                                              // null unless WITH_PRICES; never stock
+type StorefrontInput = { tagline?: string|null; about?: string|null; coverUploadId?: string|null;
+  highlights: Highlight[]; brands: string[]; serviceAreas: string[]; businessHours?: string|null;
+  featuredItemIds: string[]; publicCatalogMode: Storefront["publicCatalogMode"]; published: boolean };
+type StorefrontAdmin = StorefrontInput & { coverUrl: string | null; previewUrl: string /* = qrUrl */ };
 type RetailerSession = { accessToken: string; accessTokenExpiresAt: string;
   retailer: { id: string; name: string; shopName: string | null }; distributor: PublicDistributor };
 type IdentifyResult =
@@ -410,11 +433,12 @@ type PlaceOrderInput = { lines: { itemId: string; qty: Qty }[]; note?: string|nu
 ```
 
 **Fixture files** (`packages/shared/fixtures/`):
+- **Storefront admin:** `storefront-admin.json`.
 - **Distributor auth & profile:** `distributor-session.json`, `distributor-me.onboarding.json`, `distributor-me.json`, `dashboard.json`, `dashboard.new-account.json`.
 - **Catalog & stock:** `items.page.json`, `item.json`, `categories.json`, `stock-movements.page.json`, `stock-report.json`.
 - **Retailers, requests, enquiries:** `retailers.page.json`, `retailer.json`, `access-requests.page.json`, `enquiries.page.json`, `inbox-counts.json`.
 - **Orders:** `orders.page.json`, `order-detail.{pending,partial,accepted,rejected,dispatched,delivered,cancelled}.json`.
-- **Retailer side:** `public-distributor.json`, `identify.authenticated.json`, `identify.not-registered.json`, `identify.not-registered-pending.json`, `catalog.json`, `retailer-orders.page.json`, `retailer-order-detail.json`.
+- **Retailer side:** `storefront.json`, `storefront.minimal.json`, `storefront.signed-in.json`, `public-catalog.page.json`, `public-catalog.page.no-prices.json`, `public-distributor.json`, `identify.authenticated.json`, `identify.not-registered.json`, `identify.not-registered-pending.json`, `catalog.json`, `retailer-orders.page.json`, `retailer-order-detail.json`.
 - **Shared:** `empty.page.json`, `qty-money-vectors.json`, `problem.{validation,invalid-credentials,account-locked,rate-limited,slug-invalid,request-pending,item-unavailable,insufficient-stock}.json`.
 
 ## 7. Auth details
@@ -446,7 +470,7 @@ type PlaceOrderInput = { lines: { itemId: string; qty: Qty }[]; note?: string|nu
 | Access request / enquiry per IP | `rl:pubform:ip:{ip}` | 10 / h |
 | Place order | `rl:order:{retailerId}` | 10 / min |
 | Authenticated reads | `rl:read:{typ}:{sub}` | 120 / min |
-| Public slug card | `rl:pub:ip:{ip}` | 60 / min |
+| Public storefront + public catalog | `rl:pub:ip:{ip}` | 60 / min |
 | Presign | `rl:presign:{sub}` | 20 / h |
 Headers: `RateLimit-Policy` and `RateLimit` (IETF draft), plus `Retry-After` on 429. The IP comes from `X-Forwarded-For`, trusting Caddy only.
 
@@ -464,7 +488,7 @@ Headers: `RateLimit-Policy` and `RateLimit` (IETF draft), plus `Retry-After` on 
 - Env (Zod, fail fast): `DATABASE_URL, VALKEY_URL, S3_ENDPOINT, S3_BUCKET, S3_ACCESS_KEY, S3_SECRET_KEY, PUBLIC_BASE_URL, JWT_PRIVATE_KEY, JWT_PUBLIC_KEY, HMAC_SECRET, TRUSTED_PROXIES, NODE_ENV`.
 
 ## 11. Retailer web internals
-- **Routes:** `/d/$slug` (landing + phone entry) → `/d/$slug/welcome` (public page: Enquire / Request access) → `/d/$slug/request` → `/d/$slug/enquire` → `/d/$slug/catalog` → `/d/$slug/cart` → `/d/$slug/orders` → `/d/$slug/orders/$id` (`?placed=1` shows the confirmation). Bottom nav after login: Catalog · Cart · Orders.
+- **Routes:** `/d/$slug` (**storefront**, for everyone; *Order now* opens a phone sheet) → `/d/$slug/products` (public catalog per mode) → `/d/$slug/welcome` (not registered: Request access / Enquire) → `/d/$slug/request` → `/d/$slug/enquire` → `/d/$slug/catalog` → `/d/$slug/cart` → `/d/$slug/orders` → `/d/$slug/orders/$id` (`?placed=1` shows the confirmation). Bottom nav after login: Catalog · Cart · Orders.
 - **State:** TanStack Query for server data. The cart is a Zustand store persisted per slug as `{itemId, qty}` (prices always come from the catalog). The access token lives in memory. `deviceId` is a random UUID in localStorage.
 - **Qty input:** a stepper uses the unit's step. Tapping the number opens a numeric keypad (`inputmode="decimal"` only for decimal units).
 - **Service worker:** precache the shell. Images are stale-while-revalidate. `/v1/*` is NetworkOnly.
@@ -495,7 +519,7 @@ Headers: `RateLimit-Policy` and `RateLimit` (IETF draft), plus `Retry-After` on 
 |---|---|
 | 1 | Android Compose UI tests (MockWebServer) for signup → item → retailer → QR; manual device checklist |
 | 2 | Playwright: QR URL → identify → catalog → order with a decimal qty → history |
-| 3 | API: identify unknown phone → `NOT_REGISTERED`, no cookie; catalog without token → 401; access request/enquiry visible to the owning distributor only |
+| 3 | API: identify unknown phone → `NOT_REGISTERED`, no cookie; catalog without token → 401; storefront/public catalog never contain stock fields and contain `ratePaise` only when `WITH_PRICES`; mode `OFF` → 404; access request/enquiry visible to the owning distributor only |
 | 4 | API: approve request → retailer exists → identify → `AUTHENTICATED` |
 | 5 | API: partial decision → stock decremented, SALE movements written, line/total paise per vectors; retailer view shows requested vs accepted and no stock fields; stock report sold/remaining correct |
 | 6 | Testcontainers PG: two orders ∥ accepted over limited stock → no oversell, stock = Σ movements; decision ∥ cancel and decision ∥ decision → exactly one wins; cross-tenant ids → 404; RLS raw-query test returns 0 rows |

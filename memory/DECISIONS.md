@@ -21,6 +21,7 @@
 | ADR-013 | **Retailer auth = phone number only**, scoped to the scanned distributor; unregistered → public page (Enquire / Request access) | Accepted | 2026-10-08 |
 | ADR-014 | ~~No stock tracking~~ | Superseded by ADR-016 | 2026-10-08 |
 | ADR-015 | Brand name **DistributeKaro**; logo to be designed during UI-0 | Accepted | 2026-10-08 |
+| ADR-017 | **Public storefront** at the QR URL for everyone: distributor's pitch page; existing retailers order from it, new visitors browse, then request access / enquire | Accepted | 2026-10-08 |
 | ADR-016 | **Distributor-only stock tracking** via a stock ledger: sold vs remaining per item; retailers never see stock and can order freely | Accepted | 2026-10-08 |
 
 ---
@@ -111,6 +112,20 @@ The PWA is served at `/`, the retailer entry is `/d/<slug>`, and Caddy proxies `
 - **Retailers:** never see stock in any form. They can order any quantity of an active item. Stock reaching 0 does **not** hide the item (QF).
 - PENDING, REJECTED and CANCELLED orders never touch stock.
 
+## ADR-017 — Public storefront (QR landing for everyone)
+**Owner:** "For the QR code scan we must have a page for all users. Already-added users order from it, and new users browse it. It should be an appealing page from the distributor, persuading retailers to buy only from him. Then they can request to be added or send an enquiry."
+- `/d/<slug>` is a **storefront**, edited by the distributor in the app. It has:
+  - cover image, logo, name and tagline
+  - "Why buy from us" highlights (max 6, e.g. *Same-day delivery*, *Credit available*, *500+ products*, *Best rates*)
+  - categories and brands carried
+  - featured products (max 12, picked from the catalog)
+  - service areas, business hours and an about text
+- **Calls to action, the same for everyone:** *Order now* (phone entry; registered numbers go to the catalog), *Request to become a retailer*, *Send an enquiry*. A signed-in retailer sees "Welcome back, <shop> · Continue ordering" instead of *Order now*.
+- **Public browsing:** visitors can open "All products". Its visibility is a distributor setting, `publicCatalogMode` = `OFF` | `WITHOUT_PRICES` | `WITH_PRICES` (default → QG). **Stock is never public.**
+- A storefront with no content yet still renders well from the profile alone (name, logo, categories from the catalog), so a new distributor's QR works on day one.
+- Supersedes QC.
+- **Security:** public endpoints are read-only and return only storefront fields plus active items (name, unit, image, category, price only if `WITH_PRICES`). Rate limit 60/min per IP. Images go through the same signed `/media` path.
+
 ---
 
 ## Answered questions (2026-10-08)
@@ -127,12 +142,13 @@ The PWA is served at `/`, the retailer entry is `/d/<slug>`, and Caddy proxies `
 | Q9 | Order out-of-stock | Moot (no stock) |
 | — | git init + baseline commit | Yes |
 | QA | Stock tracking? | Yes, distributor-only: sold vs remaining — ADR-016 |
+| QE | Sold at acceptance or delivery? | **At acceptance** |
+| QF | Auto-hide at 0 stock? | **No**, retailers still see and can order it |
+| QC | Catalog on the public page? | Replaced by ADR-017 storefront + `publicCatalogMode` |
 
 ## Open questions
 | # | Question | Assumption used until answered |
 |---|---|---|
 | QB | Distributor forgot password in Phase 1 (no SMS/email)? | Admin CLI `pnpm admin:reset-password <phone>` prints a one-time reset code (15 min) the distributor enters in the app; OTP/email reset in Phase 2 |
-| QC | Should the unregistered public page show the catalog (items, with or without prices)? | No: distributor card + Enquire + Request access only |
-| QE | Count an item as **sold at acceptance** or only at **delivery**? | At acceptance (stock is committed to that retailer once accepted) |
-| QF | When remaining stock hits 0, should the item auto-hide from the retailer catalog? | No, it stays orderable; the distributor sees it as out of stock and can partially accept or restock |
+| QG | Default for public product browsing: hide prices (`WITHOUT_PRICES`, "Join to see rates") or show them (`WITH_PRICES`)? | `WITHOUT_PRICES`: rates are a reason to join and stay private from competitors; the distributor can switch |
 | QD | When a distributor approves an access request, add the retailer straight away or open the pre-filled retailer form first? | Open the pre-filled form (distributor can add photo/location), then save |
