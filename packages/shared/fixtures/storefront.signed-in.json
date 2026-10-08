@@ -2,9 +2,8 @@
   "distributor": {
     "businessName": "Shree Balaji Traders",
     "logoUrl": null,
-    "coverUrl": "https://app.distributekaro.in/media/img/cover/0199c4e2-007b-707b-807b-00000000007b.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
-    "tagline": "Jaipur's trusted wholesale partner since 1998",
-    "about": "Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city."
+    "coverUrl": "https://app.distributekaro.in/media/img/cover/0199c4e2-0083-7083-8083-000000000083.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+    "tagline": "Jaipur's trusted wholesale partner since 1998"
   },
   "highlights": [
     {
@@ -38,6 +37,24 @@
       "text": "Direct from brand depots"
     }
   ],
+  "stats": [
+    {
+      "value": "1998",
+      "label": "Serving since"
+    },
+    {
+      "value": "300+",
+      "label": "Stores served"
+    },
+    {
+      "value": "500+",
+      "label": "Products"
+    },
+    {
+      "value": "8",
+      "label": "Areas covered"
+    }
+  ],
   "categories": [
     "Beverages",
     "Biscuits",
@@ -65,17 +82,112 @@
     "Haldiram's",
     "Everest"
   ],
-  "serviceAreas": [
-    "Malviya Nagar",
-    "Vaishali Nagar",
-    "Mansarovar",
-    "Raja Park",
-    "Sanganer",
-    "Jagatpura",
-    "C-Scheme",
-    "Pratap Nagar"
-  ],
-  "businessHours": "Mon–Sat · 8 AM – 8 PM",
+  "openingHours": {
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "open": "08:00",
+    "close": "20:00"
+  },
+  "sameDayCutoff": "14:00",
+  "owner": {
+    "name": "Ramesh Agarwal",
+    "note": "Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city."
+  },
+  "map": {
+    "godown": {
+      "lat": 26.9196,
+      "lng": 75.818,
+      "label": "Kishanpole Bazar"
+    },
+    "zones": [
+      {
+        "id": "0199c4e2-007b-707b-807b-00000000007b",
+        "name": "Malviya Nagar",
+        "kind": "CIRCLE",
+        "center": {
+          "lat": 26.853,
+          "lng": 75.805
+        },
+        "radiusM": 1400
+      },
+      {
+        "id": "0199c4e2-007c-707c-807c-00000000007c",
+        "name": "Vaishali Nagar",
+        "kind": "CIRCLE",
+        "center": {
+          "lat": 26.9115,
+          "lng": 75.7432
+        },
+        "radiusM": 1400
+      },
+      {
+        "id": "0199c4e2-007d-707d-807d-00000000007d",
+        "name": "Mansarovar",
+        "kind": "CIRCLE",
+        "center": {
+          "lat": 26.8697,
+          "lng": 75.7633
+        },
+        "radiusM": 1400
+      },
+      {
+        "id": "0199c4e2-007e-707e-807e-00000000007e",
+        "name": "Raja Park",
+        "kind": "CIRCLE",
+        "center": {
+          "lat": 26.8925,
+          "lng": 75.8275
+        },
+        "radiusM": 1400
+      },
+      {
+        "id": "0199c4e2-007f-707f-807f-00000000007f",
+        "name": "Sanganer",
+        "kind": "CIRCLE",
+        "center": {
+          "lat": 26.8217,
+          "lng": 75.7926
+        },
+        "radiusM": 1400
+      },
+      {
+        "id": "0199c4e2-0080-7080-8080-000000000080",
+        "name": "Jagatpura",
+        "kind": "CIRCLE",
+        "center": {
+          "lat": 26.8315,
+          "lng": 75.8655
+        },
+        "radiusM": 1400
+      },
+      {
+        "id": "0199c4e2-0081-7081-8081-000000000081",
+        "name": "C-Scheme",
+        "kind": "CIRCLE",
+        "center": {
+          "lat": 26.905,
+          "lng": 75.804
+        },
+        "radiusM": 1400
+      },
+      {
+        "id": "0199c4e2-0082-7082-8082-000000000082",
+        "name": "Pratap Nagar",
+        "kind": "CIRCLE",
+        "center": {
+          "lat": 26.807,
+          "lng": 75.823
+        },
+        "radiusM": 1400
+      }
+    ]
+  },
   "featuredItems": [
     {
       "id": "0199c4e2-0002-7002-8002-000000000002",

@@ -305,7 +305,7 @@ const activeItems = items.filter((i) => i.isActive);
 const featuredIds = [1, 4, 7, 9, 10, 12, 16, 18].map((n) => I[n].id);
 const storefrontContent = {
   tagline: "Jaipur's trusted wholesale partner since 1998",
-  about: "Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city.",
+  ownerNote: "Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city.",
   highlights: [
     { icon: "truck", title: "Same-day delivery", text: "Order by 2 PM, get it today" },
     { icon: "credit", title: "7-day credit", text: "For regular retailers" },
@@ -315,23 +315,38 @@ const storefrontContent = {
     { icon: "shield", title: "Genuine products", text: "Direct from brand depots" },
   ],
   brands: ["Aashirvaad", "Tata", "Fortune", "Parle", "Britannia", "Nestlé", "Amul", "HUL", "Colgate", "Dettol", "Haldiram's", "Everest"],
-  serviceAreas: ["Malviya Nagar", "Vaishali Nagar", "Mansarovar", "Raja Park", "Sanganer", "Jagatpura", "C-Scheme", "Pratap Nagar"],
-  businessHours: "Mon–Sat · 8 AM – 8 PM",
+  stats: [
+    { value: "1998", label: "Serving since" }, { value: "300+", label: "Stores served" },
+    { value: "500+", label: "Products" }, { value: "8", label: "Areas covered" },
+  ],
+  openingHours: { days: [1, 2, 3, 4, 5, 6], open: "08:00", close: "20:00" },
+  sameDayCutoff: "14:00",
+  godown: { lat: 26.9196, lng: 75.818, label: "Kishanpole Bazar" },
 };
+// ADR-023: circle delivery zones (real coordinates, Jaipur)
+const deliveryZones = [
+  ["Malviya Nagar", 26.853, 75.805], ["Vaishali Nagar", 26.9115, 75.7432], ["Mansarovar", 26.8697, 75.7633], ["Raja Park", 26.8925, 75.8275],
+  ["Sanganer", 26.8217, 75.7926], ["Jagatpura", 26.8315, 75.8655], ["C-Scheme", 26.905, 75.804], ["Pratap Nagar", 26.807, 75.823],
+].map(([name, lat, lng], i) => ({ id: uuid(), name, kind: "CIRCLE", center: { lat, lng }, radiusM: 1400, sortOrder: i, isActive: true }));
+const publicZone = ({ sortOrder, isActive, ...z }) => z;
 const coverUrl = media("cover");
 const storefront = {
-  distributor: { ...publicDistributor, coverUrl, tagline: storefrontContent.tagline, about: storefrontContent.about },
+  distributor: { ...publicDistributor, coverUrl, tagline: storefrontContent.tagline },
   highlights: storefrontContent.highlights,
+  stats: storefrontContent.stats,
   categories: [...new Set(activeItems.map((i) => i.category))].sort(),
   brands: storefrontContent.brands,
-  serviceAreas: storefrontContent.serviceAreas,
-  businessHours: storefrontContent.businessHours,
+  openingHours: storefrontContent.openingHours,
+  sameDayCutoff: storefrontContent.sameDayCutoff,
+  owner: { name: distributorMe.ownerName, note: storefrontContent.ownerNote },
+  map: { godown: storefrontContent.godown, zones: deliveryZones.map(publicZone) },
   featuredItems: featuredIds.map((id) => publicItem(items.find((i) => i.id === id))),
   viewer: null,
 };
 const storefrontMinimal = {
-  distributor: { businessName: "Maa Durga Agencies", logoUrl: null, coverUrl: null, tagline: null, about: null },
-  highlights: [], categories: ["Staples", "Snacks"], brands: [], serviceAreas: [], businessHours: null,
+  distributor: { businessName: "Maa Durga Agencies", logoUrl: null, coverUrl: null, tagline: null },
+  highlights: [], stats: [], categories: ["Staples", "Snacks"], brands: [],
+  openingHours: null, sameDayCutoff: null, owner: null, map: { godown: null, zones: [] },
   featuredItems: [], viewer: null,
 };
 const storefrontSignedIn = { ...storefront, viewer: { retailerName: R[1].name, shopName: R[1].shopName } };
@@ -412,6 +427,7 @@ write("orders.page", page(orders.map(dSummary)));
 const detailFor = { pending: 1040, partial: 1038, accepted: 1037, rejected: 1033, dispatched: 1035, delivered: 1034, cancelled: 1031 };
 for (const [k, no] of Object.entries(detailFor)) write(`order-detail.${k}`, dDetail(byNo[no]));
 write("storefront-admin", storefrontAdmin);
+write("delivery-zones.page", page(deliveryZones));
 write("storefront", storefront);
 write("storefront.minimal", storefrontMinimal);
 write("storefront.signed-in", storefrontSignedIn);

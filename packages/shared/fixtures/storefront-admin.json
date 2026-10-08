@@ -1,6 +1,6 @@
 {
   "tagline": "Jaipur's trusted wholesale partner since 1998",
-  "about": "Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city.",
+  "ownerNote": "Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city.",
   "highlights": [
     {
       "icon": "truck",
@@ -47,17 +47,42 @@
     "Haldiram's",
     "Everest"
   ],
-  "serviceAreas": [
-    "Malviya Nagar",
-    "Vaishali Nagar",
-    "Mansarovar",
-    "Raja Park",
-    "Sanganer",
-    "Jagatpura",
-    "C-Scheme",
-    "Pratap Nagar"
+  "stats": [
+    {
+      "value": "1998",
+      "label": "Serving since"
+    },
+    {
+      "value": "300+",
+      "label": "Stores served"
+    },
+    {
+      "value": "500+",
+      "label": "Products"
+    },
+    {
+      "value": "8",
+      "label": "Areas covered"
+    }
   ],
-  "businessHours": "Mon–Sat · 8 AM – 8 PM",
+  "openingHours": {
+    "days": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6
+    ],
+    "open": "08:00",
+    "close": "20:00"
+  },
+  "sameDayCutoff": "14:00",
+  "godown": {
+    "lat": 26.9196,
+    "lng": 75.818,
+    "label": "Kishanpole Bazar"
+  },
   "coverUploadId": null,
   "featuredItemIds": [
     "0199c4e2-0002-7002-8002-000000000002",
@@ -70,6 +95,6 @@
     "0199c4e2-0020-7020-8020-000000000020"
   ],
   "published": true,
-  "coverUrl": "https://app.distributekaro.in/media/img/cover/0199c4e2-007b-707b-807b-00000000007b.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
+  "coverUrl": "https://app.distributekaro.in/media/img/cover/0199c4e2-0083-7083-8083-000000000083.webp?X-Amz-Expires=7200&X-Amz-Signature=…",
   "previewUrl": "https://app.distributekaro.in/d/bT7kQ9xZr2Mw"
 }

@@ -26,6 +26,8 @@
 | ADR-019 | **Logo = C (dk monogram)**: indigo tile, white "d" + stem, marigold "k" arm | Accepted | 2026-10-08 |
 | ADR-020 | **Tinted surfaces**: background `#F7F6FC`, cards `#EEEDF8`, fields/chips `#E3E2F1`; pure white only for sheets & dialogs (dark: `#0E0D1A` / `#1A1930` / `#24223F`) | Accepted | 2026-10-08 |
 | ADR-021 | **Hindi is in Phase 1 scope** (not a stretch goal): every UI string in EN + HI from day one; language switch in both apps | Accepted | 2026-10-08 |
+| ADR-022 | **Storefront v2 replaces R-01**: toran/jali hero, live open + same-day cut-off card, stats, swipe highlights, category tiles → popular products, quick view, 3-step how-to, brand marquee, delivery map, owner note, enquiry banner | Accepted | 2026-10-08 |
+| ADR-023 | **Real map + delivery zones**: MapLibre (web + Android) on self-hosted Protomaps PMTiles (OSM data) served from Garage via Caddy; distributor draws circle zones; zones stored as rows (no PostGIS) | Accepted | 2026-10-08 |
 | ADR-016 | **Distributor-only stock tracking** via a stock ledger: sold vs remaining per item; retailers never see stock and can order freely | Accepted | 2026-10-08 |
 
 ---
@@ -137,6 +139,27 @@ The PWA is served at `/`, the retailer entry is `/d/<slug>`, and Caddy proxies `
 - **Not translated:** user data (item names, shop names, notes). Distributor storefront texts are entered by the distributor in whatever language they choose.
 - **Numbers:** always Western digits with en-IN grouping (₹1,25,000.50), in both languages.
 - **Prototypes:** every batch from UI-5 onward has an EN/HI toggle.
+
+## ADR-022 — Storefront v2
+Approved by the owner ("replace this, looks good; rest all looks good"). The prototype is at `prototypes/storefront-v2/`. UI-5's other screens (phone sheet, public products, not registered, request, enquiry, invalid QR) stay as they are. New storefront data:
+- `stats`: max 4 `{value, label}` pairs, e.g. 1998 · Serving since
+- `openingHours`: `{days:[1..7], open:"08:00", close:"20:00"}` (IST)
+- `sameDayCutoff`: e.g. `"14:00"`, or null to hide the countdown
+- `ownerNote` + owner name: shown as the "From the owner" card
+- `godown`: lat/lng + label, used as the map origin
+- `zones`: see ADR-023. These replace the free-text `serviceAreas` and `businessHours`.
+
+Decorations (toran, jali, crates, truck, marquee) are part of the theme and not configurable in Phase 1. Every animation stops under `prefers-reduced-motion`.
+
+## ADR-023 — Real map with delivery zones
+- **Tiles:** a **Protomaps** basemap built from OpenStreetMap data, as a **PMTiles** extract for India (or Rajasthan) stored in Garage and served by Caddy at `/tiles/*` with HTTP range requests. Glyphs and sprites are self-hosted as well. There are no third-party tile APIs, keys or per-use fees, and everything is OSM data and OSS software.
+- **Required attribution:** "© OpenStreetMap contributors" is always visible on the map.
+- **Why not OSM's public tile server:** its usage policy forbids heavy production use, so it's not an option for the product.
+- **Web (retailer storefront):** **MapLibre GL JS**, lazy-loaded only when the map section scrolls into view, so it doesn't count against the initial JS budget (HLD §8). There's a static fallback list of zone chips.
+- **Android (distributor):** **MapLibre Native Android** in the storefront editor. The distributor drops the godown pin and adds **circle zones** (tap to place, drag a handle to set the radius from 0.5 to 10 km, then name it). Polygon zones are a Phase 2 option.
+- **Storage:** a `delivery_zones` table holding center lat/lng + `radius_m` (the `polygon` jsonb column is reserved). No PostGIS, because Phase 1 never queries by location. If we later need "does this retailer fall inside a zone?", it's simple haversine maths in SQL, or we add PostGIS then.
+- **No geocoding** (address search) in Phase 1. Nominatim (self-hosted) is a Phase 2 option.
+- **Prototype only:** the artifact uses a snapshot of 9 standard OSM tiles at zoom 12, uploaded as artifact assets, because canvases can't load external tiles. The real app uses the self-hosted setup above.
 
 ---
 

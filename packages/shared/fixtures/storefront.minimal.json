@@ -3,17 +3,22 @@
     "businessName": "Maa Durga Agencies",
     "logoUrl": null,
     "coverUrl": null,
-    "tagline": null,
-    "about": null
+    "tagline": null
   },
   "highlights": [],
+  "stats": [],
   "categories": [
     "Staples",
     "Snacks"
   ],
   "brands": [],
-  "serviceAreas": [],
-  "businessHours": null,
+  "openingHours": null,
+  "sameDayCutoff": null,
+  "owner": null,
+  "map": {
+    "godown": null,
+    "zones": []
+  },
   "featuredItems": [],
   "viewer": null
 }

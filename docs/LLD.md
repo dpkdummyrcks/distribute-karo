@@ -123,10 +123,26 @@ storefronts (                                    -- 1:1 with distributors (ADR-0
   distributor_id uuid PRIMARY KEY REFERENCES distributors,
   tagline text, about text, cover_key text,
   highlights jsonb NOT NULL DEFAULT '[]',          -- [{icon, title, text}] max 6
-  brands text[] NOT NULL DEFAULT '{}', service_areas text[] NOT NULL DEFAULT '{}',
-  business_hours text, featured_item_ids uuid[] NOT NULL DEFAULT '{}',   -- max 12, filtered to active at read
+  stats jsonb NOT NULL DEFAULT '[]',               -- [{value, label}] max 4 (ADR-022)
+  brands text[] NOT NULL DEFAULT '{}',
+  opening_hours jsonb,                             -- {days:[1..7], open:"08:00", close:"20:00"} IST
+  same_day_cutoff time,                            -- null = hide countdown
+  owner_note text,                                 -- "From the owner" card; owner name from distributors.owner_name
+  godown_lat numeric(9,6), godown_lng numeric(9,6), godown_label text,
+  featured_item_ids uuid[] NOT NULL DEFAULT '{}',  -- max 12, filtered to active at read
   published bool NOT NULL DEFAULT true
 )
+
+delivery_zones (                                 -- ADR-023; circle zones in Phase 1
+  distributor_id uuid NOT NULL REFERENCES distributors,
+  name text NOT NULL,                              -- e.g. "Malviya Nagar"
+  kind text NOT NULL DEFAULT 'CIRCLE' CHECK (kind IN ('CIRCLE','POLYGON')),
+  center_lat numeric(9,6) NOT NULL, center_lng numeric(9,6) NOT NULL,
+  radius_m int CHECK (radius_m BETWEEN 500 AND 10000),
+  polygon jsonb,                                   -- GeoJSON Polygon, reserved for Phase 2
+  sort_order int NOT NULL DEFAULT 0, is_active bool NOT NULL DEFAULT true
+)
+  INDEX (distributor_id, sort_order)
 
 access_requests (
   distributor_id uuid NOT NULL, phone text NOT NULL,
@@ -181,7 +197,7 @@ sessions (                                       -- no RLS; auth module only
 )
   INDEX (subject_type, subject_id) WHERE revoked_at IS NULL
 ```
-**RLS:** enabled + forced on `items, stock_movements, storefronts, retailers, access_requests, enquiries, orders, order_items, order_events`. Policy: `distributor_id = current_setting('app.distributor_id')::uuid` (USING + WITH CHECK).
+**RLS:** enabled + forced on `items, stock_movements, storefronts, delivery_zones, retailers, access_requests, enquiries, orders, order_items, order_events`. Policy: `distributor_id = current_setting('app.distributor_id')::uuid` (USING + WITH CHECK).
 - Roles: `dk_owner` (migrations) and `dk_app` (runtime, no BYPASSRLS).
 - `withTenant(did, tx => …)` runs `select set_config('app.distributor_id', $1, true)` first. Repositories require that tx by type.
 - Public endpoints resolve slug → `did` from `distributors` (no RLS), then enter `withTenant`.
@@ -189,7 +205,7 @@ sessions (                                       -- no RLS; auth module only
 ## 4. Field limits
 - **Names and text:** name / shopName 1–120 · businessName 2–120 · sku ≤ 40 · category ≤ 40 · description ≤ 500 · note / lineNote / reason / message ≤ 500 · email ≤ 254 · address ≤ 300 · locationLabel ≤ 120.
 - **Formats:** gstin `^\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]$` · password 8–128, not in the common list, not equal to the phone.
-- **Numbers:** ratePaise 0–10^10 · qty / stockQty ≤ 9 999 999.999 · adjustment reason 3–200 · tagline ≤ 80 · about ≤ 1000 · highlight title ≤ 30, text ≤ 80 · brands/serviceAreas ≤ 20 entries × 40 chars · businessHours ≤ 80.
+- **Numbers:** ratePaise 0–10^10 · qty / stockQty ≤ 9 999 999.999 · adjustment reason 3–200 · tagline ≤ 80 · about ≤ 1000 · highlight title ≤ 30, text ≤ 80 · brands ≤ 20 entries × 40 chars · stat value ≤ 8, label ≤ 24 · ownerNote ≤ 400 · zones ≤ 30 per distributor, name ≤ 40.
 - **Orders:** 1–100 lines, unique itemIds.
 
 ## 5. Order state machine (`packages/shared/src/orderMachine.ts`)
@@ -300,6 +316,7 @@ Base `/v1`. `D` = distributor bearer (aud `dk-distributor`). `R` = retailer bear
 | PATCH `/d/enquiries/:id` | D | `{status: "READ"\|"CLOSED"}` | 200 `Enquiry` |
 | GET `/d/inbox/counts` | D | – | 200 `InboxCounts` |
 | GET / PUT `/d/storefront` | D | `StorefrontInput` (PUT) | 200 `StorefrontAdmin` |
+| GET / POST `/d/delivery-zones` · PATCH / DELETE `/d/delivery-zones/:id` | D | `DeliveryZoneInput` | 200/201 `DeliveryZone` / 204 |
 | GET `/d/orders` | D | `?status=A,B&retailerId&cursor&limit` | 200 `Page<OrderSummary>` |
 | GET `/d/orders/:id` | D | – | 200 `OrderDetail` |
 | POST `/d/orders/:id/decision` | D | `DecisionInput` | 200 `OrderDetail` |
@@ -407,14 +424,22 @@ type Presign = { uploadId: string; url: string; method: "PUT"; headers: Record<s
 // ---------- retailer (public + authenticated)
 type PublicDistributor = { businessName: string; logoUrl: string | null };       // header use
 type Highlight = { icon: "truck"|"credit"|"tag"|"box"|"clock"|"star"|"shield"|"phone"; title: string; text: string | null };
-type Storefront = { distributor: PublicDistributor & { coverUrl: string | null; tagline: string | null; about: string | null };
-  highlights: Highlight[]; categories: string[]; brands: string[]; serviceAreas: string[]; businessHours: string | null;
+type OpeningHours = { days: number[] /* 1=Mon … 7=Sun */; open: string /* "08:00" */; close: string /* "20:00" */ };
+type DeliveryZone = { id: string; name: string; kind: "CIRCLE"; center: { lat: number; lng: number }; radiusM: number };
+type DeliveryZoneInput = { name: string; center: { lat: number; lng: number }; radiusM: number; sortOrder?: number; isActive?: boolean };
+type Storefront = { distributor: PublicDistributor & { coverUrl: string | null; tagline: string | null };
+  highlights: Highlight[]; stats: { value: string; label: string }[]; categories: string[]; brands: string[];
+  openingHours: OpeningHours | null; sameDayCutoff: string | null;           // clients compute "Open now" + countdown in Asia/Kolkata
+  owner: { name: string; note: string } | null;
+  map: { godown: { lat: number; lng: number; label: string } | null; zones: DeliveryZone[] };
   featuredItems: PublicCatalogItem[];
   viewer: { retailerName: string; shopName: string | null } | null };      // non-null when a valid retailer session is present
 type PublicCatalogItem = { id: string; name: string; unit: Unit; category: string | null; imageUrl: string | null };  // never price or stock (QG)
-type StorefrontInput = { tagline?: string|null; about?: string|null; coverUploadId?: string|null;
-  highlights: Highlight[]; brands: string[]; serviceAreas: string[]; businessHours?: string|null;
-  featuredItemIds: string[]; published: boolean };
+type StorefrontInput = { tagline?: string|null; coverUploadId?: string|null;
+  highlights: Highlight[]; stats: { value: string; label: string }[]; brands: string[];
+  openingHours?: OpeningHours|null; sameDayCutoff?: string|null; ownerNote?: string|null;
+  godown?: { lat: number; lng: number; label: string }|null;
+  featuredItemIds: string[]; published: boolean };                         // zones have their own endpoints
 type StorefrontAdmin = StorefrontInput & { coverUrl: string | null; previewUrl: string /* = qrUrl */ };
 type RetailerSession = { accessToken: string; accessTokenExpiresAt: string;
   retailer: { id: string; name: string; shopName: string | null }; distributor: PublicDistributor };
@@ -431,7 +456,7 @@ type PlaceOrderInput = { lines: { itemId: string; qty: Qty }[]; note?: string|nu
 ```
 
 **Fixture files** (`packages/shared/fixtures/`):
-- **Storefront admin:** `storefront-admin.json`.
+- **Storefront admin:** `storefront-admin.json`, `delivery-zones.page.json`.
 - **Distributor auth & profile:** `distributor-session.json`, `distributor-me.onboarding.json`, `distributor-me.json`, `dashboard.json`, `dashboard.new-account.json`.
 - **Catalog & stock:** `items.page.json`, `item.json`, `categories.json`, `stock-movements.page.json`, `stock-report.json`.
 - **Retailers, requests, enquiries:** `retailers.page.json`, `retailer.json`, `access-requests.page.json`, `enquiries.page.json`, `inbox-counts.json`.
@@ -490,7 +515,8 @@ Headers: `RateLimit-Policy` and `RateLimit` (IETF draft), plus `Retry-After` on 
 - **State:** TanStack Query for server data. The cart is a Zustand store persisted per slug as `{itemId, qty}` (prices always come from the catalog). The access token lives in memory. `deviceId` is a random UUID in localStorage.
 - **Qty input:** a stepper uses the unit's step. Tapping the number opens a numeric keypad (`inputmode="decimal"` only for decimal units).
 - **Service worker:** precache the shell. Images are stale-while-revalidate. `/v1/*` is NetworkOnly.
-- **CSP:** `default-src 'self'; img-src 'self' data: blob:; connect-src 'self'; frame-ancestors 'none'; base-uri 'none'; object-src 'none'`.
+- **CSP:** `default-src 'self'; img-src 'self' data: blob:; connect-src 'self'; worker-src 'self' blob:; frame-ancestors 'none'; base-uri 'none'; object-src 'none'` (`worker-src blob:` is for MapLibre).
+- **Storefront map:** MapLibre GL JS + `pmtiles` protocol, dynamically imported when the map section enters the viewport (IntersectionObserver). The style is Protomaps light/dark with brand-tinted overrides, sourced from `/tiles/india.pmtiles`. Zones are a GeoJSON source (circles turned into 64-point polygons on the client), plus a godown marker and a route line (a display arc, not road routing). Zone chips stay the accessible control; the map itself is `aria-hidden` with a text summary.
 
 ## 12. Android internals
 | Concern | Choice |
@@ -504,6 +530,7 @@ Headers: `RateLimit-Policy` and `RateLimit` (IETF draft), plus `Retry-After` on 
 | Lists | Paging 3 |
 | Images | Coil 3; Photo Picker; downscale before upload |
 | Location | framework `LocationManager.getCurrentLocation` + manual label |
+| Maps | MapLibre Native Android (same Protomaps style + `/tiles` source); storefront editor → godown pin + circle-zone editor (tap to place, drag radius handle, name) |
 | QR | ZXing core → Bitmap; share via `FileProvider` + `ACTION_SEND`; save via MediaStore |
 | Contact | enquiry/request rows: Call (`ACTION_DIAL`) and WhatsApp (`https://wa.me/<number>`) intents |
 | i18n | `strings.xml` (+ `values-hi`); money via en-IN `NumberFormat` |

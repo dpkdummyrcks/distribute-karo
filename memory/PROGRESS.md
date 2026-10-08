@@ -5,8 +5,8 @@
 
 ## Current checkpoint
 - **Phase:** 1A — UI prototypes
-- **Last completed:** 1A.6 UI-5 published: clickable flow + overview of 10 states, EN/HI, dark tweak
-- **Next step:** owner picks storefront v2 vs UI-5 R-01 and confirms the new storefront fields it needs (stats, structured hours, same-day cutoff, owner note, area map). Then UI-1 distributor sign-up/login (logo + design system), then the storefront batch (UI-5 moved up to second)
+- **Last completed:** 1A.6b storefront v2 approved; real OSM map with delivery-zone hotspots; ADR-022/023; LLD storefront + delivery_zones; fixtures regenerated
+- **Next step:** 1A.2 UI-1 distributor sign-up/login/onboarding (Android, EN/HI). Storefront editor incl. map zone editor comes in UI-3 (logo + design system), then the storefront batch (UI-5 moved up to second)
 - **Blockers:** none. QA–QD are running on documented assumptions (see DECISIONS.md *Open questions*); confirm during UI review
 
 ## Checklist
@@ -30,8 +30,8 @@
 | 1A.3 | UI-2 Dashboard, catalog & stock (D-07…D-09c) | not started | — |
 | 1A.4 | UI-3 Retailers, requests, enquiries, QR, storefront editor (D-10…D-14a) | not started | — |
 | 1A.5 | UI-4 Orders & decisions, settings (D-15…D-19) | not started | — |
-| 1A.6 | UI-5 Storefront, public products, entry, not-registered, forms (R-01…R-04) · EN/HI (sources: `prototypes/ui-5/project/`) | in review | https://claude.ai/artifact/TMsp8DxKnpVKywaqwDZhUb |
-| 1A.6b | Storefront v2: decorative/interactive redesign of R-01 (sources: `prototypes/storefront-v2/project/`) | in review | https://claude.ai/artifact/WqqY59SbZsCn2BERC6HjVE |
+| 1A.6 | UI-5 Storefront, public products, entry, not-registered, forms (R-01…R-04) · EN/HI (sources: `prototypes/ui-5/project/`) | approved (R-01 replaced by v2) | https://claude.ai/artifact/TMsp8DxKnpVKywaqwDZhUb |
+| 1A.6b | Storefront v2: decorative/interactive redesign of R-01 (sources: `prototypes/storefront-v2/project/`) | approved, real map with delivery hotspots added | https://claude.ai/artifact/WqqY59SbZsCn2BERC6HjVE |
 | 1A.7 | UI-6 Retailer catalog → cart → orders (R-05…R-09) | not started | — |
 | 1A.8 | UI-7 Combined end-to-end prototype → **sign-off, freeze contract v0** | not started | — |
 Status values: `not started` · `in progress` · `in review` · `changes requested` · `approved`
@@ -87,3 +87,4 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 | 2026-10-08 | UI-0 approved: logo C, colours OK, fonts OK (Hindi needed → ADR-021 Hindi in Phase 1). Applied tinted surfaces (ADR-020) and republished. |
 | 2026-10-08 | UI-5 published (artifact TMsp8DxKnpVKywaqwDZhUb): storefront visitor/new/signed-in, phone sheet, public products, not registered (+pending), request, enquiry, success, invalid QR. Demo numbers: 98280 11111 registered, 98280 77777 pending, any other → not registered. |
 | 2026-10-08 | /design: storefront v2 (artifact WqqY59SbZsCn2BERC6HjVE): toran garland, jali hero, live open/cut-off card, stats, swipe highlights, category tiles filtering products, quick-view sheet, 3-step how-it-works, brand marquee, tappable delivery map, owner note, enquiry banner. Needs new storefront DTO fields if approved. |
+| 2026-10-08 | Owner: storefront v2 replaces R-01; map must be real with delivery hotspots → real OSM tile snapshot in prototype, ADR-023 (MapLibre + self-hosted Protomaps PMTiles, circle zones table). Rest of UI-5 approved. |

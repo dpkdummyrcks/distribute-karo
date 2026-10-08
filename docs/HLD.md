@@ -24,6 +24,7 @@ The distributor accepts each order fully or partially, or rejects it, then marks
 | Object storage | MinIO | **Garage** | ADR-004 |
 | Delivery | UI prototypes first | **Artifacts with a review loop per batch** | ADR-005 |
 | New features | — | **Access requests + enquiries** inbox in the distributor app | ADR-013 |
+| Maps | — | **Real map** with distributor-drawn delivery zones; self-hosted OSM tiles via Protomaps + MapLibre | ADR-023 |
 | QR landing | Distributor name/logo card | **Public storefront** (cover, highlights, brands, featured products, service areas), public product browsing (no prices), CTAs for everyone | ADR-017 |
 
 ## 3. System context
@@ -53,7 +54,8 @@ flowchart LR
 | **PostgreSQL 18** | System of record; RLS for tenant defense-in-depth | |
 | **Valkey** | Sliding-window rate limits, login lockouts, upload tickets | |
 | **Garage** | Item images, shop photos, logos (private bucket, signed URLs) | |
-| **Caddy** | TLS, security headers, serves the PWA, proxies `/v1` and `/media` | |
+| **Caddy** | TLS, security headers, serves the PWA, proxies `/v1` and `/media`; serves `/tiles/*` (PMTiles, range requests) |
+| **Map tiles** | Protomaps PMTiles extract (OSM data) in Garage + self-hosted glyphs/sprites; rendered by MapLibre on web and Android (ADR-023) | |
 
 ## 5. Deployment (single VPS)
 ```mermaid
