@@ -6,6 +6,7 @@
 ## 1. Principles
 - **Distributor app = Material 3 Android.** Top app bar, navigation bar, FAB, M3 text fields, bottom sheets, snackbars, 48 dp targets. Each prototype component should map to a Compose M3 component.
 - **Retailer web = native-feeling PWA.** Centred app shell (max-w 480 px), bottom tabs, sticky cart bar, safe-area insets, 44 px targets.
+- **No horizontal scrolling in the distributor app** (ADR-024): chip and filter rows use `flex-wrap`; Compose uses `FlowRow`, never `LazyRow` or `horizontalScroll`.
 - **Tinted surfaces** (ADR-020): cards and fields sit on subtle indigo-tinted fills, never plain white; white is reserved for sheets and dialogs.
 - **EN + HI** in every screen (ADR-021): the prototype has a language toggle; layouts must survive Hindi string lengths.
 - Light + dark (system default, with a toggle in the prototype). Fonts: Anek Latin / Anek Devanagari + Mukta (ADR-018). ₹ with en-IN grouping (₹1,25,000.50). Layouts leave room for Hindi.

@@ -90,3 +90,4 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 | 2026-10-08 | Owner: storefront v2 replaces R-01; map must be real with delivery hotspots → real OSM tile snapshot in prototype, ADR-023 (MapLibre + self-hosted Protomaps PMTiles, circle zones table). Rest of UI-5 approved. |
 | 2026-10-08 | UI-1 published (artifact 1fKKLFvphehUmeTUPSzpyk). Demo: login 98123 45678 / balaji@1998; same number on sign-up shows 'already exists'; 5 wrong passwords lock 15 min. |
 | 2026-10-08 | UI-1 approved (owner said proceed). UI-2 published (artifact 63pT5g1DJhpUuNWGEgzcHA); numbers tie to fixtures (today ₹15,796, 7d ₹42,836, 30d ₹2,74,142.25; Toor Dal ledger 202 kg sold → 6.5 kg left). |
+| 2026-10-08 | Owner: no horizontal scrolling in the app → UI-2 catalog filters, category chips and history filters now wrap (ADR-024). Open QH: same rule for retailer web? |

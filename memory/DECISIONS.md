@@ -28,6 +28,7 @@
 | ADR-021 | **Hindi is in Phase 1 scope** (not a stretch goal): every UI string in EN + HI from day one; language switch in both apps | Accepted | 2026-10-08 |
 | ADR-022 | **Storefront v2 replaces R-01**: toran/jali hero, live open + same-day cut-off card, stats, swipe highlights, category tiles → popular products, quick view, 3-step how-to, brand marquee, delivery map, owner note, enquiry banner | Accepted | 2026-10-08 |
 | ADR-023 | **Real map + delivery zones**: MapLibre (web + Android) on self-hosted Protomaps PMTiles (OSM data) served from Garage via Caddy; distributor draws circle zones; zones stored as rows (no PostGIS) | Accepted | 2026-10-08 |
+| ADR-024 | **No horizontal scrolling in the distributor app**: chip rows, filters and suggestions wrap onto new lines; long text truncates with an ellipsis; nothing is wider than the screen (retailer web → QH) | Accepted | 2026-10-08 |
 | ADR-016 | **Distributor-only stock tracking** via a stock ledger: sold vs remaining per item; retailers never see stock and can order freely | Accepted | 2026-10-08 |
 
 ---
@@ -186,4 +187,5 @@ Decorations (toran, jali, crates, truck, marquee) are part of the theme and not 
 | # | Question | Assumption used until answered |
 |---|---|---|
 | QB | Distributor forgot password in Phase 1 (no SMS/email)? | Admin CLI `pnpm admin:reset-password <phone>` prints a one-time reset code (15 min) the distributor enters in the app; OTP/email reset in Phase 2 |
+| QH | Does "no horizontal scrolling" also apply to the **retailer web**? The storefront v2 swipe cards, popular-products row and UI-5 category chips scroll sideways today | Keep them there until the owner says otherwise |
 | QD | When a distributor approves an access request, add the retailer straight away or open the pre-filled retailer form first? | Open the pre-filled form (distributor can add photo/location), then save |

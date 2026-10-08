@@ -135,7 +135,7 @@ body{margin:0}
         </label>
         <button onClick="{{cycleSort}}" aria-label="{{cat.sortLabel}}" style="height: 46px; padding: 0 12px; flex: none; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M4 17l3 3 3-3M17 20V4M14 7l3-3 3 3"></path></svg>{{cat.sortShort}}</button>
       </div>
-      <div style="display: flex; gap: 8px; padding: 0 16px 8px; overflow-x: auto; flex: none">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 8px; flex: none">
         <sc-for list="{{cat.filters}}" as="f" hint-placeholder-count="4">
           <button onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="flex: none; height: 34px; padding: 0 12px; border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 700; border: 1.5px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}; cursor: pointer">{{f.label}}</button>
         </sc-for>
@@ -277,7 +277,7 @@ body{margin:0}
           <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.category}}</span>
           <input value="{{fm.category}}" onChange="{{onCategory}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
         </span>
-        <span style="display: flex; gap: 6px; overflow-x: auto">
+        <span style="display: flex; flex-wrap: wrap; gap: 6px">
           <sc-for list="{{fm.catChips}}" as="c" hint-placeholder-count="5"><button onClick="{{c.pick}}" style="flex: none; height: 32px; padding: 0 10px; border-radius: 8px; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{c.label}}</button></sc-for>
         </span>
       </label>
@@ -336,7 +336,7 @@ body{margin:0}
       <span style="border-radius: 16px; background: var(--surface); padding: 10px; display: flex; flex-direction: column"><span style="font-size: 12px; color: var(--text2)">{{s.soldLabel}}</span><span style="font-size: 17px; font-weight: 800">{{hist.sold}}</span></span>
       <span style="border-radius: 16px; background: var(--surface); padding: 10px; display: flex; flex-direction: column"><span style="font-size: 12px; color: var(--text2)">{{s.inLabel}}</span><span style="font-size: 17px; font-weight: 800">{{hist.received}}</span></span>
     </div>
-    <div style="display: flex; gap: 8px; padding: 0 16px 8px; overflow-x: auto; flex: none">
+    <div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 8px; flex: none">
       <sc-for list="{{hist.filters}}" as="f" hint-placeholder-count="4">
         <button onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="flex: none; height: 34px; padding: 0 12px; border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 700; border: 1.5px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}; cursor: pointer">{{f.label}}</button>
       </sc-for>
@@ -757,7 +757,7 @@ class Component extends DCLogic {
       alertBorder: f.tried && alertMsg ? 'var(--danger)' : 'transparent',
       hasPhoto: f.photo, noPhoto: !f.photo, photoLabel: f.photo ? t.changePhoto : t.addPhoto, initials: initials(f.name || 'Item'),
       tileBg: f.photo ? ftb : 'var(--field)', tileFg: f.photo ? ftf : 'var(--text2)', photoBorder: f.photo ? '0' : '2px dashed var(--outline2)',
-      catChips: CATS.slice(0, 7).map((c) => ({ label: c, ...chip(f.category === c), pick: () => this.setState({ form: { ...f, category: c } }) })),
+      catChips: CATS.slice(0, 6).map((c) => ({ label: c, ...chip(f.category === c), pick: () => this.setState({ form: { ...f, category: c } }) })),
       swBg: f.active ? 'var(--primary)' : 'var(--field)', swBorder: f.active ? 'var(--primary)' : 'var(--outline2)',
       knob: f.active ? '24px' : '16px', knobTop: f.active ? '2px' : '6px', knobLeft: f.active ? '22px' : '6px', knobBg: f.active ? 'var(--onPrimary)' : 'var(--outline2)',
       delTitle: t.delTitle(f.name || ''),
