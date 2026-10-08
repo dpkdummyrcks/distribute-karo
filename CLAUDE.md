@@ -12,7 +12,7 @@
 
 ## Rules
 - Phase gates are strict. No server code until UI-7 is approved (ADR-005).
-- Stack: Hono/TS API, PostgreSQL 18, Valkey, Garage, Vite PWA, and a native Kotlin/Compose Android app (`apps/distributor-android`, Gradle, outside pnpm). Distributor auth = phone + password; retailer = phone-only. Distributor-only stock ledger (sold vs remaining); retailers never see stock. Decimal quantities.
+- Stack: Hono/TS API, PostgreSQL 18, Valkey, Garage, Vite PWA, and a native Kotlin/Compose Android app (`apps/distributor-android`, Gradle, outside pnpm). Distributor auth = phone + password; retailer = phone-only. Distributor-only stock ledger (sold vs remaining); retailers never see stock. Decimal quantities. EN + HI from day one.
 - TS strict, no `any`, Zod `.strict()` everywhere. Kotlin: ktlint + detekt clean.
 - `distributor_id` always comes from the auth token, never from request input.
 - Never log passwords or tokens. Mask phone numbers to the last 4 digits.

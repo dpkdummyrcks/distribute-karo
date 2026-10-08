@@ -129,7 +129,7 @@ sequenceDiagram
 | Android | Cold start < 1.5 s mid-range; minSdk 26 |
 | Availability | Single VPS best effort; RPO 24 h |
 | Accessibility | WCAG 2.2 AA; 48 dp / 44 px targets |
-| i18n | English first, strings externalised; Hindi stretch |
+| i18n | **English + Hindi** in Phase 1 (ADR-021); all strings externalised |
 
 ## 9. Revised acceptance criteria
 1. A distributor can sign up with phone + password, add items and retailers, and show a QR on a real Android device.
