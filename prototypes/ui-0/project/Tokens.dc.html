@@ -22,7 +22,7 @@ a{color:#3730A3}a:hover{color:#1E1B4B}
       <div style="font-size: 14px; font-weight: 600; letter-spacing: 0.08em; color: #4A4966">UI-0 · TOKENS</div>
       <h1 style="margin: 0; font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 44px; line-height: 1.05">Colour, type &amp; status</h1>
     </div>
-    <p style="margin: 0; font-size: 16px; color: #4A4966">One tokens.json → Tailwind CSS (web) + Compose theme (Android)</p>
+    <p style="margin: 0; font-size: 16px; color: #4A4966">Tinted surfaces everywhere · pure white only for sheets &amp; dialogs</p>
   </header>
 
   <!-- colour: light + dark -->
@@ -145,16 +145,16 @@ class Component extends DCLogic {
   renderVals() {
     const sw = (pairs) => pairs.map(([name, hex]) => ({ name, hex }));
     const light = sw([
-      ['background', '#F6F6FA'], ['surface', '#FFFFFF'], ['surfaceVariant', '#EEEEF6'], ['outline', '#D7D6E4'],
+      ['background', '#F7F6FC'], ['surface · cards', '#EEEDF8'], ['surfaceHigh · fields', '#E3E2F1'], ['outline', '#DCDBEA'],
       ['text', '#16152B'], ['text2', '#4A4966'], ['text3', '#6B6A85'], ['primary', '#3730A3'],
       ['onPrimary', '#FFFFFF'], ['primaryContainer', '#E4E2FB'], ['onPrimaryCont.', '#1E1B4B'], ['accent', '#F2B33D'],
-      ['onAccent', '#2A1A00'], ['success', '#15803D'], ['warning', '#B45309'], ['danger', '#B91C1C'],
+      ['sheet · dialog', '#FFFFFF'], ['success', '#15803D'], ['warning', '#B45309'], ['danger', '#B91C1C'],
     ]);
     const dark = sw([
-      ['background', '#0E0D1A'], ['surface', '#17162A'], ['surfaceVariant', '#222039'], ['outline', '#34324F'],
+      ['background', '#0E0D1A'], ['surface · cards', '#1A1930'], ['surfaceHigh · fields', '#24223F'], ['outline', '#34324F'],
       ['text', '#EEEDF7'], ['text2', '#B9B8D0'], ['text3', '#9796B0'], ['primary', '#ABA6FF'],
       ['onPrimary', '#1B1760'], ['primaryContainer', '#2E2A78'], ['onPrimaryCont.', '#E4E2FB'], ['accent', '#F2B33D'],
-      ['onAccent', '#2A1A00'], ['success', '#4ADE80'], ['warning', '#FBBF24'], ['danger', '#F87171'],
+      ['sheet · dialog', '#222039'], ['success', '#4ADE80'], ['warning', '#FBBF24'], ['danger', '#F87171'],
     ]);
     const I = {
       clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',

@@ -6,21 +6,26 @@
 ## 1. Principles
 - **Distributor app = Material 3 Android.** Top app bar, navigation bar, FAB, M3 text fields, bottom sheets, snackbars, 48 dp targets. Each prototype component should map to a Compose M3 component.
 - **Retailer web = native-feeling PWA.** Centred app shell (max-w 480 px), bottom tabs, sticky cart bar, safe-area insets, 44 px targets.
-- Light + dark (system default, with a toggle in the prototype). Inter font. ₹ with en-IN grouping (₹1,25,000.50). Layouts leave room for Hindi.
+- **Tinted surfaces** (ADR-020): cards and fields sit on subtle indigo-tinted fills, never plain white; white is reserved for sheets and dialogs.
+- **EN + HI** in every screen (ADR-021): the prototype has a language toggle; layouts must survive Hindi string lengths.
+- Light + dark (system default, with a toggle in the prototype). Fonts: Anek Latin / Anek Devanagari + Mukta (ADR-018). ₹ with en-IN grouping (₹1,25,000.50). Layouts leave room for Hindi.
 - Every list has **loading (skeleton) / empty / error / content** states, with a state switcher in the prototype.
 - **Stock is distributor-only** (ADR-016): shown throughout the Android app, **never** in the retailer web. Quantities can be decimal for KG/G/L/ML (ADR-011).
 
 ## 2. Brand & tokens (finalised in UI-0)
-- **Name:** DistributeKaro. **Logo:** designed in UI-0. I'll offer 2–3 wordmark + icon directions (e.g. a box/route mark, a "DK" monogram) as inline SVG; you pick one.
+- **Name:** DistributeKaro. **Logo:** C · dk monogram (ADR-019).
 
 | Token | Light | Dark |
 |---|---|---|
-| primary | `#3730A3` | `#A5B4FC` |
-| onPrimary | `#FFFFFF` | `#1E1B4B` |
-| primaryContainer | `#E0E7FF` | `#312E81` |
-| surface / background | `#FFFFFF` / `#F8FAFC` | `#0F172A` / `#020617` |
-| surfaceVariant | `#F1F5F9` | `#1E293B` |
-| outline | `#CBD5E1` | `#334155` |
+| primary | `#3730A3` | `#ABA6FF` |
+| onPrimary | `#FFFFFF` | `#1B1760` |
+| primaryContainer | `#E4E2FB` | `#2E2A78` |
+| background | `#F7F6FC` | `#0E0D1A` |
+| surface (cards) | `#EEEDF8` | `#1A1930` |
+| surfaceHigh (fields, chips) | `#E3E2F1` | `#24223F` |
+| sheet / dialog | `#FFFFFF` | `#222039` |
+| outline | `#DCDBEA` | `#34324F` |
+| accent (marigold) | `#F2B33D` (text on it `#2A1A00`) | same |
 | success / warning / danger | `#15803D` / `#B45309` / `#B91C1C` | `#4ADE80` / `#FBBF24` / `#F87171` |
 | radius | sm 8 · md 12 · lg 16 · full | |
 | spacing | 4-pt scale | |

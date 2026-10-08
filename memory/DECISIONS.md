@@ -22,7 +22,10 @@
 | ADR-014 | ~~No stock tracking~~ | Superseded by ADR-016 | 2026-10-08 |
 | ADR-015 | Brand name **DistributeKaro**; logo to be designed during UI-0 | Accepted | 2026-10-08 |
 | ADR-017 | **Public storefront** at the QR URL for everyone: distributor's pitch page; existing retailers order from it, new visitors browse, then request access / enquire | Accepted | 2026-10-08 |
-| ADR-018 | Fonts: **Anek Latin** (display) + **Mukta** (UI/body) instead of Inter. Both from Ek Type, OFL, Devanagari companions for Hindi | Proposed (UI-0 review) | 2026-10-08 |
+| ADR-018 | Fonts: **Anek Latin** (display) + **Mukta** (UI/body) instead of Inter. Both from Ek Type, OFL, Devanagari companions for Hindi | Accepted | 2026-10-08 |
+| ADR-019 | **Logo = C (dk monogram)**: indigo tile, white "d" + stem, marigold "k" arm | Accepted | 2026-10-08 |
+| ADR-020 | **Tinted surfaces**: background `#F7F6FC`, cards `#EEEDF8`, fields/chips `#E3E2F1`; pure white only for sheets & dialogs (dark: `#0E0D1A` / `#1A1930` / `#24223F`) | Accepted | 2026-10-08 |
+| ADR-021 | **Hindi is in Phase 1 scope** (not a stretch goal): every UI string in EN + HI from day one; language switch in both apps | Accepted | 2026-10-08 |
 | ADR-016 | **Distributor-only stock tracking** via a stock ledger: sold vs remaining per item; retailers never see stock and can order freely | Accepted | 2026-10-08 |
 
 ---
@@ -126,6 +129,14 @@ The PWA is served at `/`, the retailer entry is `/d/<slug>`, and Caddy proxies `
 - A storefront with no content yet still renders well from the profile alone (name, logo, categories from the catalog), so a new distributor's QR works on day one.
 - Supersedes QC.
 - **Security:** public endpoints are read-only and return only storefront fields plus active items (name, unit, image, category; never price or stock). Rate limit 60/min per IP. Images go through the same signed `/media` path.
+
+## ADR-021 — Hindi in Phase 1
+- **Android:** `values/strings.xml` + `values-hi/strings.xml`. Per-app language through `AppCompatDelegate.setApplicationLocales` (Android 13+ system per-app language picker, plus an in-app Settings → Language). Plurals via `<plurals>`.
+- **Retailer web:** `src/i18n/{en,hi}.json` with a typed key set (missing keys fail CI). The language is detected from `navigator.language` and remembered in localStorage. The `EN | हिं` switch is in the storefront header and the account sheet.
+- **Fonts:** Anek Latin + **Anek Devanagari** for display, Mukta for UI/body (Mukta covers both scripts), so headings in Hindi don't fall back.
+- **Not translated:** user data (item names, shop names, notes). Distributor storefront texts are entered by the distributor in whatever language they choose.
+- **Numbers:** always Western digits with en-IN grouping (₹1,25,000.50), in both languages.
+- **Prototypes:** every batch from UI-5 onward has an EN/HI toggle.
 
 ---
 
