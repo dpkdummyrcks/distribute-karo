@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>UI-3 retailers and storefront screens</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700;800&amp;family=Anek+Devanagari:wght@500;600;700;800&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3730A3}a:hover{color:#1E1B4B}
+button{font-family:inherit;cursor:pointer}
+</style>
+</helmet>
+<div style="width: 2900px; height: 2000px; box-sizing: border-box; padding: 56px 64px; font-family: 'Mukta', system-ui, sans-serif; display: flex; flex-direction: column; gap: 36px; background: {{boardBg}}; color: {{boardFg}}">
+  <header style="display: flex; align-items: flex-end; justify-content: space-between">
+    <div style="display: flex; flex-direction: column; gap: 6px">
+      <div style="font-size: 15px; font-weight: 600; letter-spacing: 0.08em; color: {{boardFg2}}">UI-3 · DISTRIBUTOR APP · ANDROID MATERIAL 3</div>
+      <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 48px; line-height: 1">Retailers, QR &amp; storefront</h1>
+    </div>
+    <div style="display: flex; align-items: center; gap: 14px">
+      <span style="font-size: 15px; font-weight: 600; color: {{boardFg2}}">Language for all screens</span>
+      <div style="display: flex; border: 1.5px solid #8F8EA8; border-radius: 999px; overflow: hidden">
+        <button onClick="{{toEn}}" style="height: 44px; padding: 0 20px; border: 0; font-size: 16px; font-weight: 700; background: {{enBg}}; color: {{enFg}}">English</button>
+        <button onClick="{{toHi}}" style="height: 44px; padding: 0 20px; border: 0; font-size: 16px; font-weight: 700; background: {{hiBg}}; color: {{hiFg}}">हिंदी</button>
+      </div>
+    </div>
+  </header>
+  <div style="display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); row-gap: 56px; column-gap: 40px">
+    <sc-for list="{{screens}}" as="s" hint-placeholder-count="14">
+      <div style="display: flex; flex-direction: column; gap: 12px">
+        <div style="display: flex; align-items: baseline; gap: 10px; height: 28px">
+          <span style="font-size: 15px; font-weight: 700; color: #3730A3; font-family: ui-monospace, monospace">{{s.id}}</span>
+          <span style="font-size: 17px; font-weight: 600">{{s.label}}</span>
+        </div>
+        <div style="width: 360px; height: 800px; border-radius: 28px; overflow: hidden; box-shadow: 0 0 0 1px rgba(30,27,75,0.14), 0 18px 40px rgba(30,27,75,0.12)">
+          <dc-import name="Flow" start="{{s.start}}" lang="{{lang}}" dark="{{dark}}" auto="{{no}}" hint-size="360px,800px"></dc-import>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":2900,"height":2000}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { lang: 'en' };
+  }
+  renderVals() {
+    const dark = this.props.dark ?? false;
+    const lang = this.state.lang;
+    const on = (x) => (x ? '#3730A3' : 'transparent');
+    const onFg = (x) => (x ? '#FFFFFF' : (dark ? '#EEEDF7' : '#16152B'));
+    const screens = [
+      ['D-10', 'Retailers', 'retailers'],
+      ['D-10', 'Retailers · empty', 'retailersEmpty'],
+      ['D-11', 'Add retailer', 'retailerNew'],
+      ['D-11', 'Edit retailer', 'retailerEdit'],
+      ['D-11', 'Add retailer · duplicate phone', 'retailerDup'],
+      ['D-12', 'Join requests', 'requests'],
+      ['D-12', 'Approve → pre-filled form', 'approve'],
+      ['D-13', 'Enquiries', 'enquiries'],
+      ['D-15', 'More menu', 'more'],
+      ['D-14', 'My QR', 'qr'],
+      ['D-14', 'My QR · new QR warning', 'qrRotate'],
+      ['D-14a', 'Storefront editor', 'storefront'],
+      ['D-14a', 'Delivery zones map', 'zones'],
+      ['D-14a', 'Zone selected · radius', 'zoneEdit'],
+    ].map(([id, label, start]) => ({ id, label, start }));
+    return {
+      lang, dark, screens, no: false,
+      boardBg: dark ? '#05050B' : '#E4E3EE', boardFg: dark ? '#EEEDF7' : '#16152B', boardFg2: dark ? '#B9B8D0' : '#4A4966',
+      toEn: () => this.setState({ lang: 'en' }), toHi: () => this.setState({ lang: 'hi' }),
+      enBg: on(lang === 'en'), enFg: onFg(lang === 'en'), hiBg: on(lang === 'hi'), hiFg: onFg(lang === 'hi'),
+    };
+  }
+}
+</script>
+</body>
+</html>

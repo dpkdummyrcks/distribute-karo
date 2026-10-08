@@ -1,0 +1,905 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Retailers, QR and storefront flow</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700;800&amp;family=Anek+Devanagari:wght@500;600;700;800&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 360px; height: 800px; position: relative; overflow: hidden; display: flex; flex-direction: column; font-family: 'Mukta', 'Anek Devanagari', system-ui, sans-serif; {{vars}}; background: var(--bg); color: var(--text)">
+
+  <!-- ===================================================== RETAILERS TAB (D-10 / D-12 / D-13) -->
+  <sc-if value="{{scr.tab}}" hint-placeholder-val="{{true}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 16px; display: flex; align-items: center; justify-content: space-between">
+      <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 24px">{{s.retailers}}</h1>
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+    </div>
+    <div style="padding: 0 16px 10px; flex: none">
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); border: 1.5px solid var(--outline2); border-radius: 999px; overflow: hidden; height: 42px">
+        <sc-for list="{{segs}}" as="sg" hint-placeholder-count="3">
+          <button onClick="{{sg.pick}}" aria-pressed="{{sg.on}}" style="border: 0; border-left: {{sg.sep}}; font-family: inherit; font-size: 14px; font-weight: 700; background: {{sg.bg}}; color: {{sg.fg}}; display: flex; align-items: center; justify-content: center; gap: 5px; cursor: pointer">{{sg.label}}<sc-if value="{{sg.hasN}}" hint-placeholder-val="{{false}}"><span style="min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9px; background: var(--danger); color: var(--onDanger); font-size: 11px; line-height: 18px">{{sg.n}}</span></sc-if></button>
+        </sc-for>
+      </div>
+    </div>
+
+    <!-- retailers list -->
+    <sc-if value="{{tab.isRetailers}}" hint-placeholder-val="{{true}}">
+      <sc-if value="{{rl.has}}" hint-placeholder-val="{{true}}">
+        <div style="padding: 0 16px 8px; flex: none">
+          <label style="height: 46px; border-radius: 999px; background: var(--field); display: flex; align-items: center; gap: 10px; padding: 0 16px; color: var(--text2)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg>
+            <input aria-label="{{s.searchRetailers}}" placeholder="{{s.searchRetailers}}" value="{{rl.q}}" onChange="{{onRq}}" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+          </label>
+        </div>
+        <div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 6px; flex: none">
+          <sc-for list="{{rl.filters}}" as="f" hint-placeholder-count="3"><button onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="height: 34px; padding: 0 12px; border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 700; border: 1.5px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}; cursor: pointer">{{f.label}}</button></sc-for>
+        </div>
+      </sc-if>
+      <div style="flex: 1; overflow-y: auto">
+        <sc-for list="{{rl.rows}}" as="r" hint-placeholder-count="6">
+          <button onClick="{{r.open}}" style="width: 100%; border: 0; background: transparent; color: var(--text); text-align: left; padding: 10px 16px; display: flex; gap: 12px; align-items: center; font-family: inherit; cursor: pointer; opacity: {{r.opacity}}">
+            <span style="width: 48px; height: 48px; flex: none; border-radius: 24px; background: {{r.tileBg}}; color: {{r.tileFg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center">{{r.initials}}</span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 15px; font-weight: 700; line-height: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.shop}}</span>
+              <span style="font-size: 13px; color: var(--text2); line-height: 17px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.owner}} · {{r.area}}</span>
+              <span style="display: flex; flex-wrap: wrap; gap: 6px; align-items: center">
+                <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{r.last}}</span>
+                <sc-if value="{{r.viaQr}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 7px; border-radius: 6px; background: var(--accentSoft); color: var(--accentFg); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center">{{s.viaQr}}</span></sc-if>
+                <sc-if value="{{r.inactive}}" hint-placeholder-val="{{false}}"><span style="height: 20px; padding: 0 7px; border-radius: 6px; background: var(--field); color: var(--text2); font-size: 11px; font-weight: 700; display: inline-flex; align-items: center">{{s.deactivated}}</span></sc-if>
+              </span>
+            </span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--text2); flex: none"><path d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </sc-for>
+        <sc-if value="{{rl.noResults}}" hint-placeholder-val="{{false}}"><div style="padding: 40px 24px; text-align: center; font-size: 15px; color: var(--text2)">{{s.noResults}}</div></sc-if>
+        <sc-if value="{{rl.empty}}" hint-placeholder-val="{{false}}">
+          <div style="padding: 44px 28px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
+            <span style="width: 88px; height: 88px; border-radius: 28px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9l1.5-5h13L20 9M4 9h16v11H4zM4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M10 20v-5h4v5"></path></svg></span>
+            <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.emptyTitle}}</span>
+            <span style="font-size: 14px; line-height: 20px; color: var(--text2)">{{s.emptySub}}</span>
+            <button onClick="{{newRetailer}}" style="margin-top: 4px; height: 48px; padding: 0 20px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.addRetailer}}</button>
+            <button onClick="{{goQr}}" style="height: 44px; padding: 0 16px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.shareQrInstead}}</button>
+          </div>
+        </sc-if>
+        <div style="height: 84px"></div>
+      </div>
+      <sc-if value="{{rl.has}}" hint-placeholder-val="{{true}}">
+        <button onClick="{{newRetailer}}" style="position: absolute; right: 16px; bottom: 96px; height: 56px; padding: 0 20px 0 16px; border: 0; border-radius: 18px; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 10px; box-shadow: 0 6px 16px rgba(20,18,60,0.28); cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 3 17.5V19M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM19 8v6M22 11h-6"></path></svg>{{s.addRetailer}}</button>
+      </sc-if>
+    </sc-if>
+
+    <!-- join requests -->
+    <sc-if value="{{tab.isRequests}}" hint-placeholder-val="{{false}}">
+      <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{reqs}}" as="q" hint-placeholder-count="3">
+          <div style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 10px; opacity: {{q.opacity}}">
+            <div style="display: flex; gap: 12px; align-items: flex-start">
+              <span style="width: 44px; height: 44px; flex: none; border-radius: 22px; background: var(--pc); color: var(--opc); font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center">{{q.initials}}</span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 19px">
+                <span style="font-size: 16px; font-weight: 700">{{q.shop}}</span>
+                <span style="font-size: 14px; color: var(--text2)">{{q.name}} · {{q.phone}}</span>
+                <span style="font-size: 13px; color: var(--text2); margin-top: 2px; display: flex; gap: 4px; align-items: center"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path></svg>{{q.place}}</span>
+              </span>
+              <span style="flex: none; display: flex; flex-direction: column; align-items: flex-end; gap: 4px">
+                <span style="display: inline-flex; align-items: center; height: 24px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 700; background: {{q.chipBg}}; color: {{q.chipFg}}">{{q.status}}</span>
+                <span style="font-size: 12px; color: var(--text2)">{{q.time}}</span>
+              </span>
+            </div>
+            <sc-if value="{{q.pending}}" hint-placeholder-val="{{true}}">
+              <div style="display: flex; gap: 8px; align-items: center">
+                <a href="#" aria-label="{{s.call}} {{q.name}}" style="width: 44px; height: 44px; flex: none; border-radius: 22px; background: var(--field); color: var(--text); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg></a>
+                <a href="#" aria-label="WhatsApp {{q.name}}" style="width: 44px; height: 44px; flex: none; border-radius: 22px; background: var(--field); color: #128C4A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1a3.5 3.5 0 0 1-2-2l1-1-1-2z"></path></svg></a>
+                <span style="flex: 1"></span>
+                <button onClick="{{q.reject}}" style="height: 44px; padding: 0 14px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.reject}}</button>
+                <button onClick="{{q.approve}}" style="height: 44px; padding: 0 16px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.approve}}</button>
+              </div>
+            </sc-if>
+            <sc-if value="{{q.approved}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; font-weight: 600; color: var(--successFg)">{{s.addedAsRetailer}}</span></sc-if>
+          </div>
+        </sc-for>
+        <sc-if value="{{reqsEmpty}}" hint-placeholder-val="{{false}}"><div style="padding: 40px 24px; text-align: center; font-size: 15px; color: var(--text2)">{{s.noRequests}}</div></sc-if>
+      </div>
+    </sc-if>
+
+    <!-- enquiries -->
+    <sc-if value="{{tab.isEnquiries}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; flex-wrap: wrap; gap: 8px; padding: 0 16px 8px; flex: none">
+        <sc-for list="{{enqFilters}}" as="f" hint-placeholder-count="2"><button onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="height: 34px; padding: 0 12px; border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 700; border: 1.5px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}; cursor: pointer">{{f.label}}</button></sc-for>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px">
+        <sc-for list="{{enqs}}" as="e" hint-placeholder-count="3">
+          <div style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 10px">
+            <div style="display: flex; justify-content: space-between; gap: 8px; align-items: flex-start">
+              <span style="display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 16px; font-weight: 700">{{e.name}}</span><span style="font-size: 14px; color: var(--text2)">{{e.phone}} · {{e.time}}</span></span>
+              <sc-if value="{{e.isNew}}" hint-placeholder-val="{{true}}"><span style="flex: none; height: 24px; padding: 0 9px; border-radius: 999px; background: var(--primary); color: var(--onPrimary); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center">{{s.newBadge}}</span></sc-if>
+            </div>
+            <p style="margin: 0; padding: 10px 12px; border-radius: 4px 14px 14px 14px; background: var(--sheet); font-size: 15px; line-height: 21px">{{e.message}}</p>
+            <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap">
+              <a href="#" style="height: 40px; padding: 0 14px 0 10px; border-radius: 999px; background: var(--field); color: var(--text); font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg>{{s.call}}</a>
+              <a href="#" style="height: 40px; padding: 0 14px 0 10px; border-radius: 999px; background: var(--field); color: #128C4A; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1a3.5 3.5 0 0 1-2-2l1-1-1-2z"></path></svg>WhatsApp</a>
+              <span style="flex: 1"></span>
+              <button onClick="{{e.act}}" style="height: 40px; padding: 0 12px; border-radius: 999px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{e.actLabel}}</button>
+            </div>
+          </div>
+        </sc-for>
+        <sc-if value="{{enqsEmpty}}" hint-placeholder-val="{{false}}"><div style="padding: 40px 24px; text-align: center; font-size: 15px; color: var(--text2)">{{s.noEnquiries}}</div></sc-if>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <!-- ===================================================== D-11 RETAILER FORM -->
+  <sc-if value="{{scr.form}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{backToTab}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+      <h1 style="flex: 1; margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px">{{rf.title}}</h1>
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px">
+      <sc-if value="{{rf.fromReq}}" hint-placeholder-val="{{false}}">
+        <div style="border-radius: 14px; padding: 12px 14px; background: var(--accentSoft); color: var(--accentFg); font-size: 14px; font-weight: 600; display: flex; gap: 10px; align-items: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M15 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 3 17.5V19M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM19 8v6M22 11h-6"></path></svg>{{rf.fromReqText}}</div>
+      </sc-if>
+      <sc-if value="{{rf.isEdit}}" hint-placeholder-val="{{false}}">
+        <section style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; align-items: center; gap: 12px">
+          <span style="flex: 1; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <span style="display: flex; flex-direction: column"><span style="font-size: 12px; color: var(--text2)">{{s.orders}}</span><span style="font-size: 20px; font-weight: 800">{{rf.orders}}</span></span>
+            <span style="display: flex; flex-direction: column"><span style="font-size: 12px; color: var(--text2)">{{s.lastOrder}}</span><span style="font-size: 15px; font-weight: 700; line-height: 26px">{{rf.lastShort}}</span></span>
+          </span>
+          <a href="#" aria-label="{{s.call}}" style="width: 44px; height: 44px; flex: none; border-radius: 22px; background: var(--field); color: var(--text); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"></path></svg></a>
+          <a href="#" aria-label="WhatsApp" style="width: 44px; height: 44px; flex: none; border-radius: 22px; background: var(--field); color: #128C4A; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1a3.5 3.5 0 0 1-2-2l1-1-1-2z"></path></svg></a>
+        </section>
+      </sc-if>
+      <div style="display: flex; align-items: center; gap: 14px">
+        <button onClick="{{togglePhoto}}" aria-label="{{rf.photoLabel}}" style="width: 76px; height: 76px; flex: none; border-radius: 38px; border: {{rf.photoBorder}}; background: {{rf.tileBg}}; color: {{rf.tileFg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 22px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <sc-if value="{{rf.photo}}" hint-placeholder-val="{{false}}">{{rf.initials}}</sc-if>
+          <sc-if value="{{rf.noPhoto}}" hint-placeholder-val="{{true}}"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path></svg></sc-if>
+        </button>
+        <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700">{{rf.photoLabel}}</span><span style="font-size: 13px; color: var(--text2)">{{s.photoHint}}</span></span>
+      </div>
+      <label style="display: flex; flex-direction: column; gap: 4px">
+        <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{rf.nameBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.ownerName}}</span>
+          <input value="{{rf.name}}" onChange="{{onFName}}" autocomplete="name" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+        </span>
+        <sc-if value="{{rf.nameErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.required}}</span></sc-if>
+      </label>
+      <label style="display: flex; flex-direction: column; gap: 4px">
+        <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid transparent; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.shopName}}</span>
+          <input value="{{rf.shop}}" onChange="{{onFShop}}" autocomplete="organization" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+        </span>
+      </label>
+      <label style="display: flex; flex-direction: column; gap: 4px">
+        <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{rf.phoneBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.mobile}}</span>
+          <span style="display: flex; align-items: center; gap: 8px"><span style="font-size: 16px; font-weight: 700; color: var(--text2)">+91</span><input value="{{rf.phone}}" onChange="{{onFPhone}}" inputmode="numeric" autocomplete="tel-national" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 600; letter-spacing: 0.03em; color: var(--text); outline: none"></span>
+        </span>
+        <sc-if value="{{rf.phoneErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{rf.phoneMsg}}</span></sc-if>
+        <sc-if value="{{rf.phoneHint}}" hint-placeholder-val="{{true}}"><span style="font-size: 13px; padding: 0 14px; color: var(--text2)">{{s.phoneHint}}</span></sc-if>
+      </label>
+      <label style="display: flex; flex-direction: column; gap: 4px">
+        <span style="box-sizing: border-box; border-radius: 14px; background: var(--field); padding: 8px 14px; display: flex; flex-direction: column">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.address}} · {{s.optional}}</span>
+          <textarea value="{{rf.address}}" onChange="{{onFAddr}}" rows="2" autocomplete="street-address" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 16px; line-height: 22px; color: var(--text); outline: none; width: 100%; resize: none"></textarea>
+        </span>
+      </label>
+      <section style="border-radius: 18px; background: var(--surface); overflow: hidden; display: flex; flex-direction: column">
+        <sc-if value="{{rf.hasLoc}}" hint-placeholder-val="{{true}}">
+          <div aria-hidden="true" style="position: relative; height: 140px; overflow: hidden; background: var(--field)">
+            <div style="position: absolute; left: 0; top: 0; width: 768px; height: 768px; transform: {{rf.mapT}}; transform-origin: 0 0">
+              <sc-for list="{{tiles}}" as="tl" hint-placeholder-count="9"><img src="{{tl.src}}" alt="" width="256" height="256" draggable="false" style="position: absolute; left: {{tl.left}}; top: {{tl.top}}; width: 256px; height: 256px; filter: {{mapFilter}}"></sc-for>
+            </div>
+            <svg width="28" height="36" viewBox="0 0 28 36" style="position: absolute; left: 150px; top: 34px"><path d="M14 35S2 22 2 13a12 12 0 0 1 24 0c0 9-12 22-12 22z" fill="#3730A3" stroke="#FFFFFF" stroke-width="2.5"></path><circle cx="14" cy="13" r="4.5" fill="#F2B33D"></circle></svg>
+            <span style="position: absolute; right: 0; bottom: 0; padding: 1px 5px; background: rgba(255,255,255,0.85); color: #333; font-size: 9px">© OpenStreetMap contributors</span>
+          </div>
+        </sc-if>
+        <div style="padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+          <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+            <span style="font-size: 14px; font-weight: 700">{{s.location}}</span>
+            <button onClick="{{useLocation}}" style="height: 38px; padding: 0 12px 0 10px; border-radius: 999px; border: 0; background: var(--pc); color: var(--opc); font-family: inherit; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 2v3M12 19v3M2 12h3M19 12h3M12 18a6 6 0 1 0 0-12 6 6 0 0 0 0 12zM12 14a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"></path></svg>{{s.useLocation}}</button>
+          </div>
+          <label style="display: flex; flex-direction: column">
+            <span style="min-height: 52px; box-sizing: border-box; border-radius: 12px; background: var(--field); padding: 6px 12px; display: flex; flex-direction: column; justify-content: center">
+              <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.areaLabel}}</span>
+              <input value="{{rf.area}}" onChange="{{onFArea}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 16px; color: var(--text); outline: none; width: 100%">
+            </span>
+          </label>
+          <sc-if value="{{rf.hasLoc}}" hint-placeholder-val="{{true}}">
+            <span style="display: flex; flex-wrap: wrap; align-items: center; gap: 6px; font-size: 13px; color: var(--text2)">
+              <span style="font-family: ui-monospace, monospace">{{rf.coords}}</span>
+              <span style="height: 24px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; background: {{rf.zoneBg}}; color: {{rf.zoneFg}}">{{rf.zoneText}}</span>
+            </span>
+          </sc-if>
+        </div>
+      </section>
+      <sc-if value="{{rf.isEdit}}" hint-placeholder-val="{{false}}">
+        <label style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 14px; box-sizing: border-box; border-radius: 14px; background: var(--surface); cursor: pointer">
+          <span style="flex: 1; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 700">{{s.canOrder}}</span><span style="font-size: 13px; color: {{rf.activeSubFg}}">{{rf.activeSub}}</span></span>
+          <input type="checkbox" role="switch" checked="{{rf.active}}" onChange="{{onFActive}}" style="position: absolute; opacity: 0; width: 1px; height: 1px">
+          <span aria-hidden="true" style="width: 52px; height: 32px; flex: none; border-radius: 16px; box-sizing: border-box; border: 2px solid {{rf.swBorder}}; background: {{rf.swBg}}; position: relative"><span style="position: absolute; top: {{rf.knobTop}}; left: {{rf.knobLeft}}; width: {{rf.knob}}; height: {{rf.knob}}; border-radius: 12px; background: {{rf.knobBg}}"></span></span>
+        </label>
+      </sc-if>
+    </div>
+    <div style="flex: none; padding: 12px 16px 16px; background: var(--bg); border-top: 1px solid var(--outline)">
+      <button onClick="{{saveRetailer}}" style="width: 100%; height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{rf.saveLabel}}</button>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-15 MORE -->
+  <sc-if value="{{scr.more}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 16px; display: flex; align-items: center; justify-content: space-between">
+      <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 24px">{{s.more}}</h1>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px">
+      <section style="border-radius: 22px; background: #241F7A; color: #FFFFFF; padding: 16px; display: flex; align-items: center; gap: 14px">
+        <span style="width: 56px; height: 56px; flex: none; border-radius: 18px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 20px; display: flex; align-items: center; justify-content: center">SB</span>
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 20px"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 18px">Shree Balaji Traders</span><span style="font-size: 13px; color: #D4D1FF">Ramesh Agarwal · +91 98123 45678</span></span>
+      </section>
+      <div style="border-radius: 20px; background: var(--surface); overflow: hidden">
+        <sc-for list="{{moreRows}}" as="m" hint-placeholder-count="6">
+          <button onClick="{{m.go}}" style="width: 100%; min-height: 60px; border: 0; border-bottom: 1px solid var(--outline); background: transparent; color: {{m.fg}}; text-align: left; padding: 8px 14px; display: flex; align-items: center; gap: 12px; font-family: inherit; cursor: pointer">
+            <span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: {{m.tileBg}}; color: {{m.tileFg}}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.icon}}"></path></svg></span>
+            <span style="flex: 1; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 700">{{m.label}}</span><span style="font-size: 13px; color: var(--text2)">{{m.sub}}</span></span>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--text2); flex: none"><path d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </sc-for>
+      </div>
+      <span style="text-align: center; font-size: 12px; color: var(--text2)">DistributeKaro 0.1.0 (POC)</span>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-14 MY QR -->
+  <sc-if value="{{scr.qr}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{goMore}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+      <h1 style="flex: 1; margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px">{{s.myQr}}</h1>
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 20px 16px; display: flex; flex-direction: column; gap: 14px">
+      <section aria-label="{{s.qrCard}}" style="border-radius: 26px; overflow: hidden; background: #FFFFFF; color: #16152B; box-shadow: 0 10px 28px rgba(20,18,60,0.18)">
+        <div style="position: relative; background: #241F7A; color: #FFFFFF; padding: 16px 16px 40px; overflow: hidden">
+          <svg width="320" height="40" viewBox="0 0 320 40" aria-hidden="true" style="position: absolute; top: 0; left: 0"><path d="M0 4Q53 26 107 4Q160 26 213 4Q267 26 320 4" fill="none" stroke="#F2B33D" stroke-width="2"></path><circle cx="27" cy="13" r="5" fill="#F97316"></circle><circle cx="80" cy="13" r="5" fill="#F97316"></circle><circle cx="133" cy="13" r="5" fill="#F97316"></circle><circle cx="187" cy="13" r="5" fill="#F97316"></circle><circle cx="240" cy="13" r="5" fill="#F97316"></circle><circle cx="293" cy="13" r="5" fill="#F97316"></circle></svg>
+          <div style="position: relative; display: flex; align-items: center; gap: 12px; margin-top: 14px">
+            <span style="width: 48px; height: 48px; flex: none; border-radius: 15px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 17px; display: flex; align-items: center; justify-content: center">SB</span>
+            <span style="display: flex; flex-direction: column; line-height: 20px"><span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 19px">Shree Balaji Traders</span><span style="font-size: 13px; color: #D4D1FF">Jaipur · Mon–Sat 8 AM – 8 PM</span></span>
+          </div>
+        </div>
+        <div style="margin: -28px 22px 0; position: relative; background: #FFFFFF; border-radius: 18px; padding: 12px; border: 3px solid #F2B33D; display: flex; justify-content: center">
+          <svg width="232" height="232" viewBox="-2 -2 33 33" role="img" aria-label="{{s.qrAria}}" shape-rendering="crispEdges"><rect x="-2" y="-2" width="33" height="33" fill="#FFFFFF"></rect><path d="{{qr.path}}" fill="#16152B"></path><rect x="11" y="11" width="7" height="7" rx="1.6" fill="#FFFFFF"></rect><rect x="11.8" y="11.8" width="5.4" height="5.4" rx="1.2" fill="#3730A3"></rect><path d="M13.3 15.5v-2.6M14.5 15.5v-2.6M15.5 13.5l-1 .9 1.1 1.1" fill="none" stroke="#F2B33D" stroke-width="0.45" stroke-linecap="round"></path></svg>
+        </div>
+        <div style="padding: 12px 18px 16px; display: flex; flex-direction: column; align-items: center; gap: 4px; text-align: center">
+          <span style="font-size: 16px; font-weight: 800">Scan to see products &amp; order</span>
+          <span style="font-size: 15px; font-weight: 700; color: #4A4966">स्कैन करें, प्रोडक्ट देखें और ऑर्डर करें</span>
+          <span style="margin-top: 4px; font-size: 12px; font-family: ui-monospace, monospace; color: #4A4966">{{qr.url}}</span>
+          <span style="margin-top: 6px; display: flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 600; color: #6B6A85"><svg width="14" height="14" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#3730A3"></rect><circle cx="23" cy="38" r="9" fill="none" stroke="#FFFFFF" stroke-width="6"></circle><path d="M32 16V47M40 16V47" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"></path><path d="M50 27L40 37L51 47" fill="none" stroke="#F2B33D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path></svg>DistributeKaro</span>
+        </div>
+      </section>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{qrActions}}" as="qa" hint-placeholder-count="3">
+          <a href="#" style="min-height: 72px; border-radius: 18px; background: {{qa.bg}}; color: {{qa.fg}}; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; text-decoration: none; font-size: 13px; font-weight: 700"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{qa.icon}}"></path></svg>{{qa.label}}</a>
+        </sc-for>
+      </div>
+      <div style="border-radius: 18px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 15px; font-weight: 700">{{s.newQrTitle}}</span>
+        <span style="font-size: 13px; line-height: 19px; color: var(--text2)">{{s.newQrSub}}</span>
+        <button onClick="{{askRotate}}" style="align-self: flex-start; height: 42px; padding: 0 14px 0 12px; border-radius: 999px; border: 1.5px solid var(--danger); background: transparent; color: var(--danger); font-family: inherit; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"></path></svg>{{s.newQrBtn}}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-14a STOREFRONT EDITOR -->
+  <sc-if value="{{scr.storefront}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{goMore}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+      <h1 style="flex: 1; margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px">{{s.storefront}}</h1>
+      <a href="#" style="height: 38px; padding: 0 12px 0 10px; border-radius: 999px; background: var(--pc); color: var(--opc); font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12zM12 15a3 3 0 1 0 0-6 3 3 0 0 0 0 6z"></path></svg>{{s.preview}}</a>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px">
+      <label style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 14px; box-sizing: border-box; border-radius: 16px; background: {{sf.pubBg}}; cursor: pointer">
+        <span style="flex: 1; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 700">{{sf.pubTitle}}</span><span style="font-size: 13px; color: var(--text2)">{{s.pubSub}}</span></span>
+        <input type="checkbox" role="switch" checked="{{sf.published}}" onChange="{{onPublished}}" style="position: absolute; opacity: 0; width: 1px; height: 1px">
+        <span aria-hidden="true" style="width: 52px; height: 32px; flex: none; border-radius: 16px; box-sizing: border-box; border: 2px solid {{sf.swBorder}}; background: {{sf.swBg}}; position: relative"><span style="position: absolute; top: {{sf.knobTop}}; left: {{sf.knobLeft}}; width: {{sf.knob}}; height: {{sf.knob}}; border-radius: 12px; background: {{sf.knobBg}}"></span></span>
+      </label>
+
+      <section style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--primary)">{{s.secTop}}</span>
+        <div style="height: 92px; border-radius: 14px; background: #241F7A; position: relative; overflow: hidden; display: flex; align-items: flex-end; padding: 10px; box-sizing: border-box">
+          <svg width="330" height="92" viewBox="0 0 330 92" aria-hidden="true" style="position: absolute; inset: 0"><defs><pattern id="dk3-jali" width="20" height="20" patternUnits="userSpaceOnUse"><path d="M10 0L20 10L10 20L0 10Z" fill="none" stroke="#332D9C" stroke-width="1.2"></path></pattern></defs><rect width="330" height="92" fill="url(#dk3-jali)"></rect></svg>
+          <a href="#" style="position: relative; height: 34px; padding: 0 12px; border-radius: 999px; background: rgba(255,255,255,0.18); color: #FFFFFF; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; text-decoration: none"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path></svg>{{s.changeCover}}</a>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 56px; box-sizing: border-box; border-radius: 12px; background: var(--field); padding: 6px 12px; display: flex; flex-direction: column; justify-content: center">
+            <span style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--text2)"><span>{{s.tagline}}</span><span>{{sf.taglineCount}}/80</span></span>
+            <input value="{{sf.tagline}}" onChange="{{onTagline}}" maxlength="80" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 16px; color: var(--text); outline: none; width: 100%">
+          </span>
+        </label>
+      </section>
+
+      <section style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--primary)">{{s.secStats}}</span>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+          <sc-for list="{{sf.stats}}" as="st" hint-placeholder-count="4">
+            <div style="border-radius: 12px; background: var(--field); padding: 8px 10px; display: flex; flex-direction: column; gap: 2px">
+              <input aria-label="{{st.vAria}}" value="{{st.v}}" onChange="{{st.onV}}" maxlength="8" style="border: 0; background: transparent; padding: 0; font-family: 'Anek Latin', sans-serif; font-size: 22px; font-weight: 800; color: var(--primary); outline: none; width: 100%">
+              <input aria-label="{{st.lAria}}" value="{{st.l}}" onChange="{{st.onL}}" maxlength="24" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 13px; font-weight: 600; color: var(--text2); outline: none; width: 100%">
+            </div>
+          </sc-for>
+        </div>
+      </section>
+
+      <section style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--primary)">{{s.secWhy}}</span><span style="font-size: 12px; color: var(--text2)">{{sf.hlCount}}/6</span></div>
+        <sc-for list="{{sf.highlights}}" as="h" hint-placeholder-count="6">
+          <div style="display: flex; align-items: center; gap: 10px; padding: 6px 0; border-bottom: 1px solid var(--outline)">
+            <span style="width: 36px; height: 36px; flex: none; border-radius: 11px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.icon}}"></path></svg></span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 18px"><span style="font-size: 14px; font-weight: 700">{{h.title}}</span><span style="font-size: 12px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{h.text}}</span></span>
+            <button onClick="{{h.up}}" aria-label="{{s.moveUp}}" style="width: 36px; height: 36px; flex: none; border: 0; border-radius: 18px; background: transparent; color: {{h.upFg}}; display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 15l6-6 6 6"></path></svg></button>
+            <button onClick="{{h.remove}}" aria-label="{{s.remove}}" style="width: 36px; height: 36px; flex: none; border: 0; border-radius: 18px; background: transparent; color: var(--text2); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+          </div>
+        </sc-for>
+        <button onClick="{{addHighlight}}" style="align-self: flex-start; height: 38px; padding: 0 12px 0 10px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: {{sf.addHlFg}}; font-family: inherit; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>{{s.addHighlight}}</button>
+      </section>
+
+      <section style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 10px">
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--primary)">{{s.secHours}}</span>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px">
+          <sc-for list="{{sf.days}}" as="d" hint-placeholder-count="7"><button onClick="{{d.pick}}" aria-pressed="{{d.on}}" style="min-width: 42px; height: 38px; padding: 0 8px; border-radius: 10px; border: 1.5px solid {{d.border}}; background: {{d.bg}}; color: {{d.fg}}; font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{d.label}}</button></sc-for>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+          <label style="border-radius: 12px; background: var(--field); padding: 6px 12px; display: flex; flex-direction: column"><span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.opens}}</span><input type="time" value="{{sf.open}}" onChange="{{onOpen}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 700; color: var(--text); outline: none"></label>
+          <label style="border-radius: 12px; background: var(--field); padding: 6px 12px; display: flex; flex-direction: column"><span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.closes}}</span><input type="time" value="{{sf.close}}" onChange="{{onClose}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 700; color: var(--text); outline: none"></label>
+        </div>
+        <label style="border-radius: 12px; background: var(--field); padding: 6px 12px; display: flex; align-items: center; gap: 10px">
+          <span style="flex: 1; display: flex; flex-direction: column"><span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.cutoff}}</span><input type="time" value="{{sf.cutoff}}" onChange="{{onCutoff}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 700; color: var(--text); outline: none"></span>
+          <span style="font-size: 12px; line-height: 16px; color: var(--text2); max-width: 150px">{{s.cutoffHint}}</span>
+        </label>
+      </section>
+
+      <section style="border-radius: 20px; background: var(--surface); overflow: hidden; display: flex; flex-direction: column">
+        <div aria-hidden="true" style="position: relative; height: 150px; overflow: hidden; background: var(--field)">
+          <div style="position: absolute; left: 0; top: 0; width: 768px; height: 768px; transform: translate(-45px, -136px) scale(0.55); transform-origin: 0 0">
+            <sc-for list="{{tiles}}" as="tl" hint-placeholder-count="9"><img src="{{tl.src}}" alt="" width="256" height="256" draggable="false" style="position: absolute; left: {{tl.left}}; top: {{tl.top}}; width: 256px; height: 256px; filter: {{mapFilter}}"></sc-for>
+            <svg width="768" height="768" viewBox="0 0 768 768" style="position: absolute; inset: 0"><path d="{{zonesPath}}" fill="rgba(242,179,61,0.34)" stroke="#B97F10" stroke-width="3"></path><path d="M{{godown.x}} {{godown.y}}c0 0-15-14-15-25a15 15 0 0 1 30 0c0 11-15 25-15 25z" fill="#3730A3" stroke="#FFFFFF" stroke-width="3"></path></svg>
+          </div>
+        </div>
+        <div style="padding: 12px 14px; display: flex; align-items: center; gap: 10px">
+          <span style="flex: 1; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--primary)">{{s.secMap}}</span><span style="font-size: 14px; font-weight: 600">{{sf.zonesSummary}}</span></span>
+          <button onClick="{{goZones}}" style="height: 42px; padding: 0 14px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.editZones}}</button>
+        </div>
+      </section>
+
+      <section style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 8px">
+        <div style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--primary)">{{s.secFeatured}}</span><span style="font-size: 12px; color: var(--text2)">{{sf.featCount}}/12</span></div>
+        <div style="display: flex; flex-wrap: wrap; gap: 6px">
+          <sc-for list="{{sf.featured}}" as="fp" hint-placeholder-count="8"><span style="height: 34px; padding: 0 4px 0 10px; border-radius: 10px; background: var(--field); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 2px">{{fp.name}}<button onClick="{{fp.remove}}" aria-label="{{s.remove}} {{fp.name}}" style="width: 28px; height: 28px; border: 0; border-radius: 14px; background: transparent; color: var(--text2); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button></span></sc-for>
+        </div>
+        <span style="font-size: 12px; color: var(--text2)">{{s.noPricesNote}}</span>
+      </section>
+
+      <section style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 8px">
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--primary)">{{s.secOwner}}</span>
+        <label style="display: flex; flex-direction: column">
+          <span style="box-sizing: border-box; border-radius: 12px; background: var(--field); padding: 8px 12px; display: flex; flex-direction: column">
+            <span style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 600; color: var(--text2)"><span>Ramesh Agarwal</span><span>{{sf.noteCount}}/400</span></span>
+            <textarea value="{{sf.note}}" onChange="{{onNote}}" rows="4" maxlength="400" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; line-height: 21px; color: var(--text); outline: none; width: 100%; resize: none"></textarea>
+          </span>
+        </label>
+      </section>
+    </div>
+    <div style="flex: none; padding: 12px 16px 16px; background: var(--bg); border-top: 1px solid var(--outline)">
+      <button onClick="{{saveStorefront}}" style="width: 100%; height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.saveStorefront}}</button>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== D-14a ZONES MAP -->
+  <sc-if value="{{scr.zones}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{goStorefront}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+      <span style="flex: 1; display: flex; flex-direction: column; line-height: 20px"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 19px">{{s.zonesTitle}}</span><span style="font-size: 13px; color: var(--text2)">{{zn.summary}}</span></span>
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+    </div>
+    <div style="position: relative; height: 400px; flex: none; overflow: hidden; background: var(--field)">
+      <div aria-hidden="true" style="position: absolute; left: 0; top: 0; width: 768px; height: 768px; transform-origin: 0 0; transform: translate(-116.4px, -99.5px) scale(0.78)">
+        <sc-for list="{{tiles}}" as="tl" hint-placeholder-count="9"><img src="{{tl.src}}" alt="" width="256" height="256" draggable="false" style="position: absolute; left: {{tl.left}}; top: {{tl.top}}; width: 256px; height: 256px; filter: {{mapFilter}}"></sc-for>
+        <svg width="768" height="768" viewBox="0 0 768 768" style="position: absolute; inset: 0">
+          <path d="{{zn.otherPath}}" fill="rgba(242,179,61,0.32)" stroke="#B97F10" stroke-width="2.5"></path>
+          <path d="{{zn.selPath}}" fill="rgba(55,48,163,0.28)" stroke="#3730A3" stroke-width="4"></path>
+          <path d="M{{godown.x}} {{godown.y}}c0 0-15-14-15-25a15 15 0 0 1 30 0c0 11-15 25-15 25z" fill="#3730A3" stroke="#FFFFFF" stroke-width="3"></path>
+          <circle cx="{{godown.x}}" cy="{{godown.cy}}" r="6" fill="#F2B33D"></circle>
+        </svg>
+        <sc-for list="{{zn.labels}}" as="lb" hint-placeholder-count="8">
+          <span style="position: absolute; left: {{lb.left}}; top: {{lb.top}}; transform: translate(-50%, -50%) scale(1.28); white-space: nowrap; height: 22px; padding: 0 8px; border-radius: 999px; font-size: 11px; font-weight: 700; display: inline-flex; align-items: center; box-shadow: 0 2px 6px rgba(20,18,60,0.25); background: {{lb.bg}}; color: {{lb.fg}}">{{lb.name}}</span>
+        </sc-for>
+      </div>
+      <sc-if value="{{zn.placing}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{onMapTap}}" aria-label="{{zn.placeAria}}" style="position: absolute; inset: 0; border: 3px dashed #3730A3; background: rgba(55,48,163,0.06); cursor: crosshair"></button>
+        <span style="position: absolute; left: 12px; right: 12px; top: 12px; padding: 10px 12px; border-radius: 12px; background: var(--sheet); color: var(--text); font-size: 14px; font-weight: 700; box-shadow: 0 4px 12px rgba(20,18,60,0.2); pointer-events: none">{{zn.placeHint}}</span>
+      </sc-if>
+      <sc-if value="{{zn.idle}}" hint-placeholder-val="{{true}}">
+        <div style="position: absolute; right: 10px; top: 10px; display: flex; flex-direction: column; gap: 8px">
+          <button onClick="{{startAdd}}" style="height: 42px; padding: 0 14px 0 10px; border-radius: 12px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(20,18,60,0.25); cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>{{s.addZone}}</button>
+          <button onClick="{{startMoveGodown}}" style="height: 42px; padding: 0 12px 0 10px; border-radius: 12px; border: 0; background: var(--sheet); color: var(--text); font-family: inherit; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; box-shadow: 0 4px 12px rgba(20,18,60,0.2); cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path></svg>{{s.moveGodown}}</button>
+        </div>
+      </sc-if>
+      <span style="position: absolute; right: 0; bottom: 0; padding: 2px 6px; border-top-left-radius: 8px; background: rgba(255,255,255,0.85); color: #333; font-size: 10px; pointer-events: none">© OpenStreetMap contributors</span>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 10px">
+      <sc-if value="{{zn.hasSel}}" hint-placeholder-val="{{false}}">
+        <section style="border-radius: 18px; background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column; gap: 10px">
+          <label style="display: flex; flex-direction: column">
+            <span style="min-height: 52px; box-sizing: border-box; border-radius: 12px; background: var(--field); padding: 6px 12px; display: flex; flex-direction: column; justify-content: center">
+              <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.zoneName}}</span>
+              <input value="{{zn.selName}}" onChange="{{onZoneName}}" maxlength="40" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 16px; font-weight: 600; color: var(--text); outline: none; width: 100%">
+            </span>
+          </label>
+          <label style="display: flex; flex-direction: column; gap: 4px">
+            <span style="display: flex; justify-content: space-between; font-size: 13px; font-weight: 700"><span>{{s.radius}}</span><span style="color: var(--primary)">{{zn.selKm}}</span></span>
+            <input type="range" min="500" max="10000" step="100" value="{{zn.selR}}" onChange="{{onRadius}}" aria-label="{{s.radius}}" style="width: 100%; height: 32px; accent-color: #3730A3">
+            <span style="display: flex; justify-content: space-between; font-size: 11px; color: var(--text2)"><span>0.5 km</span><span>10 km</span></span>
+          </label>
+          <div style="display: flex; justify-content: space-between; align-items: center">
+            <button onClick="{{deleteZone}}" style="height: 40px; padding: 0 10px; border: 0; background: transparent; color: var(--danger); font-family: inherit; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>{{s.deleteZone}}</button>
+            <button onClick="{{doneZone}}" style="height: 42px; padding: 0 18px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.done}}</button>
+          </div>
+        </section>
+      </sc-if>
+      <span style="font-size: 13px; font-weight: 700; color: var(--text2)">{{s.tapZone}}</span>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <sc-for list="{{zn.chips}}" as="z" hint-placeholder-count="8"><button onClick="{{z.pick}}" aria-pressed="{{z.on}}" style="height: 38px; padding: 0 12px; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 600; border: 1.5px solid {{z.border}}; background: {{z.bg}}; color: {{z.fg}}; cursor: pointer">{{z.label}}</button></sc-for>
+      </div>
+      <span style="font-size: 12px; color: var(--text2); font-family: ui-monospace, monospace">{{zn.godownText}}</span>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== NAV -->
+  <sc-if value="{{showNav}}" hint-placeholder-val="{{true}}">
+    <nav style="height: 80px; flex: none; background: var(--navBg); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+        <button onClick="{{n.pick}}" aria-label="{{n.label}}" aria-current="{{n.current}}" style="border: 0; background: transparent; height: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: {{n.fg}}; font-family: inherit; cursor: pointer">
+          <span style="position: relative; width: 60px; height: 32px; border-radius: 16px; background: {{n.pill}}; display: flex; align-items: center; justify-content: center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.icon}}"></path></svg>
+            <sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 0; right: 10px; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: var(--danger); color: var(--onDanger); font-size: 11px; font-weight: 700; line-height: 16px; text-align: center">{{n.badge}}</span></sc-if>
+          </span>
+          <span style="font-size: 12px; font-weight: 700">{{n.label}}</span>
+        </button>
+      </sc-for>
+    </nav>
+  </sc-if>
+
+  <!-- ===================================================== ROTATE DIALOG -->
+  <sc-if value="{{dialog}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; z-index: 11; background: var(--scrim); display: flex; align-items: center; justify-content: center; padding: 24px">
+      <div role="alertdialog" aria-label="{{s.rotTitle}}" style="width: 100%; background: var(--sheet); border-radius: 28px; padding: 24px; display: flex; flex-direction: column; gap: 12px">
+        <span style="width: 44px; height: 44px; border-radius: 22px; background: var(--dangerBg); color: var(--dangerFg); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3.5l9 16H3zM12 10v4M12 17v.01"></path></svg></span>
+        <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px; line-height: 26px">{{s.rotTitle}}</span>
+        <sc-for list="{{s.rotPoints}}" as="rp" hint-placeholder-count="3">
+          <span style="display: flex; gap: 8px; font-size: 14px; line-height: 20px; color: var(--text2)"><span style="width: 6px; height: 6px; flex: none; margin-top: 7px; border-radius: 3px; background: var(--text2)"></span>{{rp}}</span>
+        </sc-for>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px">
+          <button onClick="{{cancelRotate}}" style="height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.cancel}}</button>
+          <button onClick="{{confirmRotate}}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--danger); color: var(--onDanger); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.rotConfirm}}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== SNACKBAR -->
+  <sc-if value="{{snack.show}}" hint-placeholder-val="{{false}}">
+    <div role="status" style="position: absolute; left: 12px; right: 12px; bottom: {{snack.bottom}}; z-index: 12; min-height: 48px; padding: 6px 8px 6px 16px; box-sizing: border-box; border-radius: 10px; background: var(--inv); color: var(--onInv); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(20,18,60,0.3)">
+      <span style="flex: 1">{{snack.text}}</span>
+      <sc-if value="{{snack.hasUndo}}" hint-placeholder-val="{{false}}"><button onClick="{{undo}}" style="height: 36px; padding: 0 10px; border: 0; border-radius: 8px; background: transparent; color: var(--invPrimary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.undo}}</button></sc-if>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","default":"retailers","options":["retailers","retailersEmpty","retailerNew","retailerEdit","retailerDup","requests","approve","enquiries","more","qr","qrRotate","storefront","zones","zoneEdit"]},"lang":{"editor":"enum","default":"en","options":["en","hi"]},"dark":{"editor":"boolean","default":false},"auto":{"editor":"boolean","default":true},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.initState(props.start ?? 'retailers');
+  }
+
+  // fixtures/retailers.page.json; map points = Web Mercator px on the z12 mosaic (tiles x 2909–2911, y 1729–1731)
+  baseRetailers() {
+    return [
+      ['Rakesh Sharma', 'Sharma General Store', '9828011111', 'Shop 4, Malviya Nagar Main Rd, Jaipur', 'Malviya Nagar', 382.1, 417.6, true, 'MANUAL', 'today', 3, true],
+      ['Sunita Gupta', 'Gupta Kirana', '9828022222', 'B-12, Vaishali Nagar, Jaipur', 'Vaishali Nagar', 202.1, 226.5, true, 'MANUAL', 'today', 2, true],
+      ['Amit Jain', 'Jain Provision Store', '9828033333', 'Raja Park Market, Jaipur', 'Raja Park', 447.6, 288.6, true, 'MANUAL', 'today', 2, true],
+      ['Imran Khan', 'New Bharat Mart', '9828044444', 'Sector 3, Mansarovar, Jaipur', 'Mansarovar', 260.6, 363.0, true, 'MANUAL', 'today', 2, false],
+      ['Mohan Lal Meena', 'Shiv Shakti Traders', '9828055555', 'Near Bus Stand, Sanganer, Jaipur', 'Sanganer', 345.9, 519.7, false, 'MANUAL', 'never', 0, false],
+      ['Pooja Verma', 'Om Sai Kirana', '9828066666', 'Jagatpura Phatak, Jaipur', 'Jagatpura', 558.3, 487.8, true, 'ACCESS_REQUEST', 'yesterday', 1, false],
+    ].map(([name, shop, phone, address, area, x, y, active, source, last, orders, photo], id) => ({ id, name, shop, phone, address, area, x, y, active, source, last, orders, photo }));
+  }
+  baseZones() {
+    return [['Malviya Nagar', 382.1, 417.6], ['Vaishali Nagar', 202.1, 226.5], ['Mansarovar', 260.6, 363.0], ['Raja Park', 447.6, 288.6],
+      ['Sanganer', 345.9, 519.7], ['Jagatpura', 558.3, 487.8], ['C-Scheme', 379.2, 247.8], ['Pratap Nagar', 434.5, 567.7]]
+      .map(([name, x, y], id) => ({ id, name, x, y, rM: 1400 }));
+  }
+  blankForm() { return { name: '', shop: '', phone: '', address: '', area: '', x: null, y: null, active: true, photo: false, tried: false, fromReq: null }; }
+  formFrom(r) { return { name: r.name, shop: r.shop, phone: r.phone, address: r.address, area: r.area, x: r.x, y: r.y, active: r.active, photo: r.photo, tried: false, fromReq: null }; }
+
+  initState(start) {
+    const base = {
+      screen: 'tab', tab: 'retailers', lang: null, retailers: this.baseRetailers(), rq: '', rFilter: 'all',
+      reqs: [
+        { id: 0, name: 'Deepak Saini', shop: 'Saini Kirana & General', phone: '9828077777', address: 'Plot 18, Pratap Nagar, Jaipur', area: 'Pratap Nagar', x: 434.5, y: 567.7, status: 'PENDING', time: '9:50 AM' },
+        { id: 1, name: 'Farhan Qureshi', shop: 'Qureshi Super Store', phone: '9828088888', address: '', area: 'Ramganj', x: 455.0, y: 214.0, status: 'PENDING', time: 'yesterday' },
+        { id: 2, name: 'Pooja Verma', shop: 'Om Sai Kirana', phone: '9828066666', address: 'Jagatpura Phatak, Jaipur', area: 'Jagatpura', x: 558.3, y: 487.8, status: 'APPROVED', time: '3 Oct' },
+      ],
+      enqs: [
+        { id: 0, name: 'Kavita Joshi', phone: '9828099999', message: 'Do you supply Patanjali products? I run a small store in Sodala.', status: 'NEW', time: '8:20 AM' },
+        { id: 1, name: 'Suresh Yadav', phone: '9829010101', message: 'What is the minimum order for delivery to Bagru?', status: 'NEW', time: 'yesterday' },
+        { id: 2, name: 'Anil Mathur', phone: '9829020202', message: 'Do you give credit to new shops?', status: 'READ', time: '5 Oct' },
+      ],
+      enqFilter: 'new', editId: null, form: null, from: 'tab', slug: 'bT7kQ9xZr2Mw', dialog: false, snack: null, undo: null,
+      sf: {
+        published: true, tagline: "Jaipur's trusted wholesale partner since 1998",
+        stats: [['1998', 'Serving since'], ['300+', 'Stores served'], ['500+', 'Products'], ['8', 'Areas covered']],
+        highlights: [['truck', 'Same-day delivery', 'Order by 2 PM, get it today'], ['credit', '7-day credit', 'For regular retailers'], ['tag', 'Wholesale rates', 'Best prices, updated daily'],
+          ['box', '500+ products', 'Staples, FMCG & home care'], ['phone', 'Order from your phone', 'No calls, no notebooks'], ['shield', 'Genuine products', 'Direct from brand depots']],
+        days: [1, 2, 3, 4, 5, 6], open: '08:00', close: '20:00', cutoff: '14:00',
+        featured: ['Aashirvaad Atta 10 kg', 'Fortune Sunflower Oil', 'Parle-G (box of 48)', 'Maggi Noodles', 'Amul Butter 500 g', 'Surf Excel 1 kg', 'Red Label Tea 1 kg', "Haldiram's Bhujia"],
+        note: 'Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city.',
+      },
+      zones: this.baseZones(), godown: { x: 419.9, y: 200.1 }, selZone: null, placing: null,
+    };
+    const m = {
+      retailers: {}, retailersEmpty: { retailers: [] },
+      retailerNew: { screen: 'form', editId: null, form: this.blankForm() },
+      retailerEdit: { screen: 'form', editId: 0, form: this.formFrom(base.retailers[0]) },
+      retailerDup: { screen: 'form', editId: null, form: { ...this.blankForm(), name: 'Sunil Gupta', shop: 'Gupta Traders', phone: '9828022222', tried: true } },
+      requests: { tab: 'requests' },
+      approve: { screen: 'form', editId: null, from: 'requests', form: { ...this.blankForm(), name: 'Deepak Saini', shop: 'Saini Kirana & General', phone: '9828077777', address: 'Plot 18, Pratap Nagar, Jaipur', area: 'Pratap Nagar', x: 434.5, y: 567.7, fromReq: 0 } },
+      enquiries: { tab: 'enquiries' },
+      more: { screen: 'more' }, qr: { screen: 'qr' }, qrRotate: { screen: 'qr', dialog: true },
+      storefront: { screen: 'storefront' }, zones: { screen: 'zones' }, zoneEdit: { screen: 'zones', selZone: 0 },
+    };
+    return { ...base, ...(m[start] ?? {}) };
+  }
+
+  componentWillUnmount() { clearTimeout(this.snackT); }
+  componentDidUpdate(prev) {
+    if (prev.start !== this.props.start) this.setState(this.initState(this.props.start ?? 'retailers'));
+    else if (prev.lang !== this.props.lang && this.state.lang !== null) this.setState({ lang: null });
+  }
+  toast(text, extra = {}, undo = null) {
+    clearTimeout(this.snackT);
+    this.setState({ ...extra, snack: text, undo });
+    this.snackT = setTimeout(() => this.setState({ snack: null, undo: null }), 4000);
+  }
+  qrPath(seed) {
+    const N = 29;
+    const g = Array.from({ length: N }, () => Array(N).fill(false));
+    const fixed = Array.from({ length: N }, () => Array(N).fill(false));
+    const finder = (ox, oy) => {
+      for (let y = -1; y <= 7; y++) for (let x = -1; x <= 7; x++) {
+        const X = ox + x, Y = oy + y;
+        if (X < 0 || Y < 0 || X >= N || Y >= N) continue;
+        fixed[Y][X] = true;
+        const ring = Math.max(Math.abs(x - 3), Math.abs(y - 3));
+        g[Y][X] = x >= 0 && x <= 6 && y >= 0 && y <= 6 && (ring === 3 || ring <= 1);
+      }
+    };
+    finder(0, 0); finder(N - 7, 0); finder(0, N - 7);
+    for (let y = -2; y <= 2; y++) for (let x = -2; x <= 2; x++) { const r = Math.max(Math.abs(x), Math.abs(y)); fixed[22 + y][22 + x] = true; g[22 + y][22 + x] = r !== 1; }
+    for (let i = 8; i < N - 8; i++) { fixed[6][i] = fixed[i][6] = true; g[6][i] = g[i][6] = i % 2 === 0; }
+    let h = 2166136261;
+    for (const c of seed) { h ^= c.charCodeAt(0); h = Math.imul(h, 16777619); }
+    const rnd = () => { h ^= h << 13; h ^= h >>> 17; h ^= h << 5; return ((h >>> 0) % 1000) / 1000; };
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (!fixed[y][x]) g[y][x] = rnd() < 0.48;
+    let d = '';
+    for (let y = 0; y < N; y++) for (let x = 0; x < N; x++) if (g[y][x]) d += `M${x} ${y}h1v1h-1z`;
+    return d;
+  }
+
+  renderVals() {
+    const st = this.state;
+    const dark = this.props.dark ?? false;
+    const lang = st.lang ?? this.props.lang ?? 'en';
+    const L = { bg: '#F7F6FC', surface: '#EEEDF8', field: '#E3E2F1', sheet: '#FFFFFF', outline: '#DCDBEA', outline2: '#8F8EA8', navBg: '#EAE9F5',
+      text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF', pc: '#E4E2FB', opc: '#1E1B4B', accentSoft: '#FDF0D5', accentFg: '#7A4A00',
+      danger: '#B91C1C', onDanger: '#FFFFFF', dangerBg: '#FEE2E2', dangerFg: '#991B1B', warnBg: '#FEF3C7', warnFg: '#92400E',
+      successBg: '#DCFCE7', successFg: '#166534', inv: '#2B2A40', onInv: '#F2F1FA', invPrimary: '#ABA6FF', scrim: 'rgba(14,13,26,0.5)' };
+    const D = { bg: '#0E0D1A', surface: '#1A1930', field: '#24223F', sheet: '#222039', outline: '#2C2A45', outline2: '#7C7A99', navBg: '#16152B',
+      text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760', pc: '#2E2A78', opc: '#E4E2FB', accentSoft: '#3A2A08', accentFg: '#F7CF7A',
+      danger: '#F87171', onDanger: '#2A0606', dangerBg: '#450A0A', dangerFg: '#FCA5A5', warnBg: '#422006', warnFg: '#FCD34D',
+      successBg: '#052E16', successFg: '#86EFAC', inv: '#EEEDF7', onInv: '#16152B', invPrimary: '#3730A3', scrim: 'rgba(0,0,0,0.6)' };
+    const vars = Object.entries(dark ? D : L).map(([k, v]) => `--${k}: ${v}`).join('; ');
+
+    const T = {
+      en: {
+        langBtn: 'हिंदी', langAria: 'Switch to Hindi', back: 'Back', optional: 'optional', required: 'This is required', undo: 'Undo', cancel: 'Cancel', done: 'Done', remove: 'Remove',
+        retailers: 'Retailers', segs: ['Retailers', 'Requests', 'Enquiries'], searchRetailers: 'Search shop, name or phone',
+        rFilters: ['All', 'Active', 'Deactivated'], viaQr: 'Joined via QR', deactivated: 'Deactivated', noResults: 'No retailers match',
+        last: { today: 'Last order today', yesterday: 'Last order yesterday', never: 'No orders yet' },
+        emptyTitle: 'No retailers yet', emptySub: 'Add the shops you supply, or share your QR so they can ask to join.', addRetailer: 'Add retailer', shareQrInstead: 'Share my QR',
+        reqStatus: { PENDING: 'Pending', APPROVED: 'Approved', REJECTED: 'Rejected' }, call: 'Call', reject: 'Reject', approve: 'Approve', addedAsRetailer: 'Added as a retailer · can order now',
+        noRequests: 'No join requests', rejectedSnack: (n) => `Request from ${n} rejected`, approvedSnack: (n) => `${n} can now order`,
+        enqFilters: ['New', 'All'], newBadge: 'New', markRead: 'Mark as read', closeEnq: 'Close', reopen: 'Reopen', noEnquiries: 'No new enquiries', closedSnack: 'Enquiry closed',
+        addTitle: 'Add retailer', editTitle: 'Edit retailer', approveTitle: 'Approve request', fromReq: (n) => `From ${n}'s join request. Check the details and save.`,
+        orders: 'Orders', lastOrder: 'Last order', lastShort: { today: 'Today', yesterday: 'Yesterday', never: '—' },
+        addPhoto: 'Add shop photo', changePhoto: 'Change shop photo', photoHint: 'Optional · helps your delivery staff',
+        ownerName: 'Retailer name', shopName: 'Shop name', mobile: 'Mobile number', address: 'Shop address',
+        phoneHint: 'They log in with this number from your QR', errPhone: 'Enter a valid 10-digit mobile number', dupPhone: (s) => `${s} already uses this number`,
+        location: 'Shop location', useLocation: 'Use current location', areaLabel: 'Area or landmark',
+        inZone: (z) => `Inside ${z} zone`, outZone: 'Outside your delivery zones',
+        canOrder: 'Can order', activeOn: 'Can log in from your QR and place orders', activeOff: 'Deactivated · signed out on all devices',
+        saveNew: 'Add retailer', saveEdit: 'Save changes', saveApprove: 'Approve and add', savedSnack: 'Retailer saved', addedSnack: (n) => `${n} added`,
+        more: 'More', moreRows: [['My QR code', 'Share or print for your counter'], ['Storefront', 'What retailers see when they scan'], ['Business profile', 'Name, address, GSTIN'], ['Change password', ''], ['Language', 'English'], ['Log out', '']],
+        myQr: 'My QR', qrCard: 'QR poster', qrAria: 'QR code that opens your storefront',
+        qrActions: ['WhatsApp', 'Save image', 'Print poster'],
+        newQrTitle: 'Get a new QR code', newQrSub: 'Use this only if your QR was misused. The old QR stops working.', newQrBtn: 'Generate new QR',
+        rotTitle: 'Generate a new QR?', rotPoints: ['The old QR stops working right away. Printed posters show "This QR is no longer valid".', 'Retailers already signed in stay signed in.', 'Share or print the new QR after this.'],
+        rotConfirm: 'Generate new QR', rotSnack: 'New QR ready. Share it with your retailers.',
+        storefront: 'Storefront', preview: 'Preview', pubOn: 'Storefront is live', pubOff: 'Storefront is hidden', pubSub: 'Anyone who scans your QR sees it',
+        secTop: 'COVER & TAGLINE', changeCover: 'Change cover', tagline: 'Tagline', secStats: 'NUMBERS RETAILERS SEE', statV: 'Number', statL: 'Label',
+        secWhy: 'WHY ORDER FROM US', moveUp: 'Move up', addHighlight: 'Add highlight',
+        secHours: 'OPENING HOURS', days: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'], opens: 'Opens', closes: 'Closes', cutoff: 'Same-day cut-off', cutoffHint: 'Orders before this arrive the same day',
+        secMap: 'DELIVERY MAP', zonesSummary: (n) => `${n} zones · godown at Kishanpole Bazar`, editZones: 'Edit zones',
+        secFeatured: 'FEATURED PRODUCTS', noPricesNote: 'Visitors see these products without prices.', secOwner: 'NOTE FROM THE OWNER',
+        saveStorefront: 'Save storefront', sfSaved: 'Storefront saved',
+        zonesTitle: 'Delivery zones', zonesCount: (n) => `${n} zones · tap a zone to edit`, addZone: 'Add zone', moveGodown: 'Move godown',
+        placeZone: 'Tap the map where you deliver', placeGodown: 'Tap the map where your godown is', tapZone: 'ZONES',
+        zoneName: 'Zone name', radius: 'Delivery radius', deleteZone: 'Delete zone', newZone: (n) => `New zone ${n}`,
+        zoneAdded: 'Zone added. Name it and set the radius.', zoneDeleted: (n) => `${n} removed`, godownMoved: 'Godown moved',
+        godown: (lat, lng) => `Godown · ${lat}, ${lng}`,
+        nav: ['Home', 'Orders', 'Catalog', 'Retailers', 'More'],
+      },
+      hi: {
+        langBtn: 'English', langAria: 'Switch to English', back: 'वापस', optional: 'वैकल्पिक', required: 'यह ज़रूरी है', undo: 'वापस लें', cancel: 'रद्द करें', done: 'हो गया', remove: 'हटाएँ',
+        retailers: 'रिटेलर', segs: ['रिटेलर', 'अनुरोध', 'पूछताछ'], searchRetailers: 'दुकान, नाम या फ़ोन खोजें',
+        rFilters: ['सभी', 'सक्रिय', 'बंद'], viaQr: 'QR से जुड़े', deactivated: 'बंद', noResults: 'कोई रिटेलर नहीं मिला',
+        last: { today: 'आखिरी ऑर्डर आज', yesterday: 'आखिरी ऑर्डर कल', never: 'अभी कोई ऑर्डर नहीं' },
+        emptyTitle: 'अभी कोई रिटेलर नहीं', emptySub: 'जिन दुकानों को आप सप्लाई करते हैं उन्हें जोड़ें, या QR शेयर करें ताकि वे जुड़ने का अनुरोध भेज सकें।', addRetailer: 'रिटेलर जोड़ें', shareQrInstead: 'मेरा QR शेयर करें',
+        reqStatus: { PENDING: 'लंबित', APPROVED: 'मंज़ूर', REJECTED: 'अस्वीकार' }, call: 'कॉल', reject: 'अस्वीकार', approve: 'मंज़ूर करें', addedAsRetailer: 'रिटेलर के रूप में जुड़ गए · अब ऑर्डर कर सकते हैं',
+        noRequests: 'कोई अनुरोध नहीं', rejectedSnack: (n) => `${n} का अनुरोध अस्वीकार किया`, approvedSnack: (n) => `${n} अब ऑर्डर कर सकते हैं`,
+        enqFilters: ['नई', 'सभी'], newBadge: 'नई', markRead: 'पढ़ लिया', closeEnq: 'बंद करें', reopen: 'फिर खोलें', noEnquiries: 'कोई नई पूछताछ नहीं', closedSnack: 'पूछताछ बंद की',
+        addTitle: 'रिटेलर जोड़ें', editTitle: 'रिटेलर बदलें', approveTitle: 'अनुरोध मंज़ूर करें', fromReq: (n) => `${n} के अनुरोध से। जानकारी जाँचें और सेव करें।`,
+        orders: 'ऑर्डर', lastOrder: 'आखिरी ऑर्डर', lastShort: { today: 'आज', yesterday: 'कल', never: '—' },
+        addPhoto: 'दुकान की फ़ोटो जोड़ें', changePhoto: 'दुकान की फ़ोटो बदलें', photoHint: 'वैकल्पिक · डिलीवरी स्टाफ़ के काम आएगी',
+        ownerName: 'रिटेलर का नाम', shopName: 'दुकान का नाम', mobile: 'मोबाइल नंबर', address: 'दुकान का पता',
+        phoneHint: 'वे आपके QR से इसी नंबर से लॉग इन करेंगे', errPhone: 'सही 10 अंकों का मोबाइल नंबर डालें', dupPhone: (s) => `${s} पहले से यह नंबर इस्तेमाल करते हैं`,
+        location: 'दुकान की लोकेशन', useLocation: 'अभी की लोकेशन लें', areaLabel: 'इलाका या लैंडमार्क',
+        inZone: (z) => `${z} ज़ोन के अंदर`, outZone: 'आपके डिलीवरी ज़ोन से बाहर',
+        canOrder: 'ऑर्डर कर सकते हैं', activeOn: 'आपके QR से लॉग इन और ऑर्डर कर सकते हैं', activeOff: 'बंद · सभी डिवाइस से लॉग आउट',
+        saveNew: 'रिटेलर जोड़ें', saveEdit: 'बदलाव सेव करें', saveApprove: 'मंज़ूर करें और जोड़ें', savedSnack: 'रिटेलर सेव हो गया', addedSnack: (n) => `${n} जुड़ गए`,
+        more: 'और', moreRows: [['मेरा QR कोड', 'शेयर करें या काउंटर के लिए प्रिंट करें'], ['स्टोरफ़्रंट', 'स्कैन करने पर रिटेलर क्या देखते हैं'], ['बिज़नेस प्रोफ़ाइल', 'नाम, पता, GSTIN'], ['पासवर्ड बदलें', ''], ['भाषा', 'हिंदी'], ['लॉग आउट', '']],
+        myQr: 'मेरा QR', qrCard: 'QR पोस्टर', qrAria: 'आपका स्टोरफ़्रंट खोलने वाला QR कोड',
+        qrActions: ['WhatsApp', 'इमेज सेव करें', 'पोस्टर प्रिंट करें'],
+        newQrTitle: 'नया QR कोड बनाएँ', newQrSub: 'सिर्फ़ तभी करें जब आपके QR का गलत इस्तेमाल हुआ हो। पुराना QR काम करना बंद कर देगा।', newQrBtn: 'नया QR बनाएँ',
+        rotTitle: 'नया QR बनाएँ?', rotPoints: ['पुराना QR तुरंत बंद हो जाएगा। छपे पोस्टर पर "यह QR कोड अब मान्य नहीं है" दिखेगा।', 'जो रिटेलर लॉग इन हैं, वे लॉग इन रहेंगे।', 'इसके बाद नया QR शेयर या प्रिंट करें।'],
+        rotConfirm: 'नया QR बनाएँ', rotSnack: 'नया QR तैयार है। इसे अपने रिटेलर से शेयर करें।',
+        storefront: 'स्टोरफ़्रंट', preview: 'देखें', pubOn: 'स्टोरफ़्रंट लाइव है', pubOff: 'स्टोरफ़्रंट छिपा है', pubSub: 'आपका QR स्कैन करने वाला हर कोई इसे देखेगा',
+        secTop: 'कवर और टैगलाइन', changeCover: 'कवर बदलें', tagline: 'टैगलाइन', secStats: 'रिटेलर को दिखने वाले आँकड़े', statV: 'संख्या', statL: 'लेबल',
+        secWhy: 'हमसे ऑर्डर क्यों करें', moveUp: 'ऊपर करें', addHighlight: 'खूबी जोड़ें',
+        secHours: 'खुलने का समय', days: ['सोम', 'मंगल', 'बुध', 'गुरु', 'शुक्र', 'शनि', 'रवि'], opens: 'खुलता है', closes: 'बंद होता है', cutoff: 'आज की डिलीवरी तक', cutoffHint: 'इससे पहले के ऑर्डर उसी दिन पहुँचेंगे',
+        secMap: 'डिलीवरी नक्शा', zonesSummary: (n) => `${n} ज़ोन · गोदाम किशनपोल बाज़ार में`, editZones: 'ज़ोन बदलें',
+        secFeatured: 'खास प्रोडक्ट', noPricesNote: 'विज़िटर को ये प्रोडक्ट बिना रेट के दिखते हैं।', secOwner: 'मालिक की ओर से',
+        saveStorefront: 'स्टोरफ़्रंट सेव करें', sfSaved: 'स्टोरफ़्रंट सेव हो गया',
+        zonesTitle: 'डिलीवरी ज़ोन', zonesCount: (n) => `${n} ज़ोन · बदलने के लिए ज़ोन चुनें`, addZone: 'ज़ोन जोड़ें', moveGodown: 'गोदाम बदलें',
+        placeZone: 'नक्शे पर वहाँ टैप करें जहाँ आप डिलीवरी करते हैं', placeGodown: 'नक्शे पर अपने गोदाम की जगह टैप करें', tapZone: 'ज़ोन',
+        zoneName: 'ज़ोन का नाम', radius: 'डिलीवरी दायरा', deleteZone: 'ज़ोन हटाएँ', newZone: (n) => `नया ज़ोन ${n}`,
+        zoneAdded: 'ज़ोन जुड़ गया। नाम और दायरा सेट करें।', zoneDeleted: (n) => `${n} हटाया`, godownMoved: 'गोदाम की जगह बदली',
+        godown: (lat, lng) => `गोदाम · ${lat}, ${lng}`,
+        nav: ['होम', 'ऑर्डर', 'कैटलॉग', 'रिटेलर', 'और'],
+      },
+    };
+    const t = T[lang];
+
+    // ---------- helpers
+    const fmtPhone = (p) => (p ? `+91 ${p.slice(0, 5)} ${p.slice(5)}` : '');
+    const digits = (v) => v.replace(/\D/g, '').slice(0, 10);
+    const validPhone = (p) => /^[6-9]\d{9}$/.test(p);
+    const initials = (n) => n.replace(/[^A-Za-z ]/g, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || 'R';
+    const chip = (on) => ({ bg: on ? 'var(--pc)' : 'transparent', fg: on ? 'var(--opc)' : 'var(--text2)', border: on ? 'var(--pc)' : 'var(--outline2)' });
+    const TINT = dark ? [['#2E2A78', '#E4E2FB'], ['#3A2A08', '#F7CF7A'], ['#0B3B36', '#99F6E4'], ['#4C0519', '#FDA4AF']]
+      : [['#E4E2FB', '#1E1B4B'], ['#FDF0D5', '#7A4A00'], ['#D5F2EE', '#115E59'], ['#FBE3E8', '#9F1239']];
+    const TILES = [['7326e2acad7a39fdebd4f6f32912a230', 'cd71edd52b9c6c47e45384e05d59bfde', 'a52b5a6552d0c2d9401e23773f64ab23'],
+      ['1d4fc8894edcf936b8b328b43e8498bc', '18ee391c3db53b479dc7f2d711cccfaa', 'f1b4c4e1853bda47267d6a96c3085a8f'],
+      ['9c66b18f8aa8d91caed848f6ddf3ff61', 'f63157d263d05a4a330be222d4ea2e24', 'cf7f316e88e4c40f2a035296aa7e1c5c']];
+    const tiles = [];
+    TILES.forEach((row, r) => row.forEach((id, c) => tiles.push({ src: `/_blob/${id}`, left: `${c * 256}px`, top: `${r * 256}px` })));
+    const mapFilter = dark ? 'invert(0.92) hue-rotate(180deg) brightness(0.92) contrast(0.9)' : 'none';
+    const MPP = 34.1;
+    const toLatLng = (x, y) => {
+      const lng = ((x / 256 + 2909) / 4096) * 360 - 180;
+      const n = Math.PI * (1 - (2 * (y / 256 + 1729)) / 4096);
+      return [(Math.atan(Math.sinh(n)) * 180 / Math.PI).toFixed(4), lng.toFixed(4)];
+    };
+    const circle = (x, y, r) => `M${(x - r).toFixed(1)} ${y}a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(2 * r).toFixed(1)} 0a${r.toFixed(1)} ${r.toFixed(1)} 0 1 0 ${(-2 * r).toFixed(1)} 0z`;
+    const zoneOf = (x, y) => st.zones.find((z) => Math.hypot(z.x - x, z.y - y) <= z.rM / MPP);
+
+    // ---------- tab
+    const pendingReqs = st.reqs.filter((q) => q.status === 'PENDING').length;
+    const newEnqs = st.enqs.filter((e) => e.status === 'NEW').length;
+    const tabKeys = ['retailers', 'requests', 'enquiries'];
+    const segs = tabKeys.map((k, i) => ({ label: t.segs[i], on: st.tab === k, n: [0, pendingReqs, newEnqs][i], hasN: [0, pendingReqs, newEnqs][i] > 0,
+      bg: st.tab === k ? 'var(--pc)' : 'transparent', fg: st.tab === k ? 'var(--opc)' : 'var(--text2)', sep: i ? '1.5px solid var(--outline2)' : '0',
+      pick: () => this.setState({ tab: k }) }));
+    const q = st.rq.trim().toLowerCase();
+    const rows = st.retailers.filter((r) => (st.rFilter === 'all' || (st.rFilter === 'active' && r.active) || (st.rFilter === 'off' && !r.active))
+      && (!q || `${r.shop} ${r.name} ${r.phone}`.toLowerCase().includes(q))).map((r, i) => {
+      const [tb, tf] = TINT[r.id % 4];
+      return { shop: r.shop || r.name, owner: r.name, area: r.area || '—', initials: initials(r.shop || r.name), tileBg: tb, tileFg: tf,
+        last: t.last[r.last] || t.last.never, viaQr: r.source === 'ACCESS_REQUEST', inactive: !r.active, opacity: r.active ? 1 : 0.6,
+        open: () => this.setState({ screen: 'form', editId: r.id, form: this.formFrom(r), from: 'tab' }) };
+    });
+    const rl = { has: st.retailers.length > 0, empty: st.retailers.length === 0, q: st.rq, rows, noResults: st.retailers.length > 0 && rows.length === 0,
+      filters: ['all', 'active', 'off'].map((k, i) => ({ label: t.rFilters[i], on: st.rFilter === k, ...chip(st.rFilter === k), pick: () => this.setState({ rFilter: k }) })) };
+    const REQ_CHIP = { PENDING: dark ? ['#422006', '#FCD34D'] : ['#FEF3C7', '#92400E'], APPROVED: dark ? ['#052E16', '#86EFAC'] : ['#DCFCE7', '#166534'], REJECTED: dark ? ['#450A0A', '#FCA5A5'] : ['#FEE2E2', '#991B1B'] };
+    const reqs = st.reqs.map((rq) => ({
+      ...rq, initials: initials(rq.name), phone: fmtPhone(rq.phone), place: rq.address ? `${rq.area} · ${rq.address}` : rq.area,
+      status: t.reqStatus[rq.status], chipBg: REQ_CHIP[rq.status][0], chipFg: REQ_CHIP[rq.status][1],
+      pending: rq.status === 'PENDING', approved: rq.status === 'APPROVED', opacity: rq.status === 'REJECTED' ? 0.6 : 1,
+      reject: () => { const prev = st.reqs; this.toast(t.rejectedSnack(rq.name), { reqs: st.reqs.map((x) => (x.id === rq.id ? { ...x, status: 'REJECTED' } : x)) }, { reqs: prev }); },
+      approve: () => this.setState({ screen: 'form', editId: null, from: 'requests',
+        form: { ...this.blankForm(), name: rq.name, shop: rq.shop, phone: rq.phone, address: rq.address, area: rq.area, x: rq.x, y: rq.y, fromReq: rq.id } }),
+    }));
+    const enqShown = st.enqs.filter((e) => (st.enqFilter === 'new' ? e.status === 'NEW' : true));
+    const enqs = enqShown.map((e) => ({ ...e, phone: fmtPhone(e.phone), isNew: e.status === 'NEW',
+      actLabel: e.status === 'NEW' ? t.markRead : e.status === 'READ' ? t.closeEnq : t.reopen,
+      act: () => {
+        if (e.status === 'READ') { const prev = st.enqs; return this.toast(t.closedSnack, { enqs: st.enqs.map((x) => (x.id === e.id ? { ...x, status: 'CLOSED' } : x)) }, { enqs: prev }); }
+        return this.setState({ enqs: st.enqs.map((x) => (x.id === e.id ? { ...x, status: e.status === 'NEW' ? 'READ' : 'READ' } : x)) });
+      } }));
+    const enqFilters = ['new', 'all'].map((k, i) => ({ label: `${t.enqFilters[i]}${k === 'new' && newEnqs ? ` · ${newEnqs}` : ''}`, on: st.enqFilter === k, ...chip(st.enqFilter === k), pick: () => this.setState({ enqFilter: k }) }));
+
+    // ---------- retailer form
+    const f = st.form || this.blankForm();
+    const editR = st.editId !== null ? st.retailers.find((r) => r.id === st.editId) : null;
+    const dup = st.retailers.find((r) => r.phone === f.phone && (!editR || r.id !== editR.id));
+    const phoneBad = !validPhone(f.phone);
+    const hasLoc = f.x !== null;
+    const zone = hasLoc ? zoneOf(f.x, f.y) : null;
+    const [ll1, ll2] = hasLoc ? toLatLng(f.x, f.y) : ['', ''];
+    const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+    const [ftb, ftf] = TINT[(editR ? editR.id : 1) % 4];
+    const rf = {
+      ...f, isEdit: !!editR, isNew: !editR, fromReq: f.fromReq !== null, fromReqText: f.fromReq !== null ? t.fromReq(f.name) : '',
+      title: f.fromReq !== null ? t.approveTitle : editR ? t.editTitle : t.addTitle,
+      saveLabel: f.fromReq !== null ? t.saveApprove : editR ? t.saveEdit : t.saveNew,
+      orders: editR ? editR.orders : 0, lastShort: editR ? t.lastShort[editR.last] : '',
+      noPhoto: !f.photo, photoLabel: f.photo ? t.changePhoto : t.addPhoto, initials: initials(f.shop || f.name || 'R'),
+      tileBg: f.photo ? ftb : 'var(--field)', tileFg: f.photo ? ftf : 'var(--text2)', photoBorder: f.photo ? '0' : '2px dashed var(--outline2)',
+      nameErr: f.tried && !f.name.trim(), nameBorder: f.tried && !f.name.trim() ? 'var(--danger)' : 'transparent',
+      phoneErr: f.tried && (phoneBad || !!dup), phoneMsg: phoneBad ? t.errPhone : dup ? t.dupPhone(dup.shop) : '',
+      phoneBorder: f.tried && (phoneBad || dup) ? 'var(--danger)' : 'transparent', phoneHint: !(f.tried && (phoneBad || dup)),
+      hasLoc, coords: hasLoc ? `${ll1}, ${ll2}` : '',
+      mapT: hasLoc ? `translate(${clamp(164 - f.x, 328 - 768, 0).toFixed(1)}px, ${clamp(70 - f.y, 140 - 768, 0).toFixed(1)}px)` : 'none',
+      zoneText: zone ? t.inZone(zone.name) : t.outZone, zoneBg: zone ? 'var(--successBg)' : 'var(--warnBg)', zoneFg: zone ? 'var(--successFg)' : 'var(--warnFg)',
+      activeSub: f.active ? t.activeOn : t.activeOff, activeSubFg: f.active ? 'var(--text2)' : 'var(--danger)',
+      swBg: f.active ? 'var(--primary)' : 'var(--field)', swBorder: f.active ? 'var(--primary)' : 'var(--outline2)',
+      knob: f.active ? '24px' : '16px', knobTop: f.active ? '2px' : '6px', knobLeft: f.active ? '22px' : '6px', knobBg: f.active ? 'var(--onPrimary)' : 'var(--outline2)',
+    };
+    const setForm = (p) => this.setState({ form: { ...f, ...p } });
+
+    // ---------- more / qr
+    const MI = ['M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2z', 'M4 9l1.5-5h13L20 9M4 9h16v11H4zM10 20v-5h4v5',
+      'M12 12a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM4 21a8 8 0 0 1 16 0', 'M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11',
+      'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z', 'M15 4h4v16h-4M10 8l-4 4 4 4M6 12h10'];
+    const moreGo = [() => this.setState({ screen: 'qr' }), () => this.setState({ screen: 'storefront' }), () => null, () => null, () => this.setState({ lang: lang === 'en' ? 'hi' : 'en' }), () => null];
+    const moreRows = t.moreRows.map(([label, sub], i) => ({ label, sub, icon: MI[i], go: moreGo[i],
+      fg: i === 5 ? 'var(--danger)' : 'var(--text)', tileBg: i === 5 ? 'var(--dangerBg)' : i < 2 ? 'var(--pc)' : 'var(--field)', tileFg: i === 5 ? 'var(--dangerFg)' : i < 2 ? 'var(--opc)' : 'var(--text2)' }));
+    const qr = { path: this.qrPath(st.slug), url: `app.distributekaro.in/d/${st.slug}` };
+    const qrActions = t.qrActions.map((label, i) => ({ label,
+      icon: ['M4 20l1.3-4A8 8 0 1 1 8 18.7zM9 9.5c0 3 2.5 5.5 5.5 5.5l1-1.5-2-1-1 1a3.5 3.5 0 0 1-2-2l1-1-1-2z', 'M12 4v11M7 10l5 5 5-5M5 20h14', 'M7 8V3h10v5M6 17H4v-7h16v7h-2M7 14h10v7H7z'][i],
+      bg: i === 0 ? (dark ? '#0B3B26' : '#D9F5E5') : 'var(--surface)', fg: i === 0 ? (dark ? '#86EFAC' : '#0F6B39') : 'var(--text)' }));
+
+    // ---------- storefront editor
+    const sf = st.sf;
+    const HL_ICON = { truck: 'M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+      credit: 'M3 6h18v12H3zM3 10h18M7 15h3', tag: 'M3 12V4h8l10 10-8 8zM7.5 8.5h.01', box: 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8',
+      phone: 'M7 3h10v18H7zM11 18h2', shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5 4.5-5', star: 'M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z' };
+    const setSf = (p) => this.setState({ sf: { ...sf, ...p } });
+    const sfV = {
+      published: sf.published, pubTitle: sf.published ? t.pubOn : t.pubOff, pubBg: sf.published ? 'var(--successBg)' : 'var(--warnBg)',
+      swBg: sf.published ? 'var(--primary)' : 'var(--field)', swBorder: sf.published ? 'var(--primary)' : 'var(--outline2)',
+      knob: sf.published ? '24px' : '16px', knobTop: sf.published ? '2px' : '6px', knobLeft: sf.published ? '22px' : '6px', knobBg: sf.published ? 'var(--onPrimary)' : 'var(--outline2)',
+      tagline: sf.tagline, taglineCount: sf.tagline.length, note: sf.note, noteCount: sf.note.length,
+      stats: sf.stats.map(([v, l], i) => ({ v, l, vAria: `${t.statV} ${i + 1}`, lAria: `${t.statL} ${i + 1}`,
+        onV: (e) => setSf({ stats: sf.stats.map((s2, j) => (j === i ? [e.target.value, s2[1]] : s2)) }),
+        onL: (e) => setSf({ stats: sf.stats.map((s2, j) => (j === i ? [s2[0], e.target.value] : s2)) }) })),
+      hlCount: sf.highlights.length, addHlFg: sf.highlights.length >= 6 ? 'var(--outline2)' : 'var(--primary)',
+      highlights: sf.highlights.map(([icon, title, text], i) => ({ icon: HL_ICON[icon], title, text, upFg: i === 0 ? 'var(--outline2)' : 'var(--text2)',
+        up: () => { if (i === 0) return; const h = [...sf.highlights]; [h[i - 1], h[i]] = [h[i], h[i - 1]]; setSf({ highlights: h }); },
+        remove: () => setSf({ highlights: sf.highlights.filter((_, j) => j !== i) }) })),
+      days: t.days.map((label, i) => { const d = i + 1; const on = sf.days.includes(d); return { label, on, ...chip(on), pick: () => setSf({ days: on ? sf.days.filter((x) => x !== d) : [...sf.days, d].sort() }) }; }),
+      open: sf.open, close: sf.close, cutoff: sf.cutoff,
+      featCount: sf.featured.length, featured: sf.featured.map((name) => ({ name, remove: () => setSf({ featured: sf.featured.filter((x) => x !== name) }) })),
+      zonesSummary: t.zonesSummary(st.zones.length),
+    };
+    const zonesPath = st.zones.map((z) => circle(z.x, z.y, z.rM / MPP)).join('');
+    const godown = { x: st.godown.x.toFixed(1), y: st.godown.y.toFixed(1), cy: (st.godown.y - 25).toFixed(1) };
+
+    // ---------- zones editor
+    const sel = st.selZone !== null ? st.zones.find((z) => z.id === st.selZone) : null;
+    const [gl1, gl2] = toLatLng(st.godown.x, st.godown.y);
+    const zn = {
+      summary: t.zonesCount(st.zones.length), placing: !!st.placing, idle: !st.placing,
+      placeHint: st.placing === 'godown' ? t.placeGodown : t.placeZone, placeAria: st.placing === 'godown' ? t.placeGodown : t.placeZone,
+      otherPath: st.zones.filter((z) => z !== sel).map((z) => circle(z.x, z.y, z.rM / MPP)).join('') || 'M0 0',
+      selPath: sel ? circle(sel.x, sel.y, sel.rM / MPP) : 'M0 0',
+      labels: st.zones.map((z) => ({ name: z.name, left: `${z.x}px`, top: `${z.y}px`, bg: z === sel ? '#3730A3' : '#FFFFFF', fg: z === sel ? '#FFFFFF' : '#16152B' })),
+      hasSel: !!sel, selName: sel ? sel.name : '', selR: sel ? sel.rM : 1400, selKm: sel ? `${(sel.rM / 1000).toFixed(1)} km` : '',
+      chips: st.zones.map((z) => ({ label: z.name, on: z === sel, ...chip(z === sel), pick: () => this.setState({ selZone: z === sel ? null : z.id, placing: null }) })),
+      godownText: t.godown(gl1, gl2),
+    };
+    const setZone = (p) => this.setState({ zones: st.zones.map((z) => (z.id === st.selZone ? { ...z, ...p } : z)) });
+
+    // ---------- nav
+    const navActive = st.screen === 'tab' || st.screen === 'form' ? 3 : 4;
+    const NAVI = ['M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8',
+      'M4 9l1.5-5h13L20 9M4 9h16v11H4zM4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M10 20v-5h4v5', 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z'];
+    const badges = [0, 2, 0, pendingReqs + newEnqs, 0];
+    const nav = t.nav.map((label, i) => ({ label, icon: NAVI[i], current: i === navActive ? 'page' : 'false',
+      pill: i === navActive ? 'var(--pc)' : 'transparent', fg: i === navActive ? 'var(--text)' : 'var(--text2)', badge: badges[i], hasBadge: badges[i] > 0,
+      pick: i === 3 ? () => this.setState({ screen: 'tab' }) : i === 4 ? () => this.setState({ screen: 'more' }) : () => null }));
+    const showNav = st.screen === 'tab' || st.screen === 'more';
+    const scr = { tab: st.screen === 'tab', form: st.screen === 'form', more: st.screen === 'more', qr: st.screen === 'qr', storefront: st.screen === 'storefront', zones: st.screen === 'zones' };
+
+    return {
+      vars, s: t, scr, segs, tab: { isRetailers: st.tab === 'retailers', isRequests: st.tab === 'requests', isEnquiries: st.tab === 'enquiries' },
+      rl, reqs, reqsEmpty: reqs.length === 0, enqs, enqsEmpty: enqs.length === 0, enqFilters, rf, tiles, mapFilter,
+      moreRows, qr, qrActions, sf: sfV, zonesPath, godown, zn, nav, showNav, dialog: st.dialog,
+      snack: { show: !!st.snack, text: st.snack || '', hasUndo: !!st.undo, bottom: showNav ? '92px' : '84px' },
+      undo: () => { clearTimeout(this.snackT); this.setState({ ...st.undo, snack: null, undo: null }); },
+      toggleLang: () => this.setState({ lang: lang === 'en' ? 'hi' : 'en' }),
+      onRq: (e) => this.setState({ rq: e.target.value }),
+      newRetailer: () => this.setState({ screen: 'form', editId: null, form: this.blankForm(), from: 'tab' }),
+      goQr: () => this.setState({ screen: 'qr' }), goMore: () => this.setState({ screen: 'more', dialog: false }),
+      goStorefront: () => this.setState({ screen: 'storefront', placing: null }), goZones: () => this.setState({ screen: 'zones' }),
+      backToTab: () => this.setState({ screen: 'tab', tab: st.from === 'requests' ? 'requests' : st.tab }),
+      togglePhoto: () => setForm({ photo: !f.photo }),
+      onFName: (e) => setForm({ name: e.target.value }), onFShop: (e) => setForm({ shop: e.target.value }),
+      onFPhone: (e) => setForm({ phone: digits(e.target.value) }), onFAddr: (e) => setForm({ address: e.target.value }),
+      onFArea: (e) => setForm({ area: e.target.value }), onFActive: (e) => setForm({ active: e.target.checked }),
+      useLocation: () => setForm(f.x === null ? { x: 395.0, y: 405.0, area: f.area || 'Malviya Nagar' } : {}),
+      saveRetailer: () => {
+        if (!f.name.trim() || phoneBad || dup) return setForm({ tried: true });
+        if (editR) {
+          return this.toast(t.savedSnack, { screen: 'tab', retailers: st.retailers.map((r) => (r.id === editR.id ? { ...r, ...f, shop: f.shop, active: f.active } : r)) });
+        }
+        const id = st.retailers.length;
+        const r = { id, name: f.name.trim(), shop: f.shop.trim(), phone: f.phone, address: f.address, area: f.area, x: f.x, y: f.y, active: true,
+          source: f.fromReq !== null ? 'ACCESS_REQUEST' : 'MANUAL', last: 'never', orders: 0, photo: f.photo };
+        const reqsNext = f.fromReq !== null ? st.reqs.map((x) => (x.id === f.fromReq ? { ...x, status: 'APPROVED' } : x)) : st.reqs;
+        return this.toast(f.fromReq !== null ? t.approvedSnack(r.shop || r.name) : t.addedSnack(r.shop || r.name),
+          { screen: 'tab', tab: f.fromReq !== null ? 'requests' : 'retailers', retailers: [r, ...st.retailers], reqs: reqsNext, rFilter: 'all', rq: '' });
+      },
+      askRotate: () => this.setState({ dialog: true }), cancelRotate: () => this.setState({ dialog: false }),
+      confirmRotate: () => {
+        const A = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
+        let slug = ''; for (let i = 0; i < 12; i++) slug += A[Math.floor(Math.random() * A.length)];
+        this.toast(t.rotSnack, { dialog: false, slug });
+      },
+      onPublished: (e) => setSf({ published: e.target.checked }),
+      onTagline: (e) => setSf({ tagline: e.target.value.slice(0, 80) }), onNote: (e) => setSf({ note: e.target.value.slice(0, 400) }),
+      addHighlight: () => (sf.highlights.length < 6 ? setSf({ highlights: [...sf.highlights, ['star', 'New highlight', 'Tap to edit']] }) : null),
+      onOpen: (e) => setSf({ open: e.target.value }), onClose: (e) => setSf({ close: e.target.value }), onCutoff: (e) => setSf({ cutoff: e.target.value }),
+      saveStorefront: () => this.toast(t.sfSaved, { screen: 'more' }),
+      startAdd: () => this.setState({ placing: 'zone', selZone: null }), startMoveGodown: () => this.setState({ placing: 'godown', selZone: null }),
+      onMapTap: (e) => {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const k = 360 / rect.width;
+        const lx = (e.clientX - rect.left) * k, ly = (e.clientY - rect.top) * (400 / rect.height);
+        const mx = (lx + 116.4) / 0.78, my = (ly + 99.5) / 0.78;
+        if (st.placing === 'godown') return this.toast(t.godownMoved, { godown: { x: mx, y: my }, placing: null });
+        const id = st.zones.reduce((a, z) => Math.max(a, z.id), -1) + 1;
+        return this.toast(t.zoneAdded, { zones: [...st.zones, { id, name: t.newZone(st.zones.length + 1), x: +mx.toFixed(1), y: +my.toFixed(1), rM: 1400 }], selZone: id, placing: null });
+      },
+      onZoneName: (e) => setZone({ name: e.target.value }), onRadius: (e) => setZone({ rM: parseInt(e.target.value, 10) }),
+      deleteZone: () => { const prev = st.zones; const name = sel ? sel.name : ''; this.toast(t.zoneDeleted(name), { zones: st.zones.filter((z) => z.id !== st.selZone), selZone: null }, { zones: prev }); },
+      doneZone: () => this.setState({ selZone: null }),
+    };
+  }
+}
+</script>
+</body>
+</html>
