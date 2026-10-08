@@ -1,0 +1,653 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Storefront flow</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700&amp;family=Anek+Devanagari:wght@500;600;700&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; font-family: 'Mukta', 'Anek Devanagari', system-ui, sans-serif; {{vars}}; background: var(--bg); color: var(--text)">
+
+  <!-- ============================================ R-01 STOREFRONT (+ phone sheet) -->
+  <sc-if value="{{scr.store}}" hint-placeholder-val="{{true}}">
+    <div style="height: 844px; display: flex; flex-direction: column">
+      <div style="flex: 1; overflow-y: auto; overflow-x: hidden">
+        <div style="height: 150px; position: relative; background: #2A2580; overflow: hidden">
+          <sc-if value="{{d.hasCover}}" hint-placeholder-val="{{true}}">
+            <svg width="390" height="150" viewBox="0 0 390 150" aria-hidden="true" style="position: absolute; inset: 0">
+              <path d="M-10 120C60 120 70 40 150 40S260 110 330 80 400 20 410 20" fill="none" stroke="#4B45C2" stroke-width="10" stroke-linecap="round"></path>
+              <path d="M-10 150C80 150 110 90 190 95S300 140 410 120" fill="none" stroke="#3B36A8" stroke-width="10" stroke-linecap="round"></path>
+              <circle cx="150" cy="40" r="9" fill="#F2B33D"></circle>
+              <circle cx="330" cy="80" r="9" fill="#FFFFFF"></circle>
+              <circle cx="190" cy="95" r="6" fill="#ABA6FF"></circle>
+            </svg>
+          </sc-if>
+          <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="position: absolute; top: 12px; right: 12px; height: 36px; padding: 0 12px 0 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: rgba(14,13,26,0.35); color: #FFFFFF; font-family: inherit; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"></path></svg>{{s.langBtn}}
+          </button>
+        </div>
+
+        <div style="padding: 0 20px; margin-top: -36px; position: relative; display: flex; flex-direction: column; gap: 6px">
+          <div style="width: 72px; height: 72px; border-radius: 20px; background: #F2B33D; color: #2A1A00; border: 4px solid var(--bg); font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 26px; display: flex; align-items: center; justify-content: center">{{d.initials}}</div>
+          <h1 style="margin: 4px 0 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 28px; line-height: 32px">{{d.name}}</h1>
+          <p style="margin: 0; font-size: 16px; line-height: 22px; color: var(--text2)">{{d.tagline}}</p>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-top: 4px">
+            <sc-if value="{{d.hasHours}}" hint-placeholder-val="{{true}}">
+              <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; color: var(--text2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2"></path></svg>{{d.hours}}</span>
+            </sc-if>
+            <sc-if value="{{d.hasAreas}}" hint-placeholder-val="{{true}}">
+              <span style="height: 28px; padding: 0 10px; border-radius: 999px; background: var(--surface); font-size: 13px; font-weight: 600; display: inline-flex; align-items: center; gap: 6px; color: var(--text2)"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path></svg>{{d.areasText}}</span>
+            </sc-if>
+          </div>
+        </div>
+
+        <sc-if value="{{d.hasHighlights}}" hint-placeholder-val="{{true}}">
+          <section style="padding: 22px 20px 0; display: flex; flex-direction: column; gap: 10px">
+            <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 600; font-size: 19px">{{s.whyUs}}</h2>
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+              <sc-for list="{{d.highlights}}" as="h" hint-placeholder-count="6">
+                <div style="background: var(--surface); border-radius: 16px; padding: 12px; display: flex; flex-direction: column; gap: 8px">
+                  <span style="width: 34px; height: 34px; border-radius: 10px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.icon}}"></path></svg></span>
+                  <div style="display: flex; flex-direction: column">
+                    <span style="font-size: 15px; font-weight: 700; line-height: 19px">{{h.title}}</span>
+                    <span style="font-size: 13px; line-height: 17px; color: var(--text2)">{{h.text}}</span>
+                  </div>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <section style="padding: 22px 20px 0; display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 600; font-size: 19px">{{s.weSupply}}</h2>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{d.categories}}" as="c" hint-placeholder-count="8">
+              <span style="height: 32px; padding: 0 12px; border-radius: 10px; background: {{c.bg}}; color: {{c.fg}}; font-size: 14px; font-weight: 600; display: inline-flex; align-items: center">{{c.label}}</span>
+            </sc-for>
+          </div>
+        </section>
+
+        <sc-if value="{{d.hasFeatured}}" hint-placeholder-val="{{true}}">
+          <section style="padding: 22px 0 0; display: flex; flex-direction: column; gap: 10px">
+            <div style="padding: 0 12px 0 20px; display: flex; justify-content: space-between; align-items: center">
+              <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 600; font-size: 19px">{{s.featured}}</h2>
+              <button onClick="{{goProducts}}" style="height: 40px; padding: 0 8px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 2px; cursor: pointer">{{s.seeAll}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+            </div>
+            <div style="display: flex; gap: 10px; overflow-x: auto; padding: 0 20px 4px">
+              <sc-for list="{{d.featured}}" as="p" hint-placeholder-count="4">
+                <div style="width: 124px; flex: none; display: flex; flex-direction: column; gap: 5px">
+                  <div style="height: 92px; border-radius: 14px; background: {{p.bg}}; color: {{p.fg}}; font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 24px; display: flex; align-items: center; justify-content: center">{{p.initials}}</div>
+                  <span style="font-size: 14px; font-weight: 600; line-height: 18px; height: 36px; overflow: hidden">{{p.name}}</span>
+                  <span style="align-self: flex-start; font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: var(--accentSoft); color: var(--accentFg)">{{s.rateTag}}</span>
+                </div>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+        <sc-if value="{{d.noFeatured}}" hint-placeholder-val="{{false}}">
+          <div style="padding: 22px 20px 0">
+            <button onClick="{{goProducts}}" style="width: 100%; height: 52px; border-radius: 14px; border: 0; background: var(--surface); color: var(--primary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.browseAll}}</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{d.hasBrands}}" hint-placeholder-val="{{true}}">
+          <section style="padding: 22px 20px 0; display: flex; flex-direction: column; gap: 10px">
+            <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 600; font-size: 19px">{{s.brands}}</h2>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px">
+              <sc-for list="{{d.brands}}" as="b" hint-placeholder-count="10">
+                <span style="height: 32px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline); font-size: 14px; font-weight: 600; display: inline-flex; align-items: center; color: var(--text)">{{b}}</span>
+              </sc-for>
+            </div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{d.hasAreas}}" hint-placeholder-val="{{true}}">
+          <section style="padding: 22px 20px 0; display: flex; flex-direction: column; gap: 10px">
+            <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 600; font-size: 19px">{{s.deliverTo}}</h2>
+            <div style="background: var(--surface); border-radius: 16px; padding: 12px 14px; font-size: 15px; line-height: 22px; color: var(--text)">{{d.areasList}}</div>
+          </section>
+        </sc-if>
+
+        <sc-if value="{{d.hasAbout}}" hint-placeholder-val="{{true}}">
+          <section style="padding: 22px 20px 0; display: flex; flex-direction: column; gap: 8px">
+            <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 600; font-size: 19px">{{s.about}}</h2>
+            <p style="margin: 0; font-size: 15px; line-height: 23px; color: var(--text2)">{{d.about}}</p>
+          </section>
+        </sc-if>
+
+        <div style="padding: 28px 20px 24px; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--text2); font-size: 13px; font-weight: 600">
+          <svg width="20" height="20" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#3730A3"></rect><circle cx="23" cy="38" r="9" fill="none" stroke="#FFFFFF" stroke-width="6"></circle><path d="M32 16V47M40 16V47" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"></path><path d="M50 27L40 37L51 47" fill="none" stroke="#F2B33D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path></svg>{{s.powered}}
+        </div>
+      </div>
+
+      <div style="flex: none; background: var(--sheet); border-top: 1px solid var(--outline); padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px">
+        <sc-if value="{{signedIn}}" hint-placeholder-val="{{false}}">
+          <span style="font-size: 15px; color: var(--text2)">{{s.welcome}} <span style="font-weight: 700; color: var(--text)">{{viewerShop}}</span></span>
+          <a href="#" style="height: 50px; border-radius: 14px; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">{{s.continueOrdering}}</a>
+          <button onClick="{{notYou}}" style="align-self: center; height: 36px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{s.notYou}}</button>
+        </sc-if>
+        <sc-if value="{{visitor}}" hint-placeholder-val="{{true}}">
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <button onClick="{{openPhone}}" style="height: 50px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.orderNow}}</button>
+            <button onClick="{{goJoin}}" style="height: 50px; border-radius: 14px; border: 0; background: var(--accent); color: var(--onAccent); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.join}}</button>
+          </div>
+          <button onClick="{{goEnquiry}}" style="align-self: center; height: 36px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{s.enquiryLink}}</button>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+
+  <sc-if value="{{scr.phone}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; background: var(--scrim); display: flex; flex-direction: column; justify-content: flex-end">
+      <div style="background: var(--sheet); border-radius: 24px 24px 0 0; padding: 10px 20px 24px; display: flex; flex-direction: column; gap: 14px">
+        <span style="align-self: center; width: 36px; height: 4px; border-radius: 2px; background: var(--outline2)"></span>
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 12px">
+          <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px; line-height: 28px">{{s.sheetTitle}}</h2>
+          <button onClick="{{closeSheet}}" aria-label="{{s.close}}" style="width: 44px; height: 44px; flex: none; margin: -8px -10px 0 0; border: 0; border-radius: 22px; background: transparent; color: var(--text2); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"></path></svg></button>
+        </div>
+        <p style="margin: -6px 0 0; font-size: 15px; line-height: 21px; color: var(--text2)">{{s.sheetSub}}</p>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; font-weight: 600">{{s.mobile}}</span>
+          <span style="height: 54px; border-radius: 14px; background: var(--field); border: 1.5px solid {{phoneBorder}}; display: flex; align-items: center; gap: 10px; padding: 0 14px; box-sizing: border-box">
+            <span style="font-size: 17px; font-weight: 700; color: var(--text2)">+91</span>
+            <span style="width: 1px; height: 24px; background: var(--outline2)"></span>
+            <input value="{{phone}}" onChange="{{onPhone}}" inputmode="numeric" autocomplete="tel-national" placeholder="98765 43210" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 18px; font-weight: 600; letter-spacing: 0.04em; color: var(--text); outline: none">
+          </span>
+          <sc-if value="{{phoneErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{s.phoneErr}}</span></sc-if>
+        </label>
+        <button onClick="{{submitPhone}}" style="height: 52px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 17px; font-weight: 700; cursor: pointer">{{s.continue}}</button>
+        <div style="display: flex; justify-content: center; align-items: center; gap: 4px; font-size: 14px; color: var(--text2)">
+          {{s.newHere}}
+          <button onClick="{{goJoin}}" style="height: 36px; padding: 0 4px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.joinLink}}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============================================ R-01b PUBLIC PRODUCTS -->
+  <sc-if value="{{scr.products}}" hint-placeholder-val="{{false}}">
+    <div style="height: 844px; display: flex; flex-direction: column">
+      <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+        <button onClick="{{goStore}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+        <div style="flex: 1; display: flex; flex-direction: column; min-width: 0">
+          <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px; line-height: 24px">{{s.allProducts}}</span>
+          <span style="font-size: 13px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{d.name}} · {{productCount}}</span>
+        </div>
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+      <div style="padding: 0 16px 8px; flex: none">
+        <label style="height: 46px; border-radius: 14px; background: var(--field); display: flex; align-items: center; gap: 10px; padding: 0 14px; color: var(--text2)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg>
+          <input aria-label="{{s.search}}" placeholder="{{s.search}}" value="{{q}}" onChange="{{onQ}}" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+        </label>
+      </div>
+      <div style="display: flex; gap: 8px; padding: 0 16px 10px; overflow-x: auto; flex: none">
+        <sc-for list="{{catChips}}" as="c" hint-placeholder-count="6">
+          <button onClick="{{c.pick}}" style="flex: none; height: 36px; padding: 0 14px; border-radius: 999px; font-family: inherit; font-size: 14px; font-weight: 600; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; cursor: pointer">{{c.label}}</button>
+        </sc-for>
+      </div>
+      <div style="margin: 0 16px 10px; padding: 10px 12px; border-radius: 12px; background: var(--accentSoft); color: var(--accentFg); display: flex; gap: 8px; align-items: center; font-size: 14px; font-weight: 600; flex: none">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"></path></svg>{{s.ratesNote}}
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 0 16px 12px">
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+          <sc-for list="{{products}}" as="p" hint-placeholder-count="6">
+            <div style="background: var(--surface); border-radius: 16px; padding: 8px; display: flex; flex-direction: column; gap: 6px">
+              <div style="height: 96px; border-radius: 12px; background: {{p.bg}}; color: {{p.fg}}; font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 26px; display: flex; align-items: center; justify-content: center">{{p.initials}}</div>
+              <span style="font-size: 14px; font-weight: 600; line-height: 18px; height: 36px; overflow: hidden; padding: 0 2px">{{p.name}}</span>
+              <span style="font-size: 13px; color: var(--text2); padding: 0 2px">{{p.unit}}</span>
+              <span style="align-self: flex-start; margin: 0 2px 2px; font-size: 12px; font-weight: 700; padding: 2px 7px; border-radius: 6px; background: var(--accentSoft); color: var(--accentFg)">{{s.joinRates}}</span>
+            </div>
+          </sc-for>
+        </div>
+        <sc-if value="{{noProducts}}" hint-placeholder-val="{{false}}">
+          <div style="padding: 48px 16px; display: flex; flex-direction: column; align-items: center; gap: 6px; text-align: center">
+            <span style="width: 56px; height: 56px; border-radius: 28px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg></span>
+            <span style="font-size: 17px; font-weight: 700">{{s.noProducts}}</span>
+            <span style="font-size: 14px; color: var(--text2)">{{s.noProductsSub}}</span>
+          </div>
+        </sc-if>
+      </div>
+      <div style="flex: none; background: var(--sheet); border-top: 1px solid var(--outline); padding: 12px 16px 16px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <button onClick="{{openPhone}}" style="height: 50px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.orderNow}}</button>
+        <button onClick="{{goJoin}}" style="height: 50px; border-radius: 14px; border: 0; background: var(--accent); color: var(--onAccent); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.join}}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============================================ R-02 NOT REGISTERED -->
+  <sc-if value="{{scr.notreg}}" hint-placeholder-val="{{false}}">
+    <div style="height: 844px; display: flex; flex-direction: column">
+      <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; justify-content: space-between">
+        <button onClick="{{goStore}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 8px 20px 24px; display: flex; flex-direction: column; gap: 16px">
+        <span style="width: 72px; height: 72px; border-radius: 24px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9l1.5-5h13L20 9M4 9h16v11H4zM4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M10 20v-5h4v5"></path></svg></span>
+        <div style="display: flex; flex-direction: column; gap: 6px">
+          <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 26px; line-height: 31px">{{s.notRegTitle}}</h1>
+          <p style="margin: 0; font-size: 16px; line-height: 23px; color: var(--text2)">{{s.notRegSub}}</p>
+        </div>
+        <div style="display: flex; align-items: center; justify-content: space-between; background: var(--surface); border-radius: 14px; padding: 4px 6px 4px 14px">
+          <span style="font-size: 17px; font-weight: 700; letter-spacing: 0.02em">{{phoneDisplay}}</span>
+          <button onClick="{{openPhone}}" style="height: 40px; padding: 0 12px; border: 0; border-radius: 10px; background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.change}}</button>
+        </div>
+        <sc-if value="{{isPending}}" hint-placeholder-val="{{false}}">
+          <div role="status" style="background: var(--successBg); color: var(--successFg); border-radius: 16px; padding: 14px; display: flex; gap: 12px; align-items: flex-start">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l2.8 2.8L16.5 9.5"></path></svg>
+            <div style="display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 16px; font-weight: 700">{{s.pendingTitle}}</span>
+              <span style="font-size: 14px; line-height: 20px; color: var(--text)">{{s.pendingDesc}}</span>
+            </div>
+          </div>
+        </sc-if>
+        <sc-if value="{{notPending}}" hint-placeholder-val="{{true}}">
+          <button onClick="{{goJoinFromNotreg}}" style="text-align: left; border: 0; border-radius: 18px; background: var(--primary); color: var(--onPrimary); padding: 16px; display: flex; gap: 14px; align-items: center; font-family: inherit; cursor: pointer">
+            <span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: var(--accent); color: var(--onAccent); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 3 17.5V19M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM19 8v6M22 11h-6"></path></svg></span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+              <span style="font-size: 17px; font-weight: 700">{{s.reqCardTitle}}</span>
+              <span style="font-size: 14px; line-height: 19px; opacity: 0.9">{{s.reqCardDesc}}</span>
+            </span>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg>
+          </button>
+        </sc-if>
+        <button onClick="{{goEnquiry}}" style="text-align: left; border: 0; border-radius: 18px; background: var(--surface); color: var(--text); padding: 16px; display: flex; gap: 14px; align-items: center; font-family: inherit; cursor: pointer">
+          <span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4zM8 9h8M8 12h5"></path></svg></span>
+          <span style="flex: 1; display: flex; flex-direction: column; gap: 2px">
+            <span style="font-size: 17px; font-weight: 700">{{s.enqCardTitle}}</span>
+            <span style="font-size: 14px; line-height: 19px; color: var(--text2)">{{s.enqCardDesc}}</span>
+          </span>
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--text2)"><path d="M9 5l7 7-7 7"></path></svg>
+        </button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============================================ R-03 REQUEST ACCESS -->
+  <sc-if value="{{scr.request}}" hint-placeholder-val="{{false}}">
+    <div style="height: 844px; display: flex; flex-direction: column">
+      <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+        <button onClick="{{backFromForm}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+        <span style="flex: 1; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.reqTitle}}</span>
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 4px 20px 16px; display: flex; flex-direction: column; gap: 16px">
+        <p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--text2)">{{s.reqIntro}}</p>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; font-weight: 600">{{s.yourName}}</span>
+          <input value="{{f.reqName}}" onChange="{{onReqName}}" autocomplete="name" style="height: 52px; box-sizing: border-box; width: 100%; border-radius: 12px; border: 1.5px solid {{f.reqNameBorder}}; background: var(--field); padding: 0 14px; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+          <sc-if value="{{f.reqNameErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{s.required}}</span></sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; font-weight: 600">{{s.shopName}}</span>
+          <input value="{{f.reqShop}}" onChange="{{onReqShop}}" autocomplete="organization" style="height: 52px; box-sizing: border-box; width: 100%; border-radius: 12px; border: 1.5px solid {{f.reqShopBorder}}; background: var(--field); padding: 0 14px; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+          <sc-if value="{{f.reqShopErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{s.required}}</span></sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; font-weight: 600">{{s.mobile}}</span>
+          <span style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1.5px solid {{f.reqPhoneBorder}}; background: var(--field); display: flex; align-items: center; gap: 10px; padding: 0 14px">
+            <span style="font-size: 16px; font-weight: 700; color: var(--text2)">+91</span>
+            <span style="width: 1px; height: 22px; background: var(--outline2)"></span>
+            <input value="{{f.reqPhone}}" onChange="{{onReqPhone}}" inputmode="numeric" autocomplete="tel-national" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+          </span>
+          <sc-if value="{{f.reqPhoneErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{f.reqPhoneMsg}}</span></sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; font-weight: 600">{{s.address}} <span style="font-weight: 500; color: var(--text2)">· {{s.optional}}</span></span>
+          <input value="{{f.reqAddr}}" onChange="{{onReqAddr}}" autocomplete="street-address" style="height: 52px; box-sizing: border-box; width: 100%; border-radius: 12px; border: 1.5px solid transparent; background: var(--field); padding: 0 14px; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; font-weight: 600">{{s.area}} <span style="font-weight: 500; color: var(--text2)">· {{s.optional}}</span></span>
+          <input value="{{f.reqArea}}" onChange="{{onReqArea}}" placeholder="Pratap Nagar" style="height: 52px; box-sizing: border-box; width: 100%; border-radius: 12px; border: 1.5px solid transparent; background: var(--field); padding: 0 14px; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+        </label>
+        <div style="display: flex; gap: 8px; align-items: center; font-size: 13px; color: var(--text2)">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"></path></svg>{{s.privacy}}
+        </div>
+      </div>
+      <div style="flex: none; padding: 12px 16px 16px; background: var(--sheet); border-top: 1px solid var(--outline)">
+        <button onClick="{{submitRequest}}" style="width: 100%; height: 52px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 17px; font-weight: 700; cursor: pointer">{{s.sendRequest}}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============================================ R-04 ENQUIRY -->
+  <sc-if value="{{scr.enquiry}}" hint-placeholder-val="{{false}}">
+    <div style="height: 844px; display: flex; flex-direction: column">
+      <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+        <button onClick="{{backFromForm}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+        <div style="flex: 1; display: flex; flex-direction: column; min-width: 0">
+          <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px; line-height: 24px">{{s.enqTitle}}</span>
+          <span style="font-size: 13px; color: var(--text2)">{{d.name}}</span>
+        </div>
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto; padding: 4px 20px 16px; display: flex; flex-direction: column; gap: 16px">
+        <div style="display: flex; flex-direction: column; gap: 8px">
+          <span style="font-size: 14px; font-weight: 600; color: var(--text2)">{{s.quick}}</span>
+          <div style="display: flex; flex-wrap: wrap; gap: 8px">
+            <sc-for list="{{prompts}}" as="p" hint-placeholder-count="3">
+              <button onClick="{{p.pick}}" style="min-height: 40px; padding: 6px 12px; border-radius: 12px; border: 1.5px solid {{p.border}}; background: {{p.bg}}; color: {{p.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; text-align: left; cursor: pointer">{{p.text}}</button>
+            </sc-for>
+          </div>
+        </div>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; font-weight: 600">{{s.message}}</span>
+          <textarea value="{{f.enqMsg}}" onChange="{{onEnqMsg}}" rows="4" placeholder="{{s.messagePh}}" maxlength="500" style="box-sizing: border-box; width: 100%; border-radius: 12px; border: 1.5px solid {{f.enqMsgBorder}}; background: var(--field); padding: 12px 14px; font-family: inherit; font-size: 16px; line-height: 23px; color: var(--text); resize: none; outline: none"></textarea>
+          <span style="display: flex; justify-content: space-between; font-size: 13px">
+            <span style="color: var(--danger)">{{f.enqMsgErrText}}</span>
+            <span style="color: var(--text2)">{{f.enqCount}}/500</span>
+          </span>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; font-weight: 600">{{s.yourName}}</span>
+          <input value="{{f.enqName}}" onChange="{{onEnqName}}" autocomplete="name" style="height: 52px; box-sizing: border-box; width: 100%; border-radius: 12px; border: 1.5px solid {{f.enqNameBorder}}; background: var(--field); padding: 0 14px; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+          <sc-if value="{{f.enqNameErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{s.required}}</span></sc-if>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 14px; font-weight: 600">{{s.mobile}}</span>
+          <span style="height: 52px; box-sizing: border-box; border-radius: 12px; border: 1.5px solid {{f.enqPhoneBorder}}; background: var(--field); display: flex; align-items: center; gap: 10px; padding: 0 14px">
+            <span style="font-size: 16px; font-weight: 700; color: var(--text2)">+91</span>
+            <span style="width: 1px; height: 22px; background: var(--outline2)"></span>
+            <input value="{{f.enqPhone}}" onChange="{{onEnqPhone}}" inputmode="numeric" autocomplete="tel-national" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+          </span>
+          <sc-if value="{{f.enqPhoneErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{s.phoneErr}}</span></sc-if>
+        </label>
+      </div>
+      <div style="flex: none; padding: 12px 16px 16px; background: var(--sheet); border-top: 1px solid var(--outline)">
+        <button onClick="{{submitEnquiry}}" style="width: 100%; height: 52px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 17px; font-weight: 700; cursor: pointer">{{s.sendEnquiry}}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ============================================ SUCCESS (request / enquiry) -->
+  <sc-if value="{{scr.done}}" hint-placeholder-val="{{false}}">
+    <div style="height: 844px; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; gap: 14px">
+      <span style="width: 88px; height: 88px; border-radius: 44px; background: var(--successBg); color: var(--successFg); display: flex; align-items: center; justify-content: center"><svg width="44" height="44" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+      <h1 role="status" style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 28px; line-height: 33px">{{doneTitle}}</h1>
+      <p style="margin: 0; max-width: 300px; font-size: 16px; line-height: 24px; color: var(--text2)">{{doneDesc}}</p>
+      <button onClick="{{goStore}}" style="margin-top: 12px; height: 50px; padding: 0 24px; border-radius: 14px; border: 0; background: var(--pc); color: var(--opc); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.backToStore}}</button>
+    </div>
+  </sc-if>
+
+  <!-- ============================================ INVALID QR -->
+  <sc-if value="{{scr.invalid}}" hint-placeholder-val="{{false}}">
+    <div style="height: 844px; box-sizing: border-box; padding: 24px; display: flex; flex-direction: column; align-items: center; text-align: center">
+      <div style="align-self: flex-end">
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+      <div style="flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 14px">
+        <span style="width: 88px; height: 88px; border-radius: 28px; background: var(--surface); color: var(--text2); display: flex; align-items: center; justify-content: center"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2M20 14v2M14 18v2h2M18 18h2v2M3 3l18 18"></path></svg></span>
+        <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 26px; line-height: 31px">{{s.invalidTitle}}</h1>
+        <p style="margin: 0; max-width: 300px; font-size: 16px; line-height: 24px; color: var(--text2)">{{s.invalidDesc}}</p>
+      </div>
+      <div style="display: flex; align-items: center; gap: 8px; color: var(--text2); font-size: 14px; font-weight: 600">
+        <svg width="24" height="24" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#3730A3"></rect><circle cx="23" cy="38" r="9" fill="none" stroke="#FFFFFF" stroke-width="6"></circle><path d="M32 16V47M40 16V47" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"></path><path d="M50 27L40 37L51 47" fill="none" stroke="#F2B33D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path></svg>DistributeKaro
+      </div>
+    </div>
+  </sc-if>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","default":"store","options":["store","minimal","phone","signedin","products","notreg","notregPending","request","enquiry","invalid"]},"lang":{"editor":"enum","default":"en","options":["en","hi"]},"dark":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.initState(props.start ?? 'store');
+  }
+
+  initState(start) {
+    const base = { screen: 'store', minimal: false, signedIn: false, viewer: null, phone: '', phoneTried: false, from: 'store',
+      lang: null, q: '', cat: 'All', done: null,
+      reqName: '', reqShop: '', reqAddr: '', reqArea: '', reqPhone: '', reqTried: false,
+      enqName: '', enqPhone: '', enqMsg: '', enqTried: false };
+    const map = {
+      store: {}, minimal: { minimal: true }, phone: { screen: 'phone' },
+      signedin: { signedIn: true, viewer: 'Sharma General Store' },
+      products: { screen: 'products' },
+      notreg: { screen: 'notreg', phone: '9829012345' },
+      notregPending: { screen: 'notreg', phone: '9828077777' },
+      request: { screen: 'request', phone: '9829012345', reqPhone: '9829012345', from: 'notreg' },
+      enquiry: { screen: 'enquiry' },
+      invalid: { screen: 'invalid' },
+    };
+    return { ...base, ...(map[start] ?? {}) };
+  }
+
+  componentDidUpdate(prev) {
+    if (prev.start !== this.props.start) this.setState(this.initState(this.props.start ?? 'store'));
+    else if (prev.lang !== this.props.lang && this.state.lang !== null) this.setState({ lang: null });
+  }
+
+  renderVals() {
+    const st = this.state;
+    const dark = this.props.dark ?? false;
+    const lang = st.lang ?? this.props.lang ?? 'en';
+    const L = { bg: '#F7F6FC', surface: '#EEEDF8', field: '#E3E2F1', sheet: '#FFFFFF', outline: '#DCDBEA', outline2: '#8F8EA8',
+      text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF', pc: '#E4E2FB', opc: '#1E1B4B',
+      accent: '#F2B33D', onAccent: '#2A1A00', accentSoft: '#FDF0D5', accentFg: '#7A4A00', danger: '#B91C1C',
+      successBg: '#DCFCE7', successFg: '#166534', scrim: 'rgba(14,13,26,0.55)' };
+    const D = { bg: '#0E0D1A', surface: '#1A1930', field: '#24223F', sheet: '#222039', outline: '#34324F', outline2: '#7C7A99',
+      text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760', pc: '#2E2A78', opc: '#E4E2FB',
+      accent: '#F2B33D', onAccent: '#2A1A00', accentSoft: '#3A2A08', accentFg: '#F7CF7A', danger: '#F87171',
+      successBg: '#052E16', successFg: '#86EFAC', scrim: 'rgba(0,0,0,0.6)' };
+    const vars = Object.entries(dark ? D : L).map(([k, v]) => `--${k}: ${v}`).join('; ');
+    const tints = dark
+      ? [['#2E2A78', '#E4E2FB'], ['#3A2A08', '#F7CF7A'], ['#0B3B36', '#99F6E4'], ['#4C0519', '#FDA4AF']]
+      : [['#E4E2FB', '#1E1B4B'], ['#FDF0D5', '#7A4A00'], ['#D5F2EE', '#115E59'], ['#FBE3E8', '#9F1239']];
+
+    // ---------- strings (EN / HI)
+    const T = {
+      en: {
+        langBtn: 'हिंदी', langAria: 'Switch to Hindi', back: 'Back', close: 'Close',
+        whyUs: 'Why order from us', weSupply: 'What we supply', brands: 'Brands we carry', featured: 'Featured products',
+        seeAll: 'See all', browseAll: 'Browse all products', deliverTo: 'We deliver to', about: 'About us', powered: 'Powered by DistributeKaro',
+        areas: (n) => `Delivers to ${n} areas`, defaultTagline: (n) => `Order from ${n} on your phone`,
+        joinRates: 'Join to see rates', inCatalog: 'Rates in your catalog',
+        orderNow: 'Order now', join: 'Join as retailer', enquiryLink: 'Have a question? Send an enquiry',
+        welcome: 'Welcome back,', continueOrdering: 'Continue ordering', notYou: 'Not you? Use another number',
+        sheetTitle: 'Enter your mobile number', sheetSub: (n) => `Registered retailers of ${n} go straight to ordering.`,
+        mobile: 'Mobile number', continue: 'Continue', phoneErr: 'Enter a valid 10-digit mobile number', newHere: 'New here?', joinLink: 'Request to join',
+        allProducts: 'All products', search: 'Search products', all: 'All', ratesNote: 'Rates are shown only to registered retailers.',
+        per: (u) => `per ${u}`, noProducts: 'No products found', noProductsSub: 'Try another word.', count: (n) => `${n} products`,
+        notRegTitle: (n) => `You're not on ${n}'s retailer list yet`, notRegSub: 'Ask to be added, or send them a question.', change: 'Change',
+        reqCardTitle: 'Request to get added', reqCardDesc: 'Share your shop details. Once approved, order with this number.',
+        enqCardTitle: 'Send an enquiry', enqCardDesc: 'Ask about products, delivery or credit.',
+        pendingTitle: 'Request already sent', pendingDesc: (d, n) => `Sent on ${d}. ${n} will add you soon.`,
+        reqTitle: 'Request to get added', reqIntro: (n) => `${n} will check your details and add you as a retailer.`,
+        yourName: 'Your name', shopName: 'Shop name', address: 'Shop address', area: 'Area or landmark', optional: 'optional', required: 'This is required',
+        sendRequest: 'Send request', privacy: (n) => `Only ${n} sees these details.`, alreadyPending: 'A request from this number is already pending.',
+        reqDoneTitle: 'Request sent', reqDoneDesc: (n) => `${n} will review it. Once you're added, tap Order now and enter this number.`,
+        backToStore: 'Back to storefront',
+        enqTitle: 'Send an enquiry', quick: 'Quick questions', message: 'Your question', messagePh: 'Type your question here',
+        sendEnquiry: 'Send enquiry', msgErr: 'Write at least a few words',
+        prompts: ['Do you deliver to my area?', 'Which brands do you carry?', 'Do you give credit to new shops?'],
+        enqDoneTitle: 'Enquiry sent', enqDoneDesc: (n, p) => `${n} will call or WhatsApp you on ${p}.`,
+        invalidTitle: 'This QR code is no longer valid', invalidDesc: 'Ask your distributor for their latest QR code, then scan it again.',
+        units: { PACK: 'pack', KG: 'kg', PCS: 'piece', CASE: 'case', L: 'litre', BOX: 'box', DOZEN: 'dozen', G: 'gram' },
+        pendingDates: { '9828077777': '8 Oct, 9:50 AM', '9828088888': '7 Oct, 7:05 PM' },
+      },
+      hi: {
+        langBtn: 'English', langAria: 'Switch to English', back: 'वापस', close: 'बंद करें',
+        whyUs: 'हमसे ऑर्डर क्यों करें', weSupply: 'हम क्या सप्लाई करते हैं', brands: 'हमारे ब्रांड', featured: 'खास प्रोडक्ट',
+        seeAll: 'सभी देखें', browseAll: 'सभी प्रोडक्ट देखें', deliverTo: 'हम यहाँ डिलीवरी करते हैं', about: 'हमारे बारे में', powered: 'DistributeKaro द्वारा संचालित',
+        areas: (n) => `${n} इलाकों में डिलीवरी`, defaultTagline: (n) => `${n} से अपने फ़ोन पर ऑर्डर करें`,
+        joinRates: 'रेट देखने के लिए जुड़ें', inCatalog: 'रेट आपके कैटलॉग में',
+        orderNow: 'ऑर्डर करें', join: 'रिटेलर बनें', enquiryLink: 'कोई सवाल? पूछताछ भेजें',
+        welcome: 'फिर से स्वागत है,', continueOrdering: 'ऑर्डर जारी रखें', notYou: 'आप नहीं हैं? दूसरा नंबर डालें',
+        sheetTitle: 'अपना मोबाइल नंबर डालें', sheetSub: (n) => `${n} के रजिस्टर्ड रिटेलर सीधे ऑर्डर कर सकते हैं।`,
+        mobile: 'मोबाइल नंबर', continue: 'आगे बढ़ें', phoneErr: 'सही 10 अंकों का मोबाइल नंबर डालें', newHere: 'पहली बार?', joinLink: 'जुड़ने का अनुरोध करें',
+        allProducts: 'सभी प्रोडक्ट', search: 'प्रोडक्ट खोजें', all: 'सभी', ratesNote: 'रेट सिर्फ़ रजिस्टर्ड रिटेलर को दिखते हैं।',
+        per: (u) => `प्रति ${u}`, noProducts: 'कोई प्रोडक्ट नहीं मिला', noProductsSub: 'कोई दूसरा शब्द आज़माएँ।', count: (n) => `${n} प्रोडक्ट`,
+        notRegTitle: (n) => `आप अभी ${n} की रिटेलर लिस्ट में नहीं हैं`, notRegSub: 'जुड़ने का अनुरोध भेजें या कोई सवाल पूछें।', change: 'बदलें',
+        reqCardTitle: 'जुड़ने का अनुरोध भेजें', reqCardDesc: 'अपनी दुकान की जानकारी दें। मंज़ूरी के बाद इसी नंबर से ऑर्डर करें।',
+        enqCardTitle: 'पूछताछ भेजें', enqCardDesc: 'प्रोडक्ट, डिलीवरी या उधार के बारे में पूछें।',
+        pendingTitle: 'अनुरोध पहले ही भेजा जा चुका है', pendingDesc: (d, n) => `${d} को भेजा गया। ${n} जल्द ही आपको जोड़ेंगे।`,
+        reqTitle: 'जुड़ने का अनुरोध', reqIntro: (n) => `${n} आपकी जानकारी देखकर आपको रिटेलर के रूप में जोड़ेंगे।`,
+        yourName: 'आपका नाम', shopName: 'दुकान का नाम', address: 'दुकान का पता', area: 'इलाका या लैंडमार्क', optional: 'वैकल्पिक', required: 'यह ज़रूरी है',
+        sendRequest: 'अनुरोध भेजें', privacy: (n) => `यह जानकारी सिर्फ़ ${n} देखेंगे।`, alreadyPending: 'इस नंबर से अनुरोध पहले से लंबित है।',
+        reqDoneTitle: 'अनुरोध भेज दिया गया', reqDoneDesc: (n) => `${n} इसे देखेंगे। जुड़ने के बाद 'ऑर्डर करें' दबाकर यही नंबर डालें।`,
+        backToStore: 'स्टोर पर वापस जाएँ',
+        enqTitle: 'पूछताछ भेजें', quick: 'जल्दी पूछें', message: 'आपका सवाल', messagePh: 'अपना सवाल यहाँ लिखें',
+        sendEnquiry: 'पूछताछ भेजें', msgErr: 'कुछ शब्द ज़रूर लिखें',
+        prompts: ['क्या आप मेरे इलाके में डिलीवरी करते हैं?', 'आपके पास कौन-से ब्रांड हैं?', 'क्या नई दुकानों को उधार देते हैं?'],
+        enqDoneTitle: 'पूछताछ भेज दी गई', enqDoneDesc: (n, p) => `${n} आपको ${p} पर कॉल या WhatsApp करेंगे।`,
+        invalidTitle: 'यह QR कोड अब मान्य नहीं है', invalidDesc: 'अपने डिस्ट्रीब्यूटर से नया QR कोड माँगें और फिर से स्कैन करें।',
+        units: { PACK: 'पैक', KG: 'किलो', PCS: 'पीस', CASE: 'केस', L: 'लीटर', BOX: 'बॉक्स', DOZEN: 'दर्जन', G: 'ग्राम' },
+        pendingDates: { '9828077777': '8 अक्टूबर, सुबह 9:50', '9828088888': '7 अक्टूबर, शाम 7:05' },
+      },
+    };
+    const t = T[lang];
+
+    // ---------- distributor data (fixtures/storefront.json, storefront.minimal.json, public-catalog.page.json)
+    const allCats = ['Staples', 'Pulses', 'Edible Oil', 'Dairy', 'Biscuits', 'Instant Food', 'Beverages', 'Snacks', 'Spices', 'Home Care', 'Personal Care'];
+    const tintOf = (c) => tints[Math.max(0, allCats.indexOf(c)) % tints.length];
+    const catalog = [
+      ['Aashirvaad Shudh Chakki Atta 10 kg', 'PACK', 'Staples', 'At'], ['Tata Salt 1 kg (case of 25)', 'CASE', 'Staples', 'TS'],
+      ['Sugar (loose)', 'KG', 'Staples', 'Su'], ['Fortune Sunflower Oil', 'L', 'Edible Oil', 'FO'], ['Toor Dal', 'KG', 'Pulses', 'TD'],
+      ['Basmati Rice (loose)', 'KG', 'Staples', 'BR'], ['Parle-G 80 g (box of 48)', 'BOX', 'Biscuits', 'PG'],
+      ['Britannia Good Day Cashew 200 g', 'PCS', 'Biscuits', 'GD'], ['Maggi 2-Minute Noodles 70 g', 'DOZEN', 'Instant Food', 'Mg'],
+      ['Amul Butter 500 g', 'PCS', 'Dairy', 'AB'], ['Amul Taaza Toned Milk', 'L', 'Dairy', 'AT'], ['Surf Excel Easy Wash 1 kg', 'PCS', 'Home Care', 'SE'],
+      ['Vim Dishwash Bar 200 g (pack of 4)', 'PACK', 'Home Care', 'Vi'], ['Colgate Strong Teeth 200 g', 'PCS', 'Personal Care', 'Co'],
+      ['Dettol Original Soap 125 g (pack of 4)', 'PACK', 'Personal Care', 'De'], ['Red Label Tea 1 kg', 'PCS', 'Beverages', 'RL'],
+      ['Bru Instant Coffee 200 g', 'PCS', 'Beverages', 'Br'], ["Haldiram's Aloo Bhujia 1 kg", 'PCS', 'Snacks', 'HB'], ['Haldi Powder (loose)', 'G', 'Spices', 'HP'],
+    ].map(([name, unit, cat, initials]) => {
+      const [bg, fg] = tintOf(cat);
+      return { name, unit: t.per(t.units[unit]), cat, initials, bg, fg };
+    });
+    const ICON = {
+      truck: 'M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+      credit: 'M3 6h18v12H3zM3 10h18M7 15h3', tag: 'M3 12V4h8l10 10-8 8zM7.5 8.5h.01',
+      box: 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8', phone: 'M7 3h10v18H7zM11 18h2',
+      shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5 4.5-5',
+    };
+    const full = {
+      name: 'Shree Balaji Traders', initials: 'SB', tagline: "Jaipur's trusted wholesale partner since 1998", hours: 'Mon–Sat · 8 AM – 8 PM',
+      areas: ['Malviya Nagar', 'Vaishali Nagar', 'Mansarovar', 'Raja Park', 'Sanganer', 'Jagatpura', 'C-Scheme', 'Pratap Nagar'],
+      highlights: [
+        [ICON.truck, 'Same-day delivery', 'Order by 2 PM, get it today'], [ICON.credit, '7-day credit', 'For regular retailers'],
+        [ICON.tag, 'Wholesale rates', 'Best prices, updated daily'], [ICON.box, '500+ products', 'Staples, FMCG & home care'],
+        [ICON.phone, 'Order from your phone', 'No calls, no notebooks'], [ICON.shield, 'Genuine products', 'Direct from brand depots'],
+      ].map(([icon, title, text]) => ({ icon, title, text })),
+      categories: allCats,
+      brands: ['Aashirvaad', 'Tata', 'Fortune', 'Parle', 'Britannia', 'Nestlé', 'Amul', 'HUL', 'Colgate', 'Dettol', "Haldiram's", 'Everest'],
+      featured: [0, 3, 6, 8, 9, 11, 15, 17].map((i) => catalog[i]),
+      about: 'Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city.',
+    };
+    const minimal = { name: 'Maa Durga Agencies', initials: 'MD', tagline: null, hours: null, areas: [], highlights: [], categories: ['Staples', 'Snacks'], brands: [], featured: [], about: null };
+    const src = st.minimal ? minimal : full;
+    const d = {
+      name: src.name, initials: src.initials, tagline: src.tagline ?? t.defaultTagline(src.name),
+      hasCover: !st.minimal, hasHours: !!src.hours, hours: src.hours,
+      hasAreas: src.areas.length > 0, areasText: t.areas(src.areas.length), areasList: src.areas.join(' · '),
+      hasHighlights: src.highlights.length > 0, highlights: src.highlights,
+      categories: src.categories.map((c) => { const [bg, fg] = tintOf(c); return { label: c, bg, fg }; }),
+      hasBrands: src.brands.length > 0, brands: src.brands,
+      hasFeatured: src.featured.length > 0, noFeatured: src.featured.length === 0, featured: src.featured,
+      hasAbout: !!src.about, about: src.about,
+    };
+
+    // ---------- known numbers (fixtures/retailers.page.json, access-requests.page.json)
+    const registered = { '9828011111': 'Sharma General Store', '9828022222': 'Gupta Kirana', '9828033333': 'Jain Provision Store', '9828044444': 'New Bharat Mart', '9828066666': 'Om Sai Kirana' };
+    const valid = (p) => /^[6-9]\d{9}$/.test(p);
+    const fmt = (p) => (p ? `+91 ${p.slice(0, 5)} ${p.slice(5)}` : '');
+    const digits = (v) => v.replace(/\D/g, '').slice(0, 10);
+    const pendingDate = t.pendingDates[st.phone];
+    const isPending = st.screen === 'notreg' && !!pendingDate;
+
+    // ---------- products filter
+    const q = st.q.trim().toLowerCase();
+    const products = catalog.filter((p) => (st.cat === 'All' || p.cat === st.cat) && (!q || p.name.toLowerCase().includes(q)));
+    const catChips = ['All', ...allCats].map((c) => {
+      const on = st.cat === c;
+      return { label: c === 'All' ? t.all : c, pick: () => this.setState({ cat: c }),
+        bg: on ? 'var(--primary)' : 'transparent', fg: on ? 'var(--onPrimary)' : 'var(--text2)', border: on ? 'var(--primary)' : 'var(--outline2)' };
+    });
+
+    // ---------- forms
+    const bad = (cond) => (cond ? 'var(--danger)' : 'transparent');
+    const reqPhonePending = !!t.pendingDates[st.reqPhone];
+    const f = {
+      reqName: st.reqName, reqShop: st.reqShop, reqAddr: st.reqAddr, reqArea: st.reqArea, reqPhone: st.reqPhone,
+      reqNameErr: st.reqTried && !st.reqName.trim(), reqShopErr: st.reqTried && !st.reqShop.trim(),
+      reqPhoneErr: st.reqTried && (!valid(st.reqPhone) || reqPhonePending),
+      reqPhoneMsg: reqPhonePending ? t.alreadyPending : t.phoneErr,
+      enqName: st.enqName, enqPhone: st.enqPhone, enqMsg: st.enqMsg, enqCount: st.enqMsg.length,
+      enqNameErr: st.enqTried && !st.enqName.trim(), enqPhoneErr: st.enqTried && !valid(st.enqPhone),
+      enqMsgErr: st.enqTried && st.enqMsg.trim().length < 5,
+    };
+    f.reqNameBorder = bad(f.reqNameErr); f.reqShopBorder = bad(f.reqShopErr); f.reqPhoneBorder = bad(f.reqPhoneErr);
+    f.enqNameBorder = bad(f.enqNameErr); f.enqPhoneBorder = bad(f.enqPhoneErr); f.enqMsgBorder = bad(f.enqMsgErr);
+    f.enqMsgErrText = f.enqMsgErr ? t.msgErr : '';
+    const prompts = t.prompts.map((text) => {
+      const on = st.enqMsg === text;
+      return { text, pick: () => this.setState({ enqMsg: text }),
+        bg: on ? 'var(--pc)' : 'transparent', fg: on ? 'var(--opc)' : 'var(--text)', border: on ? 'var(--pc)' : 'var(--outline2)' };
+    });
+
+    const s = {
+      ...t,
+      areas: undefined, defaultTagline: undefined,
+      sheetSub: t.sheetSub(d.name), notRegTitle: t.notRegTitle(d.name), reqIntro: t.reqIntro(d.name), privacy: t.privacy(d.name),
+      pendingDesc: pendingDate ? t.pendingDesc(pendingDate, d.name) : '',
+      rateTag: st.signedIn ? t.inCatalog : t.joinRates,
+    };
+    const scr = {
+      store: st.screen === 'store' || st.screen === 'phone', phone: st.screen === 'phone', products: st.screen === 'products',
+      notreg: st.screen === 'notreg', request: st.screen === 'request', enquiry: st.screen === 'enquiry',
+      done: st.screen === 'done', invalid: st.screen === 'invalid',
+    };
+    const go = (screen, extra = {}) => this.setState({ screen, ...extra });
+
+    return {
+      vars, s, d, scr, f, prompts,
+      signedIn: st.signedIn, visitor: !st.signedIn, viewerShop: st.viewer,
+      toggleLang: () => this.setState({ lang: lang === 'en' ? 'hi' : 'en' }),
+      goStore: () => go('store'), goProducts: () => go('products'),
+      openPhone: () => go('phone', { phoneTried: false }), closeSheet: () => go('store'),
+      goJoin: () => go('request', { from: st.screen === 'products' ? 'products' : 'store', reqPhone: st.phone, reqTried: false }),
+      goJoinFromNotreg: () => go('request', { from: 'notreg', reqPhone: st.phone, reqTried: false }),
+      goEnquiry: () => go('enquiry', { from: st.screen === 'notreg' ? 'notreg' : 'store', enqPhone: st.enqPhone || st.phone, enqTried: false }),
+      backFromForm: () => go(st.from || 'store'),
+      notYou: () => go('phone', { signedIn: false, viewer: null, phone: '', phoneTried: false }),
+      phone: st.phone, phoneDisplay: fmt(st.phone),
+      phoneErr: st.phoneTried && !valid(st.phone), phoneBorder: st.phoneTried && !valid(st.phone) ? 'var(--danger)' : 'transparent',
+      onPhone: (e) => this.setState({ phone: digits(e.target.value) }),
+      submitPhone: () => {
+        if (!valid(st.phone)) return this.setState({ phoneTried: true });
+        if (registered[st.phone]) return go('store', { signedIn: true, viewer: registered[st.phone] });
+        return go('notreg');
+      },
+      isPending, notPending: !isPending,
+      q: st.q, onQ: (e) => this.setState({ q: e.target.value }), catChips, products, noProducts: products.length === 0,
+      productCount: t.count(products.length),
+      onReqName: (e) => this.setState({ reqName: e.target.value }), onReqShop: (e) => this.setState({ reqShop: e.target.value }),
+      onReqAddr: (e) => this.setState({ reqAddr: e.target.value }), onReqArea: (e) => this.setState({ reqArea: e.target.value }),
+      onReqPhone: (e) => this.setState({ reqPhone: digits(e.target.value) }),
+      submitRequest: () => {
+        const ok = st.reqName.trim() && st.reqShop.trim() && valid(st.reqPhone) && !reqPhonePending;
+        if (!ok) return this.setState({ reqTried: true });
+        return go('done', { done: 'request', phone: st.reqPhone });
+      },
+      onEnqName: (e) => this.setState({ enqName: e.target.value }), onEnqPhone: (e) => this.setState({ enqPhone: digits(e.target.value) }),
+      onEnqMsg: (e) => this.setState({ enqMsg: e.target.value.slice(0, 500) }),
+      submitEnquiry: () => {
+        const ok = st.enqName.trim() && valid(st.enqPhone) && st.enqMsg.trim().length >= 5;
+        if (!ok) return this.setState({ enqTried: true });
+        return go('done', { done: 'enquiry' });
+      },
+      doneTitle: st.done === 'enquiry' ? t.enqDoneTitle : t.reqDoneTitle,
+      doneDesc: st.done === 'enquiry' ? t.enqDoneDesc(d.name, fmt(st.enqPhone)) : t.reqDoneDesc(d.name),
+    };
+  }
+}
+</script>
+</body>
+</html>
