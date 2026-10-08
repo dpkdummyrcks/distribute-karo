@@ -1,0 +1,16 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-08T20:00:00Z" },
+  "title": "DistributeKaro UI-2 Dashboard & Catalog",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 2500, "h": 2000, "title": "All screens & states · D-07…D-09c", "is_interactive": true },
+    "Flow.dc.html": { "x": 2580, "y": 0, "w": 360, "h": 800, "title": "Clickable flow · start here", "is_interactive": true, "radius": 28 }
+  },
+  "order": ["Main.dc.html", "Flow.dc.html"],
+  "notes": {
+    "title": { "x": 0, "y": -300, "text": "UI-2 · Dashboard, catalog & stock", "kind": "title1", "maxW": 2940 }
+  },
+  "designSystems": []
+}

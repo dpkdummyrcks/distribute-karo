@@ -1,0 +1,898 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Dashboard and catalog flow</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700;800&amp;family=Anek+Devanagari:wght@500;600;700;800&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 360px; height: 800px; position: relative; overflow: hidden; display: flex; flex-direction: column; font-family: 'Mukta', 'Anek Devanagari', system-ui, sans-serif; {{vars}}; background: var(--bg); color: var(--text)">
+
+  <!-- ======================================================== D-07 DASHBOARD -->
+  <sc-if value="{{scr.dash}}" hint-placeholder-val="{{true}}">
+    <div style="height: 64px; flex: none; padding: 0 12px 0 16px; display: flex; align-items: center; gap: 12px">
+      <span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center">SB</span>
+      <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 20px">
+        <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 19px">{{s.greet}}</span>
+        <span style="font-size: 13px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Shree Balaji Traders</span>
+      </span>
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 16px">
+
+      <sc-if value="{{dash.isNew}}" hint-placeholder-val="{{false}}">
+        <section style="border-radius: 24px; background: #241F7A; color: #FFFFFF; padding: 20px 18px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 12px">
+          <svg width="160" height="160" viewBox="0 0 140 130" aria-hidden="true" style="position: absolute; right: -24px; bottom: -40px; opacity: 0.35"><path d="M40 60L68 74L40 88L12 74Z" fill="#ABA6FF"></path><path d="M12 74L40 88V120L12 106Z" fill="#5B54D6"></path><path d="M40 88L68 74V106L40 120Z" fill="#4038B0"></path><path d="M69 30L97 44L69 58L41 44Z" fill="#F2B33D"></path><path d="M41 44L69 58V90L41 76Z" fill="#D99A1E"></path><path d="M69 58L97 44V76L69 90Z" fill="#B97F10"></path></svg>
+          <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 24px; line-height: 28px; max-width: 240px">{{s.setupTitle}}</span>
+          <span style="font-size: 14px; color: #D4D1FF">{{dash.setupProgress}}</span>
+          <span style="height: 8px; border-radius: 4px; background: #3A34A8; overflow: hidden"><span style="display: block; height: 8px; width: 25%; border-radius: 4px; background: #F2B33D"></span></span>
+        </section>
+        <section style="display: flex; flex-direction: column; gap: 8px">
+          <sc-for list="{{dash.steps}}" as="sp" hint-placeholder-count="4">
+            <div style="border-radius: 18px; background: var(--surface); padding: 12px 12px 12px 14px; display: flex; align-items: center; gap: 12px">
+              <span style="width: 36px; height: 36px; flex: none; border-radius: 18px; background: {{sp.circle}}; color: {{sp.circleFg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center">
+                <sc-if value="{{sp.done}}" hint-placeholder-val="{{false}}"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+                <sc-if value="{{sp.todo}}" hint-placeholder-val="{{true}}">{{sp.n}}</sc-if>
+              </span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 700">{{sp.title}}</span><span style="font-size: 13px; color: var(--text2)">{{sp.text}}</span></span>
+              <sc-if value="{{sp.hasBtn}}" hint-placeholder-val="{{true}}"><button onClick="{{sp.act}}" style="height: 36px; padding: 0 12px; flex: none; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{sp.btn}}</button></sc-if>
+            </div>
+          </sc-for>
+        </section>
+      </sc-if>
+
+      <sc-if value="{{dash.isActive}}" hint-placeholder-val="{{true}}">
+        <section style="border-radius: 24px; background: #241F7A; color: #FFFFFF; padding: 16px 18px 18px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 14px">
+          <svg width="360" height="200" viewBox="0 0 360 200" aria-hidden="true" style="position: absolute; inset: 0; opacity: 0.5"><defs><pattern id="dk2-jali" width="24" height="24" patternUnits="userSpaceOnUse"><path d="M12 0L24 12L12 24L0 12Z" fill="none" stroke="#332D9C" stroke-width="1.3"></path></pattern></defs><rect width="360" height="200" fill="url(#dk2-jali)"></rect></svg>
+          <div style="position: relative; display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 14px; font-weight: 700; letter-spacing: 0.04em; color: #D4D1FF">{{s.todayTitle}}</span><span style="font-size: 13px; color: #D4D1FF">{{dash.date}}</span></div>
+          <div style="position: relative; display: flex; align-items: flex-end; gap: 14px">
+            <span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 52px; line-height: 46px">4</span>
+            <span style="font-size: 15px; font-weight: 600; padding-bottom: 4px">{{s.ordersToday}}</span>
+          </div>
+          <div style="position: relative; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+            <span style="border-radius: 14px; background: rgba(255,255,255,0.1); padding: 8px 10px; display: flex; flex-direction: column"><span style="font-size: 12px; color: #D4D1FF">{{s.requested}}</span><span style="font-size: 15px; font-weight: 700">₹41,220.75</span></span>
+            <span style="border-radius: 14px; background: rgba(255,255,255,0.1); padding: 8px 10px; display: flex; flex-direction: column"><span style="font-size: 12px; color: #D4D1FF">{{s.accepted}}</span><span style="font-size: 15px; font-weight: 700">₹15,796.00</span></span>
+            <span style="border-radius: 14px; background: #F2B33D; color: #2A1A00; padding: 8px 10px; display: flex; flex-direction: column"><span style="font-size: 12px">{{s.sold7}}</span><span style="font-size: 15px; font-weight: 800">₹42,836.00</span></span>
+          </div>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 10px">
+          <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 19px">{{s.needsAttention}}</h2>
+          <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+            <sc-for list="{{dash.attention}}" as="at" hint-placeholder-count="3">
+              <a href="#" style="border-radius: 18px; background: {{at.bg}}; color: {{at.fg}}; padding: 12px 10px; display: flex; flex-direction: column; gap: 8px; text-decoration: none; min-height: 96px; box-sizing: border-box">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{at.icon}}"></path></svg>
+                <span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 26px; line-height: 26px">{{at.n}}</span>
+                <span style="font-size: 13px; font-weight: 700; line-height: 16px">{{at.label}}</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; justify-content: space-between; align-items: center"><h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 19px">{{s.lowStock}}</h2><button onClick="{{goLowStock}}" style="height: 36px; padding: 0 8px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.seeAll}}</button></div>
+          <div style="border-radius: 18px; background: var(--surface); overflow: hidden">
+            <sc-for list="{{dash.low}}" as="it" hint-placeholder-count="5">
+              <div style="display: flex; align-items: center; gap: 10px; padding: 10px 10px 10px 12px; border-bottom: 1px solid var(--outline)">
+                <span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: {{it.tileBg}}; color: {{it.tileFg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center">{{it.initials}}</span>
+                <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px"><span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.name}}</span>
+                  <span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px 0 6px; border-radius: 6px; font-size: 12px; font-weight: 700; background: {{it.bbg}}; color: {{it.bfg}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.bicon}}"></path></svg>{{it.badge}}</span></span>
+                <button onClick="{{it.restock}}" style="height: 36px; padding: 0 12px; flex: none; border-radius: 999px; border: 0; background: var(--pc); color: var(--opc); font-family: inherit; font-size: 13px; font-weight: 700; cursor: pointer">{{s.restock}}</button>
+              </div>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="display: flex; flex-direction: column; gap: 8px">
+          <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 19px">{{s.recentOrders}}</h2>
+          <div style="border-radius: 18px; background: var(--surface); overflow: hidden">
+            <sc-for list="{{dash.recent}}" as="o" hint-placeholder-count="5">
+              <a href="#" style="display: flex; align-items: center; gap: 10px; padding: 11px 12px; border-bottom: 1px solid var(--outline); color: var(--text); text-decoration: none">
+                <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">#{{o.no}} · {{o.shop}}</span><span style="font-size: 13px; color: var(--text2)">{{o.time}} · {{o.amount}}</span></span>
+                <span style="flex: none; display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 9px 0 7px; border-radius: 999px; font-size: 12px; font-weight: 700; background: {{o.bg}}; color: {{o.fg}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{o.icon}}"></path></svg>{{o.label}}</span>
+              </a>
+            </sc-for>
+          </div>
+        </section>
+
+        <section style="border-radius: 22px; background: #F2B33D; color: #2A1A00; padding: 16px; display: flex; align-items: center; gap: 12px">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2zM14 18h2M18 14h2"></path></svg>
+          <span style="flex: 1; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 16px; font-weight: 800">{{s.shareTitle}}</span><span style="font-size: 13px">{{s.shareSub}}</span></span>
+          <a href="#" style="height: 40px; padding: 0 14px; flex: none; border-radius: 999px; background: #2A1A00; color: #FFF4DC; font-size: 14px; font-weight: 700; display: flex; align-items: center; text-decoration: none">{{s.shareBtn}}</a>
+        </section>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ======================================================== D-08 CATALOG / D-09c REPORT -->
+  <sc-if value="{{scr.catalog}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 8px 0 16px; display: flex; align-items: center; justify-content: space-between">
+      <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 24px">{{s.catalog}}</h1>
+      <div style="display: flex; align-items: center; gap: 4px">
+        <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+      </div>
+    </div>
+    <div style="padding: 0 16px 10px; flex: none">
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1.5px solid var(--outline2); border-radius: 999px; overflow: hidden; height: 42px">
+        <button onClick="{{tabItems}}" aria-pressed="{{cat.isItems}}" style="border: 0; font-family: inherit; font-size: 14px; font-weight: 700; background: {{cat.itemsBg}}; color: {{cat.itemsFg}}; cursor: pointer">{{s.items}}</button>
+        <button onClick="{{tabReport}}" aria-pressed="{{cat.isReport}}" style="border: 0; border-left: 1.5px solid var(--outline2); font-family: inherit; font-size: 14px; font-weight: 700; background: {{cat.reportBg}}; color: {{cat.reportFg}}; cursor: pointer">{{s.report}}</button>
+      </div>
+    </div>
+
+    <sc-if value="{{cat.isItems}}" hint-placeholder-val="{{true}}">
+      <div style="padding: 0 16px 8px; flex: none; display: flex; gap: 8px">
+        <label style="flex: 1; height: 46px; border-radius: 999px; background: var(--field); display: flex; align-items: center; gap: 10px; padding: 0 16px; color: var(--text2)">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg>
+          <input aria-label="{{cat.searchPh}}" placeholder="{{cat.searchPh}}" value="{{cat.q}}" onChange="{{onQ}}" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+        </label>
+        <button onClick="{{cycleSort}}" aria-label="{{cat.sortLabel}}" style="height: 46px; padding: 0 12px; flex: none; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 13px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 4v16M4 17l3 3 3-3M17 20V4M14 7l3-3 3 3"></path></svg>{{cat.sortShort}}</button>
+      </div>
+      <div style="display: flex; gap: 8px; padding: 0 16px 8px; overflow-x: auto; flex: none">
+        <sc-for list="{{cat.filters}}" as="f" hint-placeholder-count="4">
+          <button onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="flex: none; height: 34px; padding: 0 12px; border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 700; border: 1.5px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}; cursor: pointer">{{f.label}}</button>
+        </sc-for>
+      </div>
+      <div style="flex: 1; overflow-y: auto; position: relative">
+        <sc-if value="{{cat.showList}}" hint-placeholder-val="{{true}}">
+          <sc-for list="{{cat.list}}" as="it" hint-placeholder-count="8">
+            <button onClick="{{it.open}}" style="width: 100%; border: 0; background: transparent; color: var(--text); text-align: left; padding: 10px 16px; display: flex; gap: 12px; align-items: center; font-family: inherit; cursor: pointer; opacity: {{it.opacity}}">
+              <span style="width: 48px; height: 48px; flex: none; border-radius: 14px; background: {{it.tileBg}}; color: {{it.tileFg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center">{{it.initials}}</span>
+              <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 3px">
+                <span style="font-size: 15px; font-weight: 600; line-height: 19px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{it.name}}</span>
+                <span style="font-size: 13px; color: var(--text2); line-height: 17px">{{it.rate}} · {{it.cat}}</span>
+                <span style="display: flex; gap: 6px; align-items: center">
+                  <span style="display: inline-flex; align-items: center; gap: 4px; height: 22px; padding: 0 8px 0 6px; border-radius: 6px; font-size: 12px; font-weight: 700; background: {{it.bbg}}; color: {{it.bfg}}"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{it.bicon}}"></path></svg>{{it.badge}}</span>
+                  <sc-if value="{{it.inactive}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; font-weight: 700; color: var(--text2)">{{s.unavailable}}</span></sc-if>
+                </span>
+              </span>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--text2); flex: none"><path d="M9 5l7 7-7 7"></path></svg>
+            </button>
+          </sc-for>
+          <sc-if value="{{cat.noResults}}" hint-placeholder-val="{{false}}"><div style="padding: 40px 24px; text-align: center; font-size: 15px; color: var(--text2)">{{s.noResults}}</div></sc-if>
+          <div style="height: 84px"></div>
+        </sc-if>
+        <sc-if value="{{cat.loading}}" hint-placeholder-val="{{false}}">
+          <div aria-label="{{s.loading}}" style="display: flex; flex-direction: column">
+            <sc-for list="{{skeleton}}" as="sk" hint-placeholder-count="8">
+              <div style="padding: 12px 16px; display: flex; gap: 12px; align-items: center">
+                <span style="width: 48px; height: 48px; flex: none; border-radius: 14px; background: var(--field); opacity: {{sk.o}}"></span>
+                <span style="flex: 1; display: flex; flex-direction: column; gap: 8px"><span style="height: 12px; border-radius: 6px; background: var(--field); width: {{sk.w1}}; opacity: {{sk.o}}"></span><span style="height: 10px; border-radius: 5px; background: var(--field); width: {{sk.w2}}; opacity: {{sk.o}}"></span><span style="height: 18px; width: 90px; border-radius: 6px; background: var(--field); opacity: {{sk.o}}"></span></span>
+              </div>
+            </sc-for>
+          </div>
+        </sc-if>
+        <sc-if value="{{cat.empty}}" hint-placeholder-val="{{false}}">
+          <div style="padding: 48px 28px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
+            <svg width="140" height="120" viewBox="0 0 140 130" aria-hidden="true"><path d="M40 60L68 74L40 88L12 74Z" fill="#CFCCF7"></path><path d="M12 74L40 88V120L12 106Z" fill="#ABA6FF"></path><path d="M40 88L68 74V106L40 120Z" fill="#8C86F0"></path><path d="M98 66L126 80L98 94L70 80Z" fill="#CFCCF7"></path><path d="M70 80L98 94V126L70 112Z" fill="#ABA6FF"></path><path d="M98 94L126 80V112L98 126Z" fill="#8C86F0"></path><path d="M69 30L97 44L69 58L41 44Z" fill="#F2B33D"></path><path d="M41 44L69 58V90L41 76Z" fill="#D99A1E"></path><path d="M69 58L97 44V76L69 90Z" fill="#B97F10"></path></svg>
+            <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.emptyTitle}}</span>
+            <span style="font-size: 14px; line-height: 20px; color: var(--text2)">{{s.emptySub}}</span>
+            <button onClick="{{newItem}}" style="margin-top: 6px; height: 48px; padding: 0 20px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.addFirst}}</button>
+          </div>
+        </sc-if>
+        <sc-if value="{{cat.error}}" hint-placeholder-val="{{false}}">
+          <div role="alert" style="padding: 56px 28px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 10px">
+            <span style="width: 72px; height: 72px; border-radius: 36px; background: var(--dangerBg); color: var(--dangerFg); display: flex; align-items: center; justify-content: center"><svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 8.8a15 15 0 0 1 20 0M5 12.5a10 10 0 0 1 11-2M8.5 16a5 5 0 0 1 4-1.2M12 20h.01M3 3l18 18"></path></svg></span>
+            <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.errTitle}}</span>
+            <span style="font-size: 14px; line-height: 20px; color: var(--text2)">{{s.errSub}}</span>
+            <button onClick="{{retry}}" style="margin-top: 6px; height: 48px; padding: 0 20px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 12a8 8 0 1 1-2.3-5.6M20 4v5h-5"></path></svg>{{s.retry}}</button>
+          </div>
+        </sc-if>
+      </div>
+      <sc-if value="{{cat.showFab}}" hint-placeholder-val="{{true}}">
+        <button onClick="{{newItem}}" style="position: absolute; right: 16px; bottom: 96px; height: 56px; padding: 0 20px 0 16px; border: 0; border-radius: 18px; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 10px; box-shadow: 0 6px 16px rgba(20,18,60,0.28); cursor: pointer"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>{{s.addItem}}</button>
+      </sc-if>
+    </sc-if>
+
+    <sc-if value="{{cat.isReport}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; gap: 8px; padding: 0 16px 10px; flex: none">
+        <sc-for list="{{rep.periods}}" as="p" hint-placeholder-count="3">
+          <button onClick="{{p.pick}}" aria-pressed="{{p.on}}" style="height: 34px; padding: 0 14px; border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 700; border: 1.5px solid {{p.border}}; background: {{p.bg}}; color: {{p.fg}}; cursor: pointer">{{p.label}}</button>
+        </sc-for>
+      </div>
+      <div style="margin: 0 16px 10px; padding: 14px 16px; border-radius: 20px; background: #241F7A; color: #FFFFFF; display: flex; align-items: center; justify-content: space-between; flex: none">
+        <span style="display: flex; flex-direction: column; line-height: 18px"><span style="font-size: 13px; color: #D4D1FF">{{s.totalSold}}</span><span style="font-size: 13px; color: #D4D1FF">{{rep.itemsSold}}</span></span>
+        <span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 26px">{{rep.total}}</span>
+      </div>
+      <div style="display: grid; grid-template-columns: 1fr 72px 70px; padding: 4px 16px 6px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: var(--text2); flex: none">
+        <button onClick="{{repSortSold}}" style="text-align: left; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 12px; font-weight: 700; color: {{rep.soldSortFg}}; cursor: pointer">{{s.colItem}} · {{s.colSoldRs}}</button>
+        <span style="text-align: right">{{s.colSold}}</span>
+        <button onClick="{{repSortLeft}}" style="text-align: right; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 12px; font-weight: 700; color: {{rep.leftSortFg}}; cursor: pointer">{{s.colLeft}}</button>
+      </div>
+      <div style="flex: 1; overflow-y: auto">
+        <sc-for list="{{rep.rows}}" as="r" hint-placeholder-count="8">
+          <button onClick="{{r.open}}" style="width: 100%; border: 0; border-top: 1px solid var(--outline); background: transparent; color: var(--text); text-align: left; display: grid; grid-template-columns: 1fr 72px 70px; align-items: center; padding: 10px 16px; font-family: inherit; cursor: pointer">
+            <span style="min-width: 0; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{r.name}}</span><span style="font-size: 13px; color: var(--text2)">{{r.amount}}</span></span>
+            <span style="text-align: right; font-size: 14px; font-weight: 600">{{r.sold}}</span>
+            <span style="text-align: right; font-size: 14px; font-weight: 800; color: {{r.leftFg}}">{{r.left}}</span>
+          </button>
+        </sc-for>
+        <sc-if value="{{rep.empty}}" hint-placeholder-val="{{false}}"><div style="padding: 40px 24px; text-align: center; font-size: 15px; color: var(--text2)">{{s.emptyReport}}</div></sc-if>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <!-- ======================================================== D-09 ITEM FORM -->
+  <sc-if value="{{scr.item}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{goCatalog}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+      <h1 style="flex: 1; margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px">{{fm.title}}</h1>
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px">
+      <sc-if value="{{fm.isEdit}}" hint-placeholder-val="{{false}}">
+        <section style="border-radius: 22px; background: {{fm.stockCardBg}}; padding: 16px; display: flex; flex-direction: column; gap: 12px">
+          <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 8px">
+            <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 13px; font-weight: 700; color: var(--text2)">{{s.inStockNow}}</span><span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 34px; line-height: 36px; color: {{fm.stockFg}}">{{fm.stockNow}}</span></span>
+            <span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 9px 0 7px; border-radius: 8px; font-size: 13px; font-weight: 700; background: {{fm.bbg}}; color: {{fm.bfg}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{fm.bicon}}"></path></svg>{{fm.badge}}</span>
+          </div>
+          <span style="font-size: 13px; color: var(--text2)">{{fm.alertText}} · {{fm.soldText}}</span>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <button onClick="{{openRestock}}" style="height: 46px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>{{s.restock}}</button>
+            <button onClick="{{openAdjust}}" style="height: 46px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.adjust}}</button>
+          </div>
+          <button onClick="{{goHistory}}" style="height: 40px; border: 0; background: transparent; color: var(--primary); font-family: inherit; font-size: 14px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0-9-9M3 4v5h5M12 7v5l3 2"></path></svg>{{s.history}}</button>
+        </section>
+      </sc-if>
+      <div style="display: flex; align-items: center; gap: 14px">
+        <button onClick="{{togglePhoto}}" aria-label="{{fm.photoLabel}}" style="width: 84px; height: 84px; flex: none; border-radius: 22px; border: {{fm.photoBorder}}; background: {{fm.tileBg}}; color: {{fm.tileFg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center; cursor: pointer">
+          <sc-if value="{{fm.hasPhoto}}" hint-placeholder-val="{{false}}">{{fm.initials}}</sc-if>
+          <sc-if value="{{fm.noPhoto}}" hint-placeholder-val="{{true}}"><svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4zM12 17a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7z"></path></svg></sc-if>
+        </button>
+        <span style="display: flex; flex-direction: column; gap: 2px"><span style="font-size: 15px; font-weight: 700">{{fm.photoLabel}}</span><span style="font-size: 13px; color: var(--text2)">{{s.photoHint}}</span></span>
+      </div>
+      <label style="display: flex; flex-direction: column; gap: 4px">
+        <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{fm.nameBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.name}}</span>
+          <input value="{{fm.name}}" onChange="{{onName}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+        </span>
+        <sc-if value="{{fm.nameErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{s.errName}}</span></sc-if>
+      </label>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid transparent; padding: 6px 10px 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.unit}}</span>
+            <select value="{{fm.unit}}" onChange="{{onUnit}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 600; color: var(--text); outline: none; width: 100%">
+              <sc-for list="{{units}}" as="u" hint-placeholder-count="9"><option value="{{u.code}}">{{u.label}}</option></sc-for>
+            </select>
+          </span>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{fm.rateBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{fm.rateLabel}}</span>
+            <span style="display: flex; align-items: center; gap: 4px"><span style="font-size: 17px; font-weight: 700; color: var(--text2)">₹</span><input value="{{fm.rate}}" onChange="{{onRate}}" inputmode="decimal" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 600; color: var(--text); outline: none"></span>
+          </span>
+        </label>
+      </div>
+      <sc-if value="{{fm.rateErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; margin-top: -8px; padding: 0 14px; color: var(--danger)">{{s.errRate}}</span></sc-if>
+      <label style="display: flex; flex-direction: column; gap: 6px">
+        <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid transparent; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.category}}</span>
+          <input value="{{fm.category}}" onChange="{{onCategory}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; color: var(--text); outline: none; width: 100%">
+        </span>
+        <span style="display: flex; gap: 6px; overflow-x: auto">
+          <sc-for list="{{fm.catChips}}" as="c" hint-placeholder-count="5"><button onClick="{{c.pick}}" style="flex: none; height: 32px; padding: 0 10px; border-radius: 8px; border: 1.5px solid {{c.border}}; background: {{c.bg}}; color: {{c.fg}}; font-family: inherit; font-size: 13px; font-weight: 600; cursor: pointer">{{c.label}}</button></sc-for>
+        </span>
+      </label>
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px">
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid transparent; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.sku}}</span>
+            <input value="{{fm.sku}}" onChange="{{onSku}}" style="border: 0; background: transparent; padding: 0; font-family: ui-monospace, monospace; font-size: 15px; color: var(--text); outline: none; width: 100%">
+          </span>
+        </label>
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{fm.alertBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.alertAt}}</span>
+            <span style="display: flex; align-items: center; gap: 6px"><input value="{{fm.alert}}" onChange="{{onAlert}}" inputmode="decimal" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 600; color: var(--text); outline: none"><span style="font-size: 14px; color: var(--text2)">{{fm.unitLabel}}</span></span>
+          </span>
+        </label>
+      </div>
+      <sc-if value="{{fm.isNew}}" hint-placeholder-val="{{true}}">
+        <label style="display: flex; flex-direction: column; gap: 4px">
+          <span style="min-height: 58px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{fm.openingBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.opening}}</span>
+            <span style="display: flex; align-items: center; gap: 6px"><input value="{{fm.opening}}" onChange="{{onOpening}}" inputmode="decimal" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 17px; font-weight: 600; color: var(--text); outline: none"><span style="font-size: 14px; color: var(--text2)">{{fm.unitLabel}}</span></span>
+          </span>
+          <sc-if value="{{fm.openingErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{fm.openingMsg}}</span></sc-if>
+        </label>
+      </sc-if>
+      <label style="display: flex; flex-direction: column; gap: 4px">
+        <span style="box-sizing: border-box; border-radius: 14px; background: var(--field); padding: 8px 14px; display: flex; flex-direction: column">
+          <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.desc}} · {{s.optional}}</span>
+          <textarea value="{{fm.desc}}" onChange="{{onDesc}}" rows="2" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 16px; line-height: 22px; color: var(--text); outline: none; width: 100%; resize: none"></textarea>
+        </span>
+      </label>
+      <label style="display: flex; align-items: center; gap: 12px; min-height: 60px; padding: 8px 14px; box-sizing: border-box; border-radius: 14px; background: var(--surface); cursor: pointer">
+        <span style="flex: 1; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 700">{{s.available}}</span><span style="font-size: 13px; color: var(--text2)">{{s.availableSub}}</span></span>
+        <input type="checkbox" role="switch" checked="{{fm.active}}" onChange="{{onActive}}" style="position: absolute; opacity: 0; width: 1px; height: 1px">
+        <span aria-hidden="true" style="width: 52px; height: 32px; flex: none; border-radius: 16px; box-sizing: border-box; border: 2px solid {{fm.swBorder}}; background: {{fm.swBg}}; position: relative; transition: background .15s ease"><span style="position: absolute; top: {{fm.knobTop}}; left: {{fm.knobLeft}}; width: {{fm.knob}}; height: {{fm.knob}}; border-radius: 12px; background: {{fm.knobBg}}; transition: left .15s ease"></span></span>
+      </label>
+      <sc-if value="{{fm.isEdit}}" hint-placeholder-val="{{false}}">
+        <button onClick="{{askDelete}}" style="height: 46px; border: 0; background: transparent; color: var(--danger); font-family: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg>{{s.delete}}</button>
+      </sc-if>
+    </div>
+    <div style="flex: none; padding: 12px 16px 16px; background: var(--bg); border-top: 1px solid var(--outline)">
+      <button onClick="{{saveItem}}" style="width: 100%; height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{fm.saveLabel}}</button>
+    </div>
+  </sc-if>
+
+  <!-- ======================================================== D-09b HISTORY -->
+  <sc-if value="{{scr.history}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 12px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{backFromHistory}}" aria-label="{{s.back}}" style="width: 48px; height: 48px; border: 0; border-radius: 24px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button>
+      <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 20px"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 19px">{{s.history}}</span><span style="font-size: 13px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{hist.name}}</span></span>
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+    </div>
+    <div style="margin: 0 16px 10px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px; flex: none">
+      <span style="border-radius: 16px; background: var(--surface); padding: 10px; display: flex; flex-direction: column"><span style="font-size: 12px; color: var(--text2)">{{s.nowLabel}}</span><span style="font-size: 17px; font-weight: 800; color: {{hist.nowFg}}">{{hist.now}}</span></span>
+      <span style="border-radius: 16px; background: var(--surface); padding: 10px; display: flex; flex-direction: column"><span style="font-size: 12px; color: var(--text2)">{{s.soldLabel}}</span><span style="font-size: 17px; font-weight: 800">{{hist.sold}}</span></span>
+      <span style="border-radius: 16px; background: var(--surface); padding: 10px; display: flex; flex-direction: column"><span style="font-size: 12px; color: var(--text2)">{{s.inLabel}}</span><span style="font-size: 17px; font-weight: 800">{{hist.received}}</span></span>
+    </div>
+    <div style="display: flex; gap: 8px; padding: 0 16px 8px; overflow-x: auto; flex: none">
+      <sc-for list="{{hist.filters}}" as="f" hint-placeholder-count="4">
+        <button onClick="{{f.pick}}" aria-pressed="{{f.on}}" style="flex: none; height: 34px; padding: 0 12px; border-radius: 10px; font-family: inherit; font-size: 14px; font-weight: 700; border: 1.5px solid {{f.border}}; background: {{f.bg}}; color: {{f.fg}}; cursor: pointer">{{f.label}}</button>
+      </sc-for>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px">
+      <sc-for list="{{hist.rows}}" as="m" hint-placeholder-count="7">
+        <div style="display: flex; gap: 12px; padding: 10px 0; border-bottom: 1px solid var(--outline)">
+          <span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: {{m.bg}}; color: {{m.fg}}; display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{m.icon}}"></path></svg></span>
+          <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 1px; line-height: 19px">
+            <span style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 15px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{m.title}}</span><span style="flex: none; font-size: 15px; font-weight: 800; color: {{m.deltaFg}}">{{m.delta}}</span></span>
+            <sc-if value="{{m.hasReason}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--text2)">{{m.reason}}</span></sc-if>
+            <span style="display: flex; justify-content: space-between; gap: 8px; font-size: 12px; color: var(--text2)"><span>{{m.time}}</span><span>{{m.balance}}</span></span>
+          </span>
+        </div>
+      </sc-for>
+      <sc-if value="{{hist.empty}}" hint-placeholder-val="{{false}}"><div style="padding: 40px 0; text-align: center; font-size: 15px; color: var(--text2)">{{s.emptyHist}}</div></sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ======================================================== NAV BAR -->
+  <sc-if value="{{showNav}}" hint-placeholder-val="{{true}}">
+    <nav style="height: 80px; flex: none; background: var(--navBg); display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); align-items: center">
+      <sc-for list="{{nav}}" as="n" hint-placeholder-count="5">
+        <button onClick="{{n.pick}}" aria-label="{{n.label}}" aria-current="{{n.current}}" style="border: 0; background: transparent; height: 64px; display: flex; flex-direction: column; align-items: center; gap: 4px; color: {{n.fg}}; font-family: inherit; cursor: pointer">
+          <span style="position: relative; width: 60px; height: 32px; border-radius: 16px; background: {{n.pill}}; display: flex; align-items: center; justify-content: center">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.icon}}"></path></svg>
+            <sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: 0; right: 10px; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: var(--danger); color: var(--onDanger); font-size: 11px; font-weight: 700; line-height: 16px; text-align: center">{{n.badge}}</span></sc-if>
+          </span>
+          <span style="font-size: 12px; font-weight: 700">{{n.label}}</span>
+        </button>
+      </sc-for>
+    </nav>
+  </sc-if>
+
+  <!-- ======================================================== D-09a STOCK SHEET -->
+  <sc-if value="{{sh.open}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end">
+      <button onClick="{{closeSheet}}" aria-label="{{s.close}}" style="position: absolute; inset: 0; border: 0; background: var(--scrim); cursor: pointer"></button>
+      <div style="position: relative; background: var(--sheet); border-radius: 26px 26px 0 0; padding: 10px 20px 20px; display: flex; flex-direction: column; gap: 12px">
+        <span style="align-self: center; width: 36px; height: 4px; border-radius: 2px; background: var(--outline2)"></span>
+        <div style="display: flex; flex-direction: column"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px">{{sh.itemName}}</span><span style="font-size: 13px; color: var(--text2)">{{s.inStockNow}}: {{sh.current}}</span></div>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); border: 1.5px solid var(--outline2); border-radius: 999px; overflow: hidden; height: 42px">
+          <button onClick="{{modeRestock}}" aria-pressed="{{sh.isRestock}}" style="border: 0; font-family: inherit; font-size: 14px; font-weight: 700; background: {{sh.rBg}}; color: {{sh.rFg}}; cursor: pointer">{{s.restock}}</button>
+          <button onClick="{{modeAdjust}}" aria-pressed="{{sh.isAdjust}}" style="border: 0; border-left: 1.5px solid var(--outline2); font-family: inherit; font-size: 14px; font-weight: 700; background: {{sh.aBg}}; color: {{sh.aFg}}; cursor: pointer">{{s.adjust}}</button>
+        </div>
+        <sc-if value="{{sh.isAdjust}}" hint-placeholder-val="{{false}}">
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <button onClick="{{dirRemove}}" aria-pressed="{{sh.isRemove}}" style="height: 44px; border-radius: 12px; border: 2px solid {{sh.remBorder}}; background: {{sh.remBg}}; color: {{sh.remFg}}; font-family: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg>{{s.remove}}</button>
+            <button onClick="{{dirAdd}}" aria-pressed="{{sh.isAdd}}" style="height: 44px; border-radius: 12px; border: 2px solid {{sh.addBorder}}; background: {{sh.addBg}}; color: {{sh.addFg}}; font-family: inherit; font-size: 15px; font-weight: 700; display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg>{{s.add}}</button>
+          </div>
+        </sc-if>
+        <label style="display: flex; flex-direction: column; gap: 6px">
+          <span style="min-height: 60px; box-sizing: border-box; border-radius: 14px; background: var(--field); border: 2px solid {{sh.qtyBorder}}; padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{sh.qtyLabel}}</span>
+            <span style="display: flex; align-items: center; gap: 6px"><input value="{{sh.qty}}" onChange="{{onSheetQty}}" inputmode="decimal" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 22px; font-weight: 700; color: var(--text); outline: none"><span style="font-size: 15px; font-weight: 600; color: var(--text2)">{{sh.unit}}</span></span>
+          </span>
+          <sc-if value="{{sh.isRestock}}" hint-placeholder-val="{{true}}">
+            <span style="display: flex; gap: 6px">
+              <sc-for list="{{sh.quick}}" as="qk" hint-placeholder-count="4"><button onClick="{{qk.pick}}" style="height: 34px; padding: 0 12px; border-radius: 10px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{qk.label}}</button></sc-for>
+            </span>
+          </sc-if>
+          <sc-if value="{{sh.qtyErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 0 14px; color: var(--danger)">{{sh.qtyMsg}}</span></sc-if>
+        </label>
+        <sc-if value="{{sh.isAdjust}}" hint-placeholder-val="{{false}}">
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 13px; font-weight: 700; color: {{sh.reasonFg}}">{{s.reason}}</span>
+            <span style="display: flex; flex-wrap: wrap; gap: 6px">
+              <sc-for list="{{sh.reasons}}" as="rs" hint-placeholder-count="4"><button onClick="{{rs.pick}}" aria-pressed="{{rs.on}}" style="height: 36px; padding: 0 12px; border-radius: 10px; border: 1.5px solid {{rs.border}}; background: {{rs.bg}}; color: {{rs.fg}}; font-family: inherit; font-size: 14px; font-weight: 600; cursor: pointer">{{rs.label}}</button></sc-for>
+            </span>
+          </div>
+        </sc-if>
+        <label style="display: flex; flex-direction: column">
+          <span style="min-height: 52px; box-sizing: border-box; border-radius: 14px; background: var(--field); padding: 6px 14px; display: flex; flex-direction: column; justify-content: center">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.note}} · {{s.optional}}</span>
+            <input value="{{sh.note}}" onChange="{{onSheetNote}}" placeholder="{{s.notePh}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; color: var(--text); outline: none; width: 100%">
+          </span>
+        </label>
+        <div style="display: flex; align-items: center; justify-content: space-between; padding: 10px 14px; border-radius: 14px; background: var(--surface)">
+          <span style="font-size: 14px; font-weight: 600; color: var(--text2)">{{s.newBalance}}</span>
+          <span style="font-size: 17px; font-weight: 800; display: flex; align-items: center; gap: 6px"><span style="color: var(--text2); font-weight: 600">{{sh.current}}</span><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"></path></svg><span style="color: {{sh.nextFg}}">{{sh.next}}</span></span>
+        </div>
+        <button onClick="{{saveStock}}" style="height: 52px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 700; cursor: pointer">{{s.saveStock}}</button>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ======================================================== DELETE DIALOG -->
+  <sc-if value="{{dialog}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; z-index: 11; background: var(--scrim); display: flex; align-items: center; justify-content: center; padding: 24px">
+      <div role="alertdialog" aria-label="{{fm.delTitle}}" style="width: 100%; background: var(--sheet); border-radius: 28px; padding: 24px; display: flex; flex-direction: column; gap: 14px">
+        <span style="width: 44px; height: 44px; border-radius: 22px; background: var(--dangerBg); color: var(--dangerFg); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></span>
+        <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px; line-height: 26px">{{fm.delTitle}}</span>
+        <span style="font-size: 15px; line-height: 22px; color: var(--text2)">{{s.delBody}}</span>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px">
+          <button onClick="{{cancelDelete}}" style="height: 44px; padding: 0 16px; border: 0; border-radius: 999px; background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.cancel}}</button>
+          <button onClick="{{confirmDelete}}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 999px; background: var(--danger); color: var(--onDanger); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.deleteBtn}}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ======================================================== SNACKBAR -->
+  <sc-if value="{{snack.show}}" hint-placeholder-val="{{false}}">
+    <div role="status" style="position: absolute; left: 12px; right: 12px; bottom: {{snack.bottom}}; z-index: 12; min-height: 48px; padding: 10px 16px; box-sizing: border-box; border-radius: 10px; background: var(--inv); color: var(--onInv); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 20px rgba(20,18,60,0.3)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg>{{snack.text}}
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","default":"dash","options":["dash","dashNew","catalog","catalogLoading","catalogEmpty","catalogError","itemNew","itemEdit","stockSheet","history","report","reportToday"]},"lang":{"editor":"enum","default":"en","options":["en","hi"]},"dark":{"editor":"boolean","default":false},"auto":{"editor":"boolean","default":true},"$preview":{"width":360,"height":800}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.initState(props.start ?? 'dash');
+  }
+
+  // fixtures/items.page.json → [name, sku, unit, ratePaise, stockQty, lowStockThreshold, category, isActive, description]
+  baseItems() {
+    return [
+      ['Aashirvaad Shudh Chakki Atta 10 kg', 'ASH-ATTA-10', 'PACK', 46500, '120', '20', 'Staples', true, 'Whole wheat atta, 10 kg bag'],
+      ['Tata Salt 1 kg (case of 25)', 'TATA-SALT-25', 'CASE', 60000, '40', '10', 'Staples', true, ''],
+      ['Sugar (loose)', '', 'KG', 4250, '850.5', '100', 'Staples', true, 'S-30 grade, sold per kg'],
+      ['Fortune Sunflower Oil', 'FOR-SUN-L', 'L', 15500, '320', '50', 'Edible Oil', true, 'Refined, sold per litre'],
+      ['Toor Dal', '', 'KG', 13800, '6.5', '50', 'Pulses', true, 'Premium unpolished'],
+      ['Basmati Rice (loose)', '', 'KG', 9600, '0', '50', 'Staples', true, ''],
+      ['Parle-G 80 g (box of 48)', 'PARLE-G-48', 'BOX', 48000, '64', '10', 'Biscuits', true, ''],
+      ['Britannia Good Day Cashew 200 g', 'BRIT-GD-200', 'PCS', 4000, '600', '50', 'Biscuits', true, ''],
+      ['Maggi 2-Minute Noodles 70 g', 'MAGGI-70-DZ', 'DOZEN', 16800, '85', '10', 'Instant Food', true, 'Sold per dozen'],
+      ['Amul Butter 500 g', 'AMUL-BTR-500', 'PCS', 27500, '48', '50', 'Dairy', true, ''],
+      ['Amul Taaza Toned Milk', 'AMUL-TAAZA', 'L', 5400, '200', '40', 'Dairy', true, ''],
+      ['Surf Excel Easy Wash 1 kg', 'SURF-EW-1', 'PCS', 14000, '150', '20', 'Home Care', true, ''],
+      ['Vim Dishwash Bar 200 g (pack of 4)', 'VIM-BAR-4', 'PACK', 8800, '9', '20', 'Home Care', true, ''],
+      ['Colgate Strong Teeth 200 g', 'COL-ST-200', 'PCS', 11000, '230', '30', 'Personal Care', true, ''],
+      ['Dettol Original Soap 125 g (pack of 4)', 'DET-SOAP-4', 'PACK', 22000, '75', '15', 'Personal Care', true, ''],
+      ['Red Label Tea 1 kg', 'RL-TEA-1', 'PCS', 52000, '60', '10', 'Beverages', true, ''],
+      ['Bru Instant Coffee 200 g', 'BRU-200', 'PCS', 38500, '0', '10', 'Beverages', true, ''],
+      ["Haldiram's Aloo Bhujia 1 kg", 'HAL-BHU-1', 'PCS', 26000, '44', '10', 'Snacks', true, ''],
+      ['Everest Garam Masala 100 g', 'EVR-GM-100', 'PCS', 8200, '300', '30', 'Spices', false, 'Seasonal — paused'],
+      ['Haldi Powder (loose)', '', 'G', 30, '25000', '5000', 'Spices', true, 'Sold per gram'],
+    ].map(([name, sku, unit, ratePaise, stock, thr, category, active, desc], i) => ({
+      id: i, name, sku, unit, ratePaise, stockM: this.toM(stock), thrM: this.toM(thr), category, active, desc, photo: !!sku, deleted: false,
+    }));
+  }
+  toM(q) { const [a, b = ''] = String(q).split('.'); return parseInt(a || '0', 10) * 1000 + parseInt((b + '000').slice(0, 3), 10); }
+
+  // fixtures/stock-movements.page.json (Toor Dal) → [type, deltaMilli, balanceMilli, amountPaise, orderNo, shop, reason, iso]
+  baseMoves() {
+    return { 4: [
+      ['SALE', -37000, 6500, 510600, 1038, 'Gupta Kirana', '', '2026-10-08T09:45:00.000Z'],
+      ['ADJUSTMENT', -1500, 43500, null, null, '', 'Damaged — bag torn in storage', '2026-10-07T08:45:00.000Z'],
+      ['SALE', -75000, 45000, 1035000, 1035, 'Sharma General Store', '', '2026-10-07T07:45:00.000Z'],
+      ['RESTOCK', 60000, 120000, null, null, '', 'Received from Agarwal Mills, bill #A-5521', '2026-09-26T06:45:00.000Z'],
+      ['SALE', -40000, 60000, 552000, 1030, 'Jain Provision Store', '', '2026-09-18T05:45:00.000Z'],
+      ['SALE', -50000, 100000, 690000, 1028, 'Sharma General Store', '', '2026-09-08T04:45:00.000Z'],
+      ['OPENING', 150000, 150000, null, null, '', '', '2026-08-29T03:45:00.000Z'],
+    ].map(([type, d, bal, amount, orderNo, shop, reason, at]) => ({ type, d, bal, amount, orderNo, shop, reason, at })) };
+  }
+
+  initState(start) {
+    const base = {
+      screen: 'dash', tab: 'items', lang: null, newAccount: false, loading: false, error: false,
+      filter: 'all', q: '', sortIdx: 0, period: '30d', repSort: 'sold', histFilter: 'all', from: 'catalog',
+      items: this.baseItems(), moves: this.baseMoves(), editId: null, form: null, sheet: null, dialog: false, snack: null,
+    };
+    const st = { ...base };
+    const editFor = (id) => ({ screen: 'item', editId: id, form: this.formFrom(base.items[id]) });
+    const m = {
+      dash: {}, dashNew: { newAccount: true, items: [] },
+      catalog: { screen: 'catalog' }, catalogLoading: { screen: 'catalog', loading: true },
+      catalogEmpty: { screen: 'catalog', newAccount: true, items: [] }, catalogError: { screen: 'catalog', error: true },
+      itemNew: { screen: 'item', editId: null, form: this.blankForm() },
+      itemEdit: editFor(4),
+      stockSheet: { ...editFor(4), sheet: { mode: 'restock', qty: '50', dir: 'remove', reason: null, note: 'Agarwal Mills, bill #A-5602', tried: false } },
+      history: { screen: 'history', editId: 4, from: 'item', form: this.formFrom(base.items[4]) },
+      report: { screen: 'catalog', tab: 'report', period: '30d' }, reportToday: { screen: 'catalog', tab: 'report', period: 'today' },
+    };
+    return { ...st, ...(m[start] ?? {}) };
+  }
+  blankForm() { return { name: '', sku: '', unit: 'KG', rate: '', category: '', desc: '', active: true, opening: '', alert: '', photo: false, tried: false }; }
+  formFrom(it) {
+    return { name: it.name, sku: it.sku, unit: it.unit, rate: (it.ratePaise / 100).toFixed(2), category: it.category, desc: it.desc,
+      active: it.active, opening: '', alert: this.fq(it.thrM), photo: it.photo, tried: false };
+  }
+  fq(m) { const neg = m < 0; const a = Math.abs(m); const s = `${Math.floor(a / 1000)}.${String(a % 1000).padStart(3, '0')}`.replace(/\.?0+$/, ''); return (neg ? '-' : '') + (s || '0'); }
+
+  componentDidMount() {
+    if ((this.props.auto ?? true) && this.state.loading) this.loadT = setTimeout(() => this.setState({ loading: false }), 1500);
+  }
+  componentWillUnmount() { clearTimeout(this.loadT); clearTimeout(this.snackT); }
+  componentDidUpdate(prev) {
+    if (prev.start !== this.props.start) this.setState(this.initState(this.props.start ?? 'dash'));
+    else if (prev.lang !== this.props.lang && this.state.lang !== null) this.setState({ lang: null });
+  }
+  toast(text, extra = {}) {
+    clearTimeout(this.snackT);
+    this.setState({ ...extra, snack: text });
+    this.snackT = setTimeout(() => this.setState({ snack: null }), 3000);
+  }
+
+  renderVals() {
+    const st = this.state;
+    const dark = this.props.dark ?? false;
+    const lang = st.lang ?? this.props.lang ?? 'en';
+    const L = { bg: '#F7F6FC', surface: '#EEEDF8', field: '#E3E2F1', sheet: '#FFFFFF', outline: '#DCDBEA', outline2: '#8F8EA8', navBg: '#EAE9F5',
+      text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF', pc: '#E4E2FB', opc: '#1E1B4B',
+      danger: '#B91C1C', onDanger: '#FFFFFF', dangerBg: '#FEE2E2', dangerFg: '#991B1B', warnBg: '#FEF3C7', warnFg: '#92400E',
+      successBg: '#DCFCE7', successFg: '#166534', inv: '#2B2A40', onInv: '#F2F1FA', scrim: 'rgba(14,13,26,0.5)' };
+    const D = { bg: '#0E0D1A', surface: '#1A1930', field: '#24223F', sheet: '#222039', outline: '#2C2A45', outline2: '#7C7A99', navBg: '#16152B',
+      text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760', pc: '#2E2A78', opc: '#E4E2FB',
+      danger: '#F87171', onDanger: '#2A0606', dangerBg: '#450A0A', dangerFg: '#FCA5A5', warnBg: '#422006', warnFg: '#FCD34D',
+      successBg: '#052E16', successFg: '#86EFAC', inv: '#EEEDF7', onInv: '#16152B', scrim: 'rgba(0,0,0,0.6)' };
+    const vars = Object.entries(dark ? D : L).map(([k, v]) => `--${k}: ${v}`).join('; ');
+
+    const T = {
+      en: {
+        langBtn: 'हिंदी', langAria: 'Switch to Hindi', back: 'Back', close: 'Close', loading: 'Loading', optional: 'optional',
+        greet: 'Namaste, Ramesh', todayTitle: "TODAY'S BUSINESS", ordersToday: 'orders today', requested: 'Requested', accepted: 'Accepted', sold7: 'Sold · 7 days',
+        needsAttention: 'Needs your attention', pendingOrders: 'Pending orders', joinReq: 'Join requests', enquiries: 'Enquiries',
+        lowStock: 'Low & out of stock', seeAll: 'See all', restock: 'Restock', recentOrders: 'Recent orders',
+        shareTitle: 'Get more retailers', shareSub: 'Send your QR on WhatsApp or print it for the counter.', shareBtn: 'Share QR',
+        setupTitle: "Let's get your first order", setupProgress: (n) => `${n} of 4 done`,
+        steps: [['Business profile', 'Done'], ['Add your items', 'Retailers order from this list'], ['Add your retailers', 'Or let them request to join'], ['Share your QR', 'Print it or send on WhatsApp']],
+        stepBtns: ['', 'Add item', 'Add retailer', 'Share'],
+        nav: ['Home', 'Orders', 'Catalog', 'Retailers', 'More'],
+        status: { PENDING: 'Pending', ACCEPTED: 'Accepted', PARTIALLY_ACCEPTED: 'Partial', REJECTED: 'Rejected', CANCELLED: 'Cancelled', DISPATCHED: 'Dispatched', DELIVERED: 'Delivered' },
+        catalog: 'Catalog', items: 'Items', report: 'Stock report', search: (n) => `Search ${n} items`,
+        filters: ['All', 'Low stock', 'Out of stock', 'Unavailable'], sorts: ['Name', 'Stock', 'Rate'], sortAria: (x) => `Sort by ${x}`,
+        left: (q, u) => `${q} ${u} left`, low: (q, u) => `Low · ${q} ${u}`, out: 'Out of stock', unavailable: 'Unavailable',
+        addItem: 'Add item', addFirst: 'Add your first item', noResults: 'No items match',
+        emptyTitle: 'Your catalog is empty', emptySub: 'Add the items you supply. Retailers order from this list.',
+        errTitle: "Couldn't load your catalog", errSub: 'Check your internet connection and try again.', retry: 'Try again',
+        periods: [['today', 'Today'], ['7d', '7 days'], ['30d', '30 days']], totalSold: 'Total sold', itemsSold: (n) => `${n} items sold`,
+        colItem: 'ITEM', colSoldRs: '₹', colSold: 'SOLD', colLeft: 'LEFT', emptyReport: 'No sales in this period',
+        newTitle: 'Add item', editTitle: 'Edit item', addPhoto: 'Add photo', changePhoto: 'Change photo', photoHint: 'Optional · shown to retailers',
+        name: 'Item name', sku: 'SKU / code', unit: 'Sold per', rate: (u) => `Rate per ${u}`, category: 'Category', desc: 'Description',
+        available: 'Available to order', availableSub: 'Retailers can see and order it', opening: 'Opening stock', alertAt: 'Alert below',
+        save: 'Save item', saveChanges: 'Save changes', delete: 'Delete item',
+        errName: 'Enter the item name', errRate: 'Enter a valid rate, e.g. 42.50', errQty: 'Enter a valid quantity', errWhole: (u) => `Whole numbers only for ${u}`,
+        inStockNow: 'In stock now', alertText: (q) => `Alert below ${q}`, soldText: (q) => `${q} sold in 30 days`, adjust: 'Adjust', history: 'Stock history',
+        delTitle: (n) => `Delete ${n}?`, delBody: 'It disappears from your catalog. Past orders keep their details.', cancel: 'Cancel', deleteBtn: 'Delete',
+        received: 'Quantity received', qty: 'Quantity', remove: 'Remove', add: 'Add', reason: 'Reason',
+        reasons: ['Damaged', 'Expired', 'Count correction', 'Other'], note: 'Note', notePh: 'Supplier, bill number…', newBalance: 'New balance',
+        errBelow: "Can't remove more than you have", errReason: 'Pick a reason', errPositive: 'Enter more than 0', saveStock: 'Update stock',
+        snackStock: (n, q) => `Stock updated · ${n}: ${q}`, snackAdded: 'Item added to catalog', snackSaved: 'Changes saved', snackDeleted: 'Item deleted',
+        histFilters: ['All', 'Sales', 'Received', 'Adjustments'], nowLabel: 'In stock', soldLabel: 'Sold', inLabel: 'Received',
+        mSale: (n, s) => `Sold · #${n} ${s}`, mRestock: 'Stock received', mAdjust: 'Adjusted', mOpening: 'Opening stock', balance: (q) => `Balance ${q}`,
+        emptyHist: 'No stock movements yet',
+        units: { PCS: 'pcs', BOX: 'box', DOZEN: 'dozen', PACK: 'pack', CASE: 'case', KG: 'kg', G: 'g', L: 'L', ML: 'ml' },
+        unitNames: { PCS: 'Pieces', BOX: 'Box', DOZEN: 'Dozen', PACK: 'Pack', CASE: 'Case', KG: 'Kilogram', G: 'Gram', L: 'Litre', ML: 'Millilitre' },
+      },
+      hi: {
+        langBtn: 'English', langAria: 'Switch to English', back: 'वापस', close: 'बंद करें', loading: 'लोड हो रहा है', optional: 'वैकल्पिक',
+        greet: 'नमस्ते, रमेश', todayTitle: 'आज का कारोबार', ordersToday: 'आज के ऑर्डर', requested: 'माँगा गया', accepted: 'स्वीकार', sold7: 'बिक्री · 7 दिन',
+        needsAttention: 'आपका ध्यान चाहिए', pendingOrders: 'लंबित ऑर्डर', joinReq: 'जुड़ने के अनुरोध', enquiries: 'पूछताछ',
+        lowStock: 'कम और खत्म स्टॉक', seeAll: 'सभी देखें', restock: 'स्टॉक जोड़ें', recentOrders: 'हाल के ऑर्डर',
+        shareTitle: 'और रिटेलर जोड़ें', shareSub: 'अपना QR WhatsApp पर भेजें या काउंटर के लिए प्रिंट करें।', shareBtn: 'QR शेयर करें',
+        setupTitle: 'चलिए, पहला ऑर्डर लाते हैं', setupProgress: (n) => `4 में से ${n} पूरे`,
+        steps: [['बिज़नेस प्रोफ़ाइल', 'पूरा'], ['अपने आइटम जोड़ें', 'रिटेलर इसी लिस्ट से ऑर्डर करेंगे'], ['अपने रिटेलर जोड़ें', 'या उन्हें जुड़ने का अनुरोध भेजने दें'], ['अपना QR शेयर करें', 'प्रिंट करें या WhatsApp पर भेजें']],
+        stepBtns: ['', 'आइटम जोड़ें', 'रिटेलर जोड़ें', 'शेयर करें'],
+        nav: ['होम', 'ऑर्डर', 'कैटलॉग', 'रिटेलर', 'और'],
+        status: { PENDING: 'लंबित', ACCEPTED: 'स्वीकार', PARTIALLY_ACCEPTED: 'आंशिक', REJECTED: 'अस्वीकार', CANCELLED: 'रद्द', DISPATCHED: 'भेजा गया', DELIVERED: 'डिलीवर' },
+        catalog: 'कैटलॉग', items: 'आइटम', report: 'स्टॉक रिपोर्ट', search: (n) => `${n} आइटम में खोजें`,
+        filters: ['सभी', 'कम स्टॉक', 'स्टॉक खत्म', 'उपलब्ध नहीं'], sorts: ['नाम', 'स्टॉक', 'रेट'], sortAria: (x) => `${x} से क्रम`,
+        left: (q, u) => `${q} ${u} बचा`, low: (q, u) => `कम · ${q} ${u}`, out: 'स्टॉक खत्म', unavailable: 'उपलब्ध नहीं',
+        addItem: 'आइटम जोड़ें', addFirst: 'पहला आइटम जोड़ें', noResults: 'कोई आइटम नहीं मिला',
+        emptyTitle: 'आपका कैटलॉग खाली है', emptySub: 'जो आइटम आप सप्लाई करते हैं, उन्हें जोड़ें। रिटेलर इसी लिस्ट से ऑर्डर करेंगे।',
+        errTitle: 'कैटलॉग लोड नहीं हो पाया', errSub: 'इंटरनेट कनेक्शन जाँचें और फिर कोशिश करें।', retry: 'फिर कोशिश करें',
+        periods: [['today', 'आज'], ['7d', '7 दिन'], ['30d', '30 दिन']], totalSold: 'कुल बिक्री', itemsSold: (n) => `${n} आइटम बिके`,
+        colItem: 'आइटम', colSoldRs: '₹', colSold: 'बिका', colLeft: 'बचा', emptyReport: 'इस अवधि में कोई बिक्री नहीं',
+        newTitle: 'आइटम जोड़ें', editTitle: 'आइटम बदलें', addPhoto: 'फ़ोटो जोड़ें', changePhoto: 'फ़ोटो बदलें', photoHint: 'वैकल्पिक · रिटेलर को दिखेगी',
+        name: 'आइटम का नाम', sku: 'SKU / कोड', unit: 'किस हिसाब से', rate: (u) => `प्रति ${u} रेट`, category: 'कैटेगरी', desc: 'विवरण',
+        available: 'ऑर्डर के लिए उपलब्ध', availableSub: 'रिटेलर इसे देख और ऑर्डर कर सकते हैं', opening: 'शुरुआती स्टॉक', alertAt: 'इससे कम पर अलर्ट',
+        save: 'आइटम सेव करें', saveChanges: 'बदलाव सेव करें', delete: 'आइटम हटाएँ',
+        errName: 'आइटम का नाम डालें', errRate: 'सही रेट डालें, जैसे 42.50', errQty: 'सही मात्रा डालें', errWhole: (u) => `${u} के लिए सिर्फ़ पूरे अंक`,
+        inStockNow: 'अभी स्टॉक में', alertText: (q) => `${q} से कम पर अलर्ट`, soldText: (q) => `30 दिन में ${q} बिका`, adjust: 'सुधार करें', history: 'स्टॉक हिस्ट्री',
+        delTitle: (n) => `${n} हटाएँ?`, delBody: 'यह आपके कैटलॉग से हट जाएगा। पुराने ऑर्डर में इसकी जानकारी बनी रहेगी।', cancel: 'रद्द करें', deleteBtn: 'हटाएँ',
+        received: 'आई मात्रा', qty: 'मात्रा', remove: 'घटाएँ', add: 'बढ़ाएँ', reason: 'कारण',
+        reasons: ['खराब', 'एक्सपायर', 'गिनती में सुधार', 'अन्य'], note: 'नोट', notePh: 'सप्लायर, बिल नंबर…', newBalance: 'नया बैलेंस',
+        errBelow: 'जितना है उससे ज़्यादा नहीं घटा सकते', errReason: 'कारण चुनें', errPositive: '0 से ज़्यादा डालें', saveStock: 'स्टॉक अपडेट करें',
+        snackStock: (n, q) => `स्टॉक अपडेट · ${n}: ${q}`, snackAdded: 'आइटम कैटलॉग में जुड़ गया', snackSaved: 'बदलाव सेव हो गए', snackDeleted: 'आइटम हटा दिया गया',
+        histFilters: ['सभी', 'बिक्री', 'स्टॉक आया', 'सुधार'], nowLabel: 'स्टॉक में', soldLabel: 'बिका', inLabel: 'आया',
+        mSale: (n, s) => `बिका · #${n} ${s}`, mRestock: 'स्टॉक आया', mAdjust: 'सुधार', mOpening: 'शुरुआती स्टॉक', balance: (q) => `बैलेंस ${q}`,
+        emptyHist: 'अभी कोई बदलाव नहीं',
+        units: { PCS: 'पीस', BOX: 'बॉक्स', DOZEN: 'दर्जन', PACK: 'पैक', CASE: 'केस', KG: 'किलो', G: 'ग्राम', L: 'लीटर', ML: 'मि.ली.' },
+        unitNames: { PCS: 'पीस', BOX: 'बॉक्स', DOZEN: 'दर्जन', PACK: 'पैक', CASE: 'केस', KG: 'किलो', G: 'ग्राम', L: 'लीटर', ML: 'मि.ली.' },
+      },
+    };
+    const t = T[lang];
+
+    // ---------- helpers
+    const DEC = { KG: true, G: true, L: true, ML: true };
+    const fq = (m) => this.fq(m);
+    const inr = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(p / 100);
+    const pay = (rate, m) => Math.floor((rate * m + 500) / 1000);
+    const u = (code) => t.units[code];
+    const qtyRe = /^\d{1,7}(\.\d{1,3})?$/;
+    const when = (iso) => new Date(iso).toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' });
+    const TINT = dark
+      ? [['#2E2A78', '#E4E2FB'], ['#3A2A08', '#F7CF7A'], ['#0B3B36', '#99F6E4'], ['#4C0519', '#FDA4AF']]
+      : [['#E4E2FB', '#1E1B4B'], ['#FDF0D5', '#7A4A00'], ['#D5F2EE', '#115E59'], ['#FBE3E8', '#9F1239']];
+    const CATS = ['Staples', 'Pulses', 'Edible Oil', 'Dairy', 'Biscuits', 'Instant Food', 'Beverages', 'Snacks', 'Spices', 'Home Care', 'Personal Care'];
+    const tint = (c) => TINT[Math.max(0, CATS.indexOf(c)) % 4];
+    const initials = (n) => n.replace(/[^A-Za-z ]/g, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase() || 'IT';
+    const ICON = {
+      box: 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8', alert: 'M12 3.5l9 16H3zM12 10v4M12 17v.01',
+      xCircle: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9 9l6 6M15 9l-6 6',
+      up: 'M12 19V5M6 11l6-6 6 6', down: 'M12 5v14M6 13l6 6 6-6', adjust: 'M4 7h10M4 17h6M18 4v6M15 7h6M14 14v6M11 17h6', flag: 'M5 21V4h11l-2 4 2 4H5',
+      clock: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2', check: 'M5 12.5l4.5 4.5L19 7.5', half: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 3v18',
+      x: 'M6 6l12 12M18 6L6 18', truck: 'M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+    };
+    const statusOf = (it) => (it.stockM === 0 ? 'OUT' : it.thrM > 0 && it.stockM <= it.thrM ? 'LOW' : 'IN');
+    const badge = (it) => {
+      const s = statusOf(it);
+      if (s === 'OUT') return { badge: t.out, bbg: 'var(--dangerBg)', bfg: 'var(--dangerFg)', bicon: ICON.xCircle, stockFg: 'var(--danger)' };
+      if (s === 'LOW') return { badge: t.low(fq(it.stockM), u(it.unit)), bbg: 'var(--warnBg)', bfg: 'var(--warnFg)', bicon: ICON.alert, stockFg: 'var(--warnFg)' };
+      return { badge: t.left(fq(it.stockM), u(it.unit)), bbg: 'var(--field)', bfg: 'var(--text2)', bicon: ICON.box, stockFg: 'var(--text)' };
+    };
+    const rateText = (it) => `${inr(it.ratePaise)} / ${u(it.unit)}`;
+    const chip = (on) => ({ bg: on ? 'var(--pc)' : 'transparent', fg: on ? 'var(--opc)' : 'var(--text2)', border: on ? 'var(--pc)' : 'var(--outline2)' });
+    const live = st.items.filter((i) => !i.deleted);
+    const openItem = (id, extra = {}) => this.setState({ screen: 'item', editId: id, form: this.formFrom(st.items[id]), sheet: null, ...extra });
+
+    // ---------- dashboard
+    const STATUS = {
+      PENDING: [ICON.clock, '#FEF3C7', '#92400E', '#422006', '#FCD34D'], ACCEPTED: [ICON.check, '#DCFCE7', '#166534', '#052E16', '#86EFAC'],
+      PARTIALLY_ACCEPTED: [ICON.half, '#CCFBF1', '#115E59', '#042F2E', '#5EEAD4'], DISPATCHED: [ICON.truck, '#DBEAFE', '#1E40AF', '#172554', '#93C5FD'],
+    };
+    const recent = [[1040, 'Sharma General Store', 'PENDING', 1373075, '2026-10-08T05:12:00.000Z'], [1039, 'New Bharat Mart', 'PENDING', 897000, '2026-10-08T03:45:00.000Z'],
+      [1038, 'Gupta Kirana', 'PARTIALLY_ACCEPTED', 975600, '2026-10-08T02:35:00.000Z'], [1037, 'Jain Provision Store', 'ACCEPTED', 604000, '2026-10-08T02:00:00.000Z'],
+      [1036, 'Om Sai Kirana', 'ACCEPTED', 280000, '2026-10-07T11:40:00.000Z']].map(([no, shop, status, amt, at]) => {
+      const [icon, lb, lf, db, df] = STATUS[status];
+      return { no, shop, amount: inr(amt), time: when(at), label: t.status[status], icon, bg: dark ? db : lb, fg: dark ? df : lf };
+    });
+    const att = [
+      [ICON.clock, 2, t.pendingOrders, dark ? ['#422006', '#FCD34D'] : ['#FEF3C7', '#92400E']],
+      ['M15 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 3 17.5V19M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM19 8v6M22 11h-6', 2, t.joinReq, dark ? ['#2E2A78', '#E4E2FB'] : ['#E4E2FB', '#1E1B4B']],
+      ['M4 5h16v11H9l-5 4zM8 9h8M8 12h5', 2, t.enquiries, dark ? ['#0B3B36', '#99F6E4'] : ['#D5F2EE', '#115E59']],
+    ].map(([icon, n, label, [bg, fg]]) => ({ icon, n, label, bg, fg }));
+    const low = live.filter((i) => i.active && statusOf(i) !== 'IN').sort((a, b) => a.stockM - b.stockM).slice(0, 5).map((it) => {
+      const [tb, tf] = tint(it.category);
+      return { name: it.name, initials: initials(it.name), tileBg: tb, tileFg: tf, ...badge(it),
+        restock: () => openItem(it.id, { sheet: { mode: 'restock', qty: '', dir: 'remove', reason: null, note: '', tried: false }, from: 'dash' }) };
+    });
+    const doneCount = 1 + (live.length > 0 ? 1 : 0);
+    const steps = t.steps.map(([title, text], i) => {
+      const done = i === 0 || (i === 1 && live.length > 0);
+      return { n: i + 1, title, text, done, todo: !done, hasBtn: !done, btn: t.stepBtns[i],
+        circle: done ? 'var(--successFg)' : 'var(--pc)', circleFg: done ? 'var(--successBg)' : 'var(--opc)',
+        act: i === 1 ? () => this.setState({ screen: 'item', editId: null, form: this.blankForm(), from: 'dash' }) : () => null };
+    });
+    const dash = { isNew: st.newAccount, isActive: !st.newAccount, attention: att, low, recent, steps, setupProgress: t.setupProgress(doneCount),
+      date: new Date('2026-10-08T06:00:00Z').toLocaleDateString(lang === 'hi' ? 'hi-IN' : 'en-IN', { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }) };
+
+    // ---------- catalog
+    const q = st.q.trim().toLowerCase();
+    const fkeys = ['all', 'low', 'out', 'off'];
+    const counts = { all: live.length, low: live.filter((i) => statusOf(i) === 'LOW').length, out: live.filter((i) => statusOf(i) === 'OUT').length, off: live.filter((i) => !i.active).length };
+    const sortKeys = ['name', 'stock', 'rate'];
+    const sortKey = sortKeys[st.sortIdx];
+    let list = live.filter((i) => (st.filter === 'all' || (st.filter === 'low' && statusOf(i) === 'LOW') || (st.filter === 'out' && statusOf(i) === 'OUT') || (st.filter === 'off' && !i.active))
+      && (!q || i.name.toLowerCase().includes(q) || (i.sku || '').toLowerCase().includes(q)));
+    list = [...list].sort((a, b) => sortKey === 'name' ? a.name.localeCompare(b.name) : sortKey === 'stock' ? (a.stockM / (a.thrM || 1)) - (b.stockM / (b.thrM || 1)) : b.ratePaise - a.ratePaise);
+    const blocked = st.loading || st.error;
+    const cat = {
+      isItems: st.tab === 'items', isReport: st.tab === 'report',
+      itemsBg: st.tab === 'items' ? 'var(--pc)' : 'transparent', itemsFg: st.tab === 'items' ? 'var(--opc)' : 'var(--text2)',
+      reportBg: st.tab === 'report' ? 'var(--pc)' : 'transparent', reportFg: st.tab === 'report' ? 'var(--opc)' : 'var(--text2)',
+      q: st.q, searchPh: t.search(live.length), sortShort: t.sorts[st.sortIdx], sortLabel: t.sortAria(t.sorts[st.sortIdx]),
+      filters: fkeys.map((k, i) => ({ label: `${t.filters[i]}${counts[k] ? ` · ${counts[k]}` : ''}`, on: st.filter === k, ...chip(st.filter === k), pick: () => this.setState({ filter: k }) })),
+      list: list.map((it) => { const [tb, tf] = tint(it.category); return { name: it.name, initials: initials(it.name), tileBg: tb, tileFg: tf, rate: rateText(it), cat: it.category,
+        inactive: !it.active, opacity: it.active ? 1 : 0.55, ...badge(it), open: () => openItem(it.id, { from: 'catalog' }) }; }),
+      loading: st.loading, error: st.error && !st.loading, empty: !blocked && live.length === 0,
+      showList: !blocked && live.length > 0, noResults: !blocked && live.length > 0 && list.length === 0, showFab: !blocked && live.length > 0,
+    };
+
+    // ---------- report (today / 7d from accepted order lines; 30d = fixtures/stock-report.json)
+    const LINES = [[0, 4, 37000], [0, 0, 10000], [0, 15, 4000], [0, 13, 24000], [0, 14, 6000], [1, 7, 48000], [1, 12, 10000], [1, 4, 75000], [1, 2, 40000], [1, 10, 20000],
+      [2, 0, 8000], [2, 3, 20000], [2, 19, 500000], [3, 9, 12000], [3, 11, 6000]];
+    const R30 = { 3: 260000, 0: 64000, 4: 202000, 6: 41000, 2: 412500, 5: 180000, 9: 61000, 15: 27000, 11: 96000, 7: 330000, 13: 120000, 1: 18000, 8: 52000, 10: 140000, 14: 33000, 17: 22000, 16: 14000, 12: 38000, 19: 7500000 };
+    const soldBy = {};
+    if (st.period === '30d') Object.entries(R30).forEach(([id, m]) => { soldBy[id] = m; });
+    else LINES.filter(([day]) => (st.period === 'today' ? day === 0 : day <= 6)).forEach(([, id, m]) => { soldBy[id] = (soldBy[id] || 0) + m; });
+    let rows = Object.entries(soldBy).map(([id, m]) => ({ it: st.items[id], m })).filter((r) => r.it && !r.it.deleted);
+    rows = rows.sort((a, b) => st.repSort === 'sold' ? pay(b.it.ratePaise, b.m) - pay(a.it.ratePaise, a.m) : a.it.stockM - b.it.stockM);
+    const totalPaise = rows.reduce((s, r) => s + pay(r.it.ratePaise, r.m), 0);
+    const rep = {
+      periods: t.periods.map(([k, label]) => ({ label, on: st.period === k, ...chip(st.period === k), pick: () => this.setState({ period: k }) })),
+      total: inr(totalPaise), itemsSold: t.itemsSold(rows.length), empty: rows.length === 0,
+      soldSortFg: st.repSort === 'sold' ? 'var(--primary)' : 'var(--text2)', leftSortFg: st.repSort === 'left' ? 'var(--primary)' : 'var(--text2)',
+      rows: rows.map(({ it, m }) => { const s = statusOf(it); return { name: it.name, amount: inr(pay(it.ratePaise, m)), sold: `${fq(m)} ${u(it.unit)}`,
+        left: `${fq(it.stockM)} ${u(it.unit)}`, leftFg: s === 'OUT' ? 'var(--danger)' : s === 'LOW' ? 'var(--warnFg)' : 'var(--text)',
+        open: () => this.setState({ screen: 'history', editId: it.id, from: 'catalog', histFilter: 'all' }) }; }),
+    };
+
+    // ---------- item form
+    const f = st.form || this.blankForm();
+    const editItem = st.editId !== null ? st.items[st.editId] : null;
+    const isNew = !editItem;
+    const rateOk = /^\d{1,8}(\.\d{1,2})?$/.test(f.rate.trim());
+    const qtyCheck = (v, unit, allowZero) => {
+      const s = v.trim();
+      if (!qtyRe.test(s)) return t.errQty;
+      if (!DEC[unit] && s.includes('.')) return t.errWhole(u(unit));
+      if (!allowZero && this.toM(s) === 0) return t.errPositive;
+      return null;
+    };
+    const openingMsg = isNew ? qtyCheck(f.opening, f.unit, true) : null;
+    const alertMsg = f.alert.trim() === '' ? null : qtyCheck(f.alert, f.unit, true);
+    const formOk = f.name.trim() && rateOk && !openingMsg && !alertMsg;
+    const [ftb, ftf] = tint(f.category);
+    const sold30 = editItem ? (R30[editItem.id] || 0) : 0;
+    const fm = {
+      ...f, isNew, isEdit: !isNew, title: isNew ? t.newTitle : t.editTitle, saveLabel: isNew ? t.save : t.saveChanges,
+      unitLabel: u(f.unit), rateLabel: t.rate(u(f.unit)),
+      nameErr: f.tried && !f.name.trim(), nameBorder: f.tried && !f.name.trim() ? 'var(--danger)' : 'transparent',
+      rateErr: f.tried && !rateOk, rateBorder: f.tried && !rateOk ? 'var(--danger)' : 'transparent',
+      openingErr: f.tried && !!openingMsg, openingMsg, openingBorder: f.tried && openingMsg ? 'var(--danger)' : 'transparent',
+      alertBorder: f.tried && alertMsg ? 'var(--danger)' : 'transparent',
+      hasPhoto: f.photo, noPhoto: !f.photo, photoLabel: f.photo ? t.changePhoto : t.addPhoto, initials: initials(f.name || 'Item'),
+      tileBg: f.photo ? ftb : 'var(--field)', tileFg: f.photo ? ftf : 'var(--text2)', photoBorder: f.photo ? '0' : '2px dashed var(--outline2)',
+      catChips: CATS.slice(0, 7).map((c) => ({ label: c, ...chip(f.category === c), pick: () => this.setState({ form: { ...f, category: c } }) })),
+      swBg: f.active ? 'var(--primary)' : 'var(--field)', swBorder: f.active ? 'var(--primary)' : 'var(--outline2)',
+      knob: f.active ? '24px' : '16px', knobTop: f.active ? '2px' : '6px', knobLeft: f.active ? '22px' : '6px', knobBg: f.active ? 'var(--onPrimary)' : 'var(--outline2)',
+      delTitle: t.delTitle(f.name || ''),
+      ...(editItem ? badge(editItem) : {}),
+      stockNow: editItem ? `${fq(editItem.stockM)} ${u(editItem.unit)}` : '',
+      stockCardBg: editItem && statusOf(editItem) === 'OUT' ? 'var(--dangerBg)' : editItem && statusOf(editItem) === 'LOW' ? 'var(--warnBg)' : 'var(--surface)',
+      alertText: editItem ? t.alertText(`${fq(editItem.thrM)} ${u(editItem.unit)}`) : '',
+      soldText: editItem ? t.soldText(`${fq(sold30)} ${u(editItem.unit)}`) : '',
+    };
+    const units = ['PCS', 'BOX', 'DOZEN', 'PACK', 'CASE', 'KG', 'G', 'L', 'ML'].map((code) => ({ code, label: t.unitNames[code] }));
+    const setForm = (patch) => this.setState({ form: { ...f, ...patch } });
+
+    // ---------- stock sheet
+    const sheet = st.sheet;
+    const shItem = editItem;
+    let sh = { open: false };
+    if (sheet && shItem) {
+      const isRestock = sheet.mode === 'restock';
+      const remove = !isRestock && sheet.dir === 'remove';
+      const qMsg = qtyCheck(sheet.qty || '', shItem.unit, false);
+      const qM = qMsg ? 0 : this.toM(sheet.qty);
+      const below = remove && qM > shItem.stockM;
+      const nextM = shItem.stockM + (remove ? -qM : qM);
+      const qtyErr = sheet.tried && (!!qMsg || below);
+      const reasonBad = sheet.tried && !isRestock && !sheet.reason;
+      sh = {
+        open: true, isRestock, isAdjust: !isRestock, isRemove: remove, isAdd: !isRestock && !remove,
+        itemName: shItem.name, unit: u(shItem.unit), current: `${fq(shItem.stockM)} ${u(shItem.unit)}`,
+        next: `${fq(Math.max(nextM, 0))} ${u(shItem.unit)}`, nextFg: below ? 'var(--danger)' : nextM > shItem.stockM ? 'var(--successFg)' : 'var(--text)',
+        qty: sheet.qty, note: sheet.note, qtyLabel: isRestock ? t.received : t.qty,
+        qtyErr, qtyMsg: below ? t.errBelow : qMsg, qtyBorder: qtyErr ? 'var(--danger)' : 'transparent',
+        rBg: isRestock ? 'var(--pc)' : 'transparent', rFg: isRestock ? 'var(--opc)' : 'var(--text2)',
+        aBg: !isRestock ? 'var(--pc)' : 'transparent', aFg: !isRestock ? 'var(--opc)' : 'var(--text2)',
+        remBorder: remove ? 'var(--danger)' : 'var(--outline2)', remBg: remove ? 'var(--dangerBg)' : 'transparent', remFg: remove ? 'var(--dangerFg)' : 'var(--text2)',
+        addBorder: !remove && !isRestock ? 'var(--successFg)' : 'var(--outline2)', addBg: !remove && !isRestock ? 'var(--successBg)' : 'transparent', addFg: !remove && !isRestock ? 'var(--successFg)' : 'var(--text2)',
+        reasonFg: reasonBad ? 'var(--danger)' : 'var(--text2)',
+        reasons: t.reasons.map((label, i) => ({ label, on: sheet.reason === i, ...chip(sheet.reason === i), pick: () => this.setState({ sheet: { ...sheet, reason: i } }) })),
+        quick: (DEC[shItem.unit] ? [10, 25, 50, 100] : [5, 10, 25, 50]).map((n) => ({ label: `+${n}`, pick: () => this.setState({ sheet: { ...sheet, qty: this.fq(this.toM(sheet.qty || '0') + n * 1000) } }) })),
+        save: () => {
+          if (qMsg || below || (!isRestock && sheet.reason === null)) return this.setState({ sheet: { ...sheet, tried: true } });
+          const d = remove ? -qM : qM;
+          const items = st.items.map((it) => (it.id === shItem.id ? { ...it, stockM: it.stockM + d } : it));
+          const prev = st.moves[shItem.id] || [];
+          const mv = { type: isRestock ? 'RESTOCK' : 'ADJUSTMENT', d, bal: shItem.stockM + d, amount: null, orderNo: null, shop: '',
+            reason: isRestock ? sheet.note : [t.reasons[sheet.reason], sheet.note].filter(Boolean).join(' — '), at: new Date().toISOString() };
+          return this.toast(t.snackStock(shItem.name, `${fq(shItem.stockM + d)} ${u(shItem.unit)}`), { items, moves: { ...st.moves, [shItem.id]: [mv, ...prev] }, sheet: null });
+        },
+      };
+    }
+
+    // ---------- history
+    const hItem = st.editId !== null ? st.items[st.editId] : null;
+    let hist = { name: '', rows: [], filters: [], empty: true };
+    if (hItem) {
+      const mv = st.moves[hItem.id] || [{ type: 'OPENING', d: hItem.stockM, bal: hItem.stockM, amount: null, orderNo: null, shop: '', reason: '', at: '2026-08-29T03:45:00.000Z' }];
+      const hk = ['all', 'SALE', 'RESTOCK', 'ADJUSTMENT'];
+      const shown = mv.filter((m) => st.histFilter === 'all' || m.type === st.histFilter || (st.histFilter === 'RESTOCK' && m.type === 'OPENING'));
+      const sumOf = (types) => mv.filter((m) => types.includes(m.type)).reduce((s, m) => s + Math.abs(m.d), 0);
+      const S = {
+        SALE: [ICON.down, dark ? '#450A0A' : '#FEE2E2', dark ? '#FCA5A5' : '#991B1B'], RESTOCK: [ICON.up, dark ? '#052E16' : '#DCFCE7', dark ? '#86EFAC' : '#166534'],
+        ADJUSTMENT: [ICON.adjust, dark ? '#422006' : '#FEF3C7', dark ? '#FCD34D' : '#92400E'], OPENING: [ICON.flag, dark ? '#2E2A78' : '#E4E2FB', dark ? '#E4E2FB' : '#1E1B4B'],
+      };
+      const bs = badge(hItem);
+      hist = {
+        name: hItem.name, now: `${fq(hItem.stockM)} ${u(hItem.unit)}`, nowFg: bs.stockFg,
+        sold: `${fq(sumOf(['SALE']))} ${u(hItem.unit)}`, received: `${fq(sumOf(['RESTOCK', 'OPENING']))} ${u(hItem.unit)}`,
+        filters: hk.map((k, i) => ({ label: t.histFilters[i], on: st.histFilter === k, ...chip(st.histFilter === k), pick: () => this.setState({ histFilter: k }) })),
+        empty: shown.length === 0,
+        rows: shown.map((m) => {
+          const [icon, bg, fg] = S[m.type];
+          const title = m.type === 'SALE' ? t.mSale(m.orderNo, m.shop) : m.type === 'RESTOCK' ? t.mRestock : m.type === 'ADJUSTMENT' ? t.mAdjust : t.mOpening;
+          return { icon, bg, fg, title, delta: `${m.d > 0 ? '+' : '−'}${fq(Math.abs(m.d))} ${u(hItem.unit)}`, deltaFg: m.d > 0 ? 'var(--successFg)' : 'var(--danger)',
+            hasReason: !!m.reason || m.amount !== null, reason: m.amount !== null ? inr(m.amount) : m.reason,
+            time: when(m.at), balance: t.balance(`${fq(m.bal)} ${u(hItem.unit)}`) };
+        }),
+      };
+    }
+
+    // ---------- nav
+    const navActive = st.screen === 'dash' ? 0 : 2;
+    const NAVI = ['M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6', ICON.box,
+      'M4 9l1.5-5h13L20 9M4 9h16v11H4zM4 9a2.7 2.7 0 0 0 5.3 0 2.7 2.7 0 0 0 5.4 0 2.7 2.7 0 0 0 5.3 0M10 20v-5h4v5', 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z'];
+    const nav = t.nav.map((label, i) => ({ label, icon: NAVI[i], current: i === navActive ? 'page' : 'false',
+      pill: i === navActive ? 'var(--pc)' : 'transparent', fg: i === navActive ? 'var(--text)' : 'var(--text2)',
+      badge: [0, 2, 0, 4, 0][i], hasBadge: !st.newAccount && [0, 2, 0, 4, 0][i] > 0,
+      pick: i === 0 ? () => this.setState({ screen: 'dash', sheet: null }) : i === 2 ? () => this.setState({ screen: 'catalog', sheet: null }) : () => null }));
+    const showNav = st.screen === 'dash' || st.screen === 'catalog';
+    const scr = { dash: st.screen === 'dash', catalog: st.screen === 'catalog', item: st.screen === 'item', history: st.screen === 'history' };
+
+    return {
+      vars, s: t, scr, dash, cat, rep, fm, units, sh, hist, nav, showNav, dialog: st.dialog,
+      skeleton: [0.9, 0.75, 0.6, 0.5, 0.42, 0.35, 0.28, 0.22].map((o, i) => ({ o, w1: `${70 + (i % 3) * 8}%`, w2: `${40 + (i % 4) * 7}%` })),
+      snack: { show: !!st.snack, text: st.snack || '', bottom: showNav ? '92px' : '84px' },
+      toggleLang: () => this.setState({ lang: lang === 'en' ? 'hi' : 'en' }),
+      tabItems: () => this.setState({ tab: 'items' }), tabReport: () => this.setState({ tab: 'report' }),
+      onQ: (e) => this.setState({ q: e.target.value }), cycleSort: () => this.setState({ sortIdx: (st.sortIdx + 1) % 3 }),
+      retry: () => { this.setState({ error: false, loading: true }); clearTimeout(this.loadT); this.loadT = setTimeout(() => this.setState({ loading: false }), 1200); },
+      goLowStock: () => this.setState({ screen: 'catalog', tab: 'items', filter: 'low' }),
+      newItem: () => this.setState({ screen: 'item', editId: null, form: this.blankForm(), from: 'catalog' }),
+      repSortSold: () => this.setState({ repSort: 'sold' }), repSortLeft: () => this.setState({ repSort: 'left' }),
+      goCatalog: () => this.setState({ screen: st.from === 'dash' ? 'dash' : 'catalog', sheet: null }),
+      goHistory: () => this.setState({ screen: 'history', from: 'item', histFilter: 'all' }),
+      backFromHistory: () => (st.from === 'item' ? this.setState({ screen: 'item', form: st.form || this.formFrom(st.items[st.editId]) }) : this.setState({ screen: 'catalog' })),
+      togglePhoto: () => setForm({ photo: !f.photo }),
+      onName: (e) => setForm({ name: e.target.value }), onSku: (e) => setForm({ sku: e.target.value.toUpperCase() }),
+      onUnit: (e) => setForm({ unit: e.target.value }), onRate: (e) => setForm({ rate: e.target.value.replace(/[^\d.]/g, '') }),
+      onCategory: (e) => setForm({ category: e.target.value }), onDesc: (e) => setForm({ desc: e.target.value }),
+      onOpening: (e) => setForm({ opening: e.target.value.replace(/[^\d.]/g, '') }), onAlert: (e) => setForm({ alert: e.target.value.replace(/[^\d.]/g, '') }),
+      onActive: (e) => setForm({ active: e.target.checked }),
+      saveItem: () => {
+        if (!formOk) return setForm({ tried: true });
+        const ratePaise = Math.round(parseFloat(f.rate) * 100);
+        const thrM = f.alert.trim() ? this.toM(f.alert) : 0;
+        if (isNew) {
+          const id = st.items.length;
+          const it = { id, name: f.name.trim(), sku: f.sku, unit: f.unit, ratePaise, stockM: this.toM(f.opening), thrM, category: f.category || 'Staples', active: f.active, desc: f.desc, photo: f.photo, deleted: false };
+          const mv = { type: 'OPENING', d: it.stockM, bal: it.stockM, amount: null, orderNo: null, shop: '', reason: '', at: new Date().toISOString() };
+          return this.toast(t.snackAdded, { items: [...st.items, it], moves: { ...st.moves, [id]: [mv] }, screen: 'catalog', tab: 'items', newAccount: false, filter: 'all', q: '' });
+        }
+        const items = st.items.map((it) => (it.id === editItem.id ? { ...it, name: f.name.trim(), sku: f.sku, unit: f.unit, ratePaise, thrM, category: f.category, active: f.active, desc: f.desc, photo: f.photo } : it));
+        return this.toast(t.snackSaved, { items, screen: st.from === 'dash' ? 'dash' : 'catalog' });
+      },
+      askDelete: () => this.setState({ dialog: true }), cancelDelete: () => this.setState({ dialog: false }),
+      confirmDelete: () => this.toast(t.snackDeleted, { dialog: false, screen: 'catalog', items: st.items.map((it) => (it.id === st.editId ? { ...it, deleted: true } : it)) }),
+      openRestock: () => this.setState({ sheet: { mode: 'restock', qty: '', dir: 'remove', reason: null, note: '', tried: false } }),
+      openAdjust: () => this.setState({ sheet: { mode: 'adjust', qty: '', dir: 'remove', reason: null, note: '', tried: false } }),
+      closeSheet: () => this.setState({ sheet: null }),
+      modeRestock: () => this.setState({ sheet: { ...sheet, mode: 'restock', tried: false } }), modeAdjust: () => this.setState({ sheet: { ...sheet, mode: 'adjust', tried: false } }),
+      dirRemove: () => this.setState({ sheet: { ...sheet, dir: 'remove' } }), dirAdd: () => this.setState({ sheet: { ...sheet, dir: 'add' } }),
+      onSheetQty: (e) => this.setState({ sheet: { ...sheet, qty: e.target.value.replace(/[^\d.]/g, '') } }),
+      onSheetNote: (e) => this.setState({ sheet: { ...sheet, note: e.target.value } }),
+      saveStock: () => (sh.save ? sh.save() : null),
+    };
+  }
+}
+</script>
+</body>
+</html>
