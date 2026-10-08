@@ -81,6 +81,24 @@ Bottom nav after login: **Catalog · Cart · Orders**.
 | R-08 | Order history | cards (no, date, status chip, ₹requested → ₹accepted), pull-to-refresh | skeleton / empty / error | retailer-orders.page |
 | R-09 | Order detail | status timeline, lines requested vs accepted (diff highlighted, line notes), totals, Cancel (if PENDING), **Reorder** (adds lines to cart; skips unavailable items with a notice) | each status | retailer-order-detail |
 
+### Screen ID notes (as built)
+- **D-20 More menu** (QR, Storefront, Business profile, Change password, Language, Log out) was labelled "D-15" on the UI-3 canvas; D-15 is the Orders inbox.
+- **R-01** is the storefront v2 design (ADR-022); public products (R-01b), not registered (R-02), request (R-03) and enquiry (R-04) are as in UI-5.
+- **Retailer web** also avoids horizontal scrolling in new screens: the catalog category filter is a bottom sheet (QH still open for the storefront's swipe rows).
+
+### Prototype index
+| Batch | Artifact |
+|---|---|
+| UI-0 Design system | https://claude.ai/artifact/LVet3gGAeoPUSihSnjJwEZ |
+| UI-1 Sign-up & onboarding | https://claude.ai/artifact/1fKKLFvphehUmeTUPSzpyk |
+| UI-2 Dashboard, catalog & stock | https://claude.ai/artifact/63pT5g1DJhpUuNWGEgzcHA |
+| UI-3 Retailers, QR & storefront editor | https://claude.ai/artifact/LB8NnNzh4R4Ups4kc6F9pg |
+| UI-4 Orders & settings | https://claude.ai/artifact/R3NEGEoDYbgnBxcQrU4TpN |
+| UI-5 Storefront & joining | https://claude.ai/artifact/TMsp8DxKnpVKywaqwDZhUb |
+| Storefront v2 (R-01) | https://claude.ai/artifact/WqqY59SbZsCn2BERC6HjVE |
+| UI-6 Retailer ordering | https://claude.ai/artifact/NHwipyCfbcgs86icTBVzYb |
+| UI-7 End-to-end | https://claude.ai/artifact/CPkrUDXM1Ciq7Hktn8t74N |
+
 ## 4. Shared components (UI-0)
 App bar · nav bar / bottom tabs · segmented tabs with badges · list cell (thumb/avatar/initials) · item card + **qty stepper (integer and decimal modes)** · sticky cart summary · status chip · bottom sheet · dialog · snackbar/toast · empty state · skeletons · text field (label/helper/error) · password field (show/hide, strength) · phone field (+91) · FAB · timeline · contact actions (call/WhatsApp) · money + qty formatting.
 

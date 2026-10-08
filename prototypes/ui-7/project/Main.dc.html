@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>DistributeKaro end-to-end</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700;800&amp;family=Anek+Devanagari:wght@500;600;700;800&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+button{cursor:pointer;font-family:inherit}
+button:focus-visible,input:focus-visible,a:focus-visible{outline:3px solid #F2B33D;outline-offset:2px}
+</style>
+</helmet>
+<div style="width: 1520px; height: 1000px; box-sizing: border-box; padding: 28px 40px; font-family: 'Mukta', 'Anek Devanagari', system-ui, sans-serif; {{vars}}; background: var(--board); color: var(--text); display: flex; flex-direction: column; gap: 18px">
+
+  <header style="display: flex; align-items: center; justify-content: space-between; height: 56px; flex: none">
+    <div style="display: flex; align-items: center; gap: 14px">
+      <svg width="44" height="44" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#3730A3"></rect><circle cx="23" cy="38" r="9" fill="none" stroke="#FFFFFF" stroke-width="5"></circle><path d="M32 16V47M40 16V47" stroke="#FFFFFF" stroke-width="5" stroke-linecap="round"></path><path d="M50 27L40 37L51 47" fill="none" stroke="#F2B33D" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"></path></svg>
+      <div style="display: flex; flex-direction: column; line-height: 1.15">
+        <span style="font-size: 13px; font-weight: 700; letter-spacing: 0.08em; color: var(--text2)">UI-7 · END-TO-END</span>
+        <h1 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 30px">{{s.title}}</h1>
+      </div>
+    </div>
+    <div style="display: flex; align-items: center; gap: 10px">
+      <div style="display: flex; border: 1.5px solid var(--outline2); border-radius: 999px; overflow: hidden">
+        <button onClick="{{toEn}}" style="height: 40px; padding: 0 16px; border: 0; font-size: 15px; font-weight: 700; background: {{enBg}}; color: {{enFg}}">English</button>
+        <button onClick="{{toHi}}" style="height: 40px; padding: 0 16px; border: 0; font-size: 15px; font-weight: 700; background: {{hiBg}}; color: {{hiFg}}">हिंदी</button>
+      </div>
+      <button onClick="{{reset}}" style="height: 40px; padding: 0 16px 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-size: 15px; font-weight: 700; display: flex; align-items: center; gap: 6px"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 1 0 2.3-5.6M4 4v5h5"></path></svg>{{s.reset}}</button>
+    </div>
+  </header>
+
+  <div style="flex: 1; min-height: 0; display: flex; gap: 32px; align-items: flex-start">
+
+    <!-- ============================================================ RETAILER PHONE -->
+    <div style="display: flex; flex-direction: column; gap: 8px; flex: none">
+      <span style="font-size: 14px; font-weight: 700; color: var(--text2); display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 5px; background: #F2B33D"></span>{{s.retailerPhone}}</span>
+      <div style="width: 390px; height: 844px; border-radius: 32px; overflow: hidden; position: relative; background: var(--bg); box-shadow: 0 0 0 1px var(--outline), 0 18px 40px rgba(20,18,60,0.14); display: flex; flex-direction: column">
+
+        <sc-if value="{{r.store}}" hint-placeholder-val="{{true}}">
+          <div style="height: 210px; flex: none; position: relative; background: #241F7A; overflow: hidden">
+            <svg width="390" height="210" viewBox="0 0 390 210" aria-hidden="true" style="position: absolute; inset: 0"><defs><pattern id="e2e-jali" width="26" height="26" patternUnits="userSpaceOnUse"><path d="M13 0L26 13L13 26L0 13Z" fill="none" stroke="#332D9C" stroke-width="1.4"></path><circle cx="13" cy="13" r="2" fill="#3A34A8"></circle></pattern></defs><rect width="390" height="210" fill="url(#e2e-jali)"></rect><path d="M0 6Q65 34 130 6Q195 34 260 6Q325 34 390 6" fill="none" stroke="#F2B33D" stroke-width="2"></path><circle cx="40" cy="22" r="7" fill="#F97316"></circle><circle cx="105" cy="26" r="7" fill="#F97316"></circle><circle cx="170" cy="22" r="7" fill="#F97316"></circle><circle cx="235" cy="26" r="7" fill="#F97316"></circle><circle cx="300" cy="22" r="7" fill="#F97316"></circle><circle cx="355" cy="15" r="7" fill="#F97316"></circle></svg>
+            <div style="position: absolute; left: 20px; right: 20px; bottom: 20px; display: flex; flex-direction: column; gap: 6px; color: #FFFFFF">
+              <span style="width: 52px; height: 52px; border-radius: 16px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 19px; display: flex; align-items: center; justify-content: center">SB</span>
+              <span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 28px; line-height: 30px">Shree Balaji Traders</span>
+              <span style="font-size: 14px; color: #D4D1FF">Jaipur's trusted wholesale partner since 1998</span>
+            </div>
+          </div>
+          <div style="flex: 1; overflow-y: auto; padding: 16px; display: flex; flex-direction: column; gap: 10px">
+            <sc-for list="{{r.highlights}}" as="h" hint-placeholder-count="3">
+              <div style="border-radius: 16px; background: var(--surface); padding: 12px 14px; display: flex; gap: 12px; align-items: center"><span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.icon}}"></path></svg></span><span style="display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 700">{{h.title}}</span><span style="font-size: 13px; color: var(--text2)">{{h.text}}</span></span></div>
+            </sc-for>
+          </div>
+          <div style="flex: none; padding: 12px 16px 16px; border-top: 1px solid var(--outline); background: var(--sheet); display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <button onClick="{{rGoPhone}}" style="height: 52px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 800">{{s.orderNow}}</button>
+            <button onClick="{{rGoJoin}}" style="height: 52px; border-radius: 14px; border: 0; background: #F2B33D; color: #2A1A00; font-size: 16px; font-weight: 800">{{s.join}}</button>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{r.join}}" hint-placeholder-val="{{false}}">
+          <div style="height: 60px; flex: none; padding: 0 16px 0 4px; display: flex; align-items: center; gap: 4px"><button onClick="{{rGoStore}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.joinTitle}}</span></div>
+          <div style="flex: 1; overflow-y: auto; padding: 4px 20px 16px; display: flex; flex-direction: column; gap: 14px">
+            <p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--text2)">{{s.joinIntro}}</p>
+            <sc-for list="{{r.joinFields}}" as="f" hint-placeholder-count="4">
+              <label style="display: flex; flex-direction: column"><span style="min-height: 56px; box-sizing: border-box; border-radius: 12px; background: var(--field); padding: 6px 14px; display: flex; flex-direction: column; justify-content: center"><span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{f.label}}</span><input value="{{f.value}}" onChange="{{f.on}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 16px; color: var(--text); outline: none; width: 100%"></span></label>
+            </sc-for>
+          </div>
+          <div style="flex: none; padding: 12px 16px 16px; border-top: 1px solid var(--outline); background: var(--sheet)"><button onClick="{{rSendRequest}}" style="width: 100%; height: 52px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 800">{{s.sendRequest}}</button></div>
+        </sc-if>
+
+        <sc-if value="{{r.joined}}" hint-placeholder-val="{{false}}">
+          <div style="flex: 1; padding: 40px 24px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px">
+            <span style="width: 88px; height: 88px; border-radius: 44px; background: {{r.joinedBg}}; color: {{r.joinedFg}}; display: flex; align-items: center; justify-content: center"><svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{r.joinedIcon}}"></path></svg></span>
+            <h2 role="status" style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 26px">{{r.joinedTitle}}</h2>
+            <p style="margin: 0; font-size: 15px; line-height: 22px; color: var(--text2); max-width: 300px">{{r.joinedSub}}</p>
+          </div>
+          <div style="flex: none; padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px"><button onClick="{{rGoPhone}}" style="height: 52px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 800">{{s.orderNow}}</button><button onClick="{{rGoStore}}" style="height: 46px; border-radius: 14px; border: 1.5px solid var(--outline2); background: transparent; color: var(--primary); font-size: 15px; font-weight: 700">{{s.backStore}}</button></div>
+        </sc-if>
+
+        <sc-if value="{{r.phone}}" hint-placeholder-val="{{false}}">
+          <div style="height: 60px; flex: none; padding: 0 16px 0 4px; display: flex; align-items: center; gap: 4px"><button onClick="{{rGoStore}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button></div>
+          <div style="flex: 1; padding: 8px 20px; display: flex; flex-direction: column; gap: 14px">
+            <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 26px; line-height: 30px">{{s.phoneTitle}}</h2>
+            <label style="display: flex; flex-direction: column; gap: 6px"><span style="font-size: 14px; font-weight: 600">{{s.mobile}}</span><span style="height: 56px; border-radius: 14px; background: var(--field); display: flex; align-items: center; gap: 10px; padding: 0 14px"><span style="font-size: 17px; font-weight: 700; color: var(--text2)">+91</span><input value="{{r.phoneVal}}" onChange="{{rOnPhone}}" inputmode="numeric" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 19px; font-weight: 700; color: var(--text); outline: none"></span></label>
+            <sc-if value="{{r.notReg}}" hint-placeholder-val="{{false}}"><div role="alert" style="border-radius: 14px; padding: 12px 14px; background: var(--warnBg); color: var(--warnFg); font-size: 14px; line-height: 20px; font-weight: 600">{{r.notRegText}}</div></sc-if>
+          </div>
+          <div style="flex: none; padding: 12px 16px 16px"><button onClick="{{rContinue}}" style="width: 100%; height: 52px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 800">{{s.continue}}</button></div>
+        </sc-if>
+
+        <sc-if value="{{r.catalog}}" hint-placeholder-val="{{false}}">
+          <div style="flex: none; padding: 14px 16px 10px; display: flex; align-items: center; gap: 10px"><span style="width: 40px; height: 40px; border-radius: 12px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center">SB</span><span style="flex: 1; display: flex; flex-direction: column; line-height: 20px"><span style="font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 18px">Shree Balaji Traders</span><span style="font-size: 13px; color: var(--text2)">{{s.orderingAs}}</span></span><sc-if value="{{r.hasOrder}}" hint-placeholder-val="{{false}}"><button onClick="{{rGoOrder}}" style="height: 38px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--primary); font-size: 13px; font-weight: 700">{{s.myOrder}}</button></sc-if></div>
+          <div style="flex: 1; overflow-y: auto; padding: 0 16px 10px; display: flex; flex-direction: column; gap: 8px">
+            <sc-for list="{{r.items}}" as="p" hint-placeholder-count="6">
+              <div style="border-radius: 16px; background: var(--surface); padding: 10px; display: flex; gap: 10px; align-items: center">
+                <span style="width: 48px; height: 48px; flex: none; border-radius: 12px; background: {{p.bg}}; color: {{p.fg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 16px; display: flex; align-items: center; justify-content: center">{{p.initials}}</span>
+                <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{p.name}}</span><span style="font-size: 14px; font-weight: 800">{{p.rate}}</span></span>
+                <sc-if value="{{p.empty}}" hint-placeholder-val="{{true}}"><button onClick="{{p.add}}" style="height: 42px; min-width: 70px; padding: 0 12px; border-radius: 12px; border: 1.5px solid var(--primary); background: transparent; color: var(--primary); font-size: 15px; font-weight: 800">{{s.add}}</button></sc-if>
+                <sc-if value="{{p.inCart}}" hint-placeholder-val="{{false}}"><div style="display: flex; align-items: center; height: 42px; border-radius: 12px; background: var(--primary); color: var(--onPrimary)"><button onClick="{{p.dec}}" aria-label="−" style="width: 40px; height: 42px; border: 0; background: transparent; color: inherit; font-size: 20px; font-weight: 800">−</button><span style="min-width: 58px; text-align: center; font-size: 14px; font-weight: 800">{{p.qty}}</span><button onClick="{{p.inc}}" aria-label="+" style="width: 40px; height: 42px; border: 0; background: transparent; color: inherit; font-size: 20px; font-weight: 800">+</button></div></sc-if>
+              </div>
+            </sc-for>
+          </div>
+          <sc-if value="{{r.hasCart}}" hint-placeholder-val="{{false}}">
+            <div style="flex: none; margin: 0 12px 12px; min-height: 58px; border-radius: 16px; background: var(--inv); color: var(--onInv); display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 8px 6px 16px; box-sizing: border-box"><span style="display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 13px; opacity: 0.85">{{r.cartCount}}</span><span style="font-size: 17px; font-weight: 800">{{r.cartTotal}}</span></span><button onClick="{{rPlace}}" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: #F2B33D; color: #2A1A00; font-size: 15px; font-weight: 800">{{s.place}}</button></div>
+          </sc-if>
+        </sc-if>
+
+        <sc-if value="{{r.order}}" hint-placeholder-val="{{false}}">
+          <div style="height: 60px; flex: none; padding: 0 16px 0 4px; display: flex; align-items: center; gap: 4px"><button onClick="{{rGoCatalog}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button><span style="flex: 1; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.order}} #1041</span><span style="height: 28px; padding: 0 10px; border-radius: 999px; font-size: 13px; font-weight: 700; display: inline-flex; align-items: center; background: {{ord.rChipBg}}; color: {{ord.rChipFg}}">{{ord.rStatus}}</span></div>
+          <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px">
+            <sc-if value="{{r.justPlaced}}" hint-placeholder-val="{{false}}"><div role="status" style="border-radius: 14px; padding: 12px 14px; background: var(--successBg); color: var(--successFg); font-size: 14px; font-weight: 700">{{s.placedBanner}}</div></sc-if>
+            <section style="border-radius: 16px; background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column">
+              <sc-for list="{{ord.steps}}" as="sp" hint-placeholder-count="4">
+                <div style="display: flex; gap: 12px"><div style="display: flex; flex-direction: column; align-items: center; width: 16px"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 7px; margin-top: 3px; background: {{sp.dot}}; border: 2px solid {{sp.ring}}"></span><sc-if value="{{sp.hasLine}}" hint-placeholder-val="{{true}}"><span style="width: 2px; flex: 1; min-height: 14px; background: var(--outline)"></span></sc-if></div><span style="font-size: 15px; font-weight: 700; padding-bottom: 10px; color: {{sp.fg}}">{{sp.label}}</span></div>
+              </sc-for>
+            </section>
+            <sc-for list="{{ord.rLines}}" as="l" hint-placeholder-count="3">
+              <div style="border-radius: 14px; background: var(--surface); border: 1.5px solid {{l.border}}; padding: 10px 12px; display: flex; flex-direction: column; gap: 3px"><span style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 15px; font-weight: 600">{{l.name}}</span><span style="font-size: 15px; font-weight: 800">{{l.amount}}</span></span><span style="display: flex; gap: 8px; font-size: 14px"><span style="color: var(--text2); text-decoration: {{l.strike}}">{{l.asked}}</span><sc-if value="{{l.decided}}" hint-placeholder-val="{{false}}"><span style="color: var(--text2)">→</span><span style="font-weight: 800; color: {{l.accFg}}">{{l.acc}}</span></sc-if></span></div>
+            </sc-for>
+            <section style="border-radius: 14px; background: var(--surface); padding: 12px 14px; display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 15px; font-weight: 700">{{ord.totalLabel}}</span><span style="font-size: 20px; font-weight: 800">{{ord.total}}</span></section>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{rToast.show}}" hint-placeholder-val="{{false}}"><div role="status" style="position: absolute; left: 12px; right: 12px; top: 12px; min-height: 46px; padding: 10px 14px; box-sizing: border-box; border-radius: 14px; background: var(--inv); color: var(--onInv); font-size: 14px; font-weight: 600; display: flex; align-items: center; box-shadow: 0 8px 24px rgba(20,18,60,0.25)">{{rToast.text}}</div></sc-if>
+      </div>
+    </div>
+
+    <!-- ============================================================ STORY PANEL -->
+    <section style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 14px; padding-top: 28px">
+      <div style="border-radius: 24px; background: var(--sheet); padding: 18px 20px; display: flex; flex-direction: column; gap: 4px; box-shadow: 0 0 0 1px var(--outline)">
+        <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.06em; color: var(--primary)">{{s.storyLabel}}</span>
+        <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px; line-height: 26px">{{s.storyTitle}}</span>
+        <span style="font-size: 14px; color: var(--text2)">{{story.progress}}</span>
+        <span style="margin-top: 6px; height: 8px; border-radius: 4px; background: var(--field); overflow: hidden"><span style="display: block; height: 8px; border-radius: 4px; background: #F2B33D; width: {{story.pct}}"></span></span>
+      </div>
+      <ol style="margin: 0; padding: 0; list-style: none; display: flex; flex-direction: column; gap: 6px">
+        <sc-for list="{{story.steps}}" as="st" hint-placeholder-count="7">
+          <li style="border-radius: 16px; padding: 10px 14px; background: {{st.bg}}; box-shadow: 0 0 0 {{st.ringW}} var(--primary); display: flex; gap: 12px; align-items: flex-start">
+            <span style="width: 30px; height: 30px; flex: none; border-radius: 15px; background: {{st.dotBg}}; color: {{st.dotFg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center">
+              <sc-if value="{{st.done}}" hint-placeholder-val="{{false}}"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+              <sc-if value="{{st.todo}}" hint-placeholder-val="{{true}}">{{st.n}}</sc-if>
+            </span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; gap: 2px; line-height: 19px">
+              <span style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap"><span style="height: 22px; padding: 0 8px; border-radius: 6px; font-size: 11px; font-weight: 800; letter-spacing: 0.04em; display: inline-flex; align-items: center; background: {{st.whoBg}}; color: {{st.whoFg}}">{{st.who}}</span><span style="font-size: 15px; font-weight: 700; color: {{st.fg}}">{{st.title}}</span></span>
+              <sc-if value="{{st.current}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--text2)">{{st.hint}}</span></sc-if>
+            </span>
+          </li>
+        </sc-for>
+      </ol>
+      <div style="border-radius: 20px; background: var(--sheet); padding: 14px 16px; box-shadow: 0 0 0 1px var(--outline); display: flex; flex-direction: column; gap: 8px">
+        <span style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 13px; font-weight: 800; letter-spacing: 0.06em; color: var(--text2)">{{s.liveStock}}</span><span style="font-size: 12px; color: var(--text2)">{{s.liveStockSub}}</span></span>
+        <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 6px">
+          <sc-for list="{{story.stock}}" as="k" hint-placeholder-count="6">
+            <span style="border-radius: 12px; padding: 8px 10px; background: {{k.bg}}; display: flex; flex-direction: column; line-height: 17px"><span style="font-size: 12px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{k.name}}</span><span style="font-size: 15px; font-weight: 800; color: {{k.fg}}">{{k.qty}}</span></span>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================ DISTRIBUTOR PHONE -->
+    <div style="display: flex; flex-direction: column; gap: 8px; flex: none">
+      <span style="font-size: 14px; font-weight: 700; color: var(--text2); display: flex; align-items: center; gap: 8px"><span style="width: 10px; height: 10px; border-radius: 5px; background: #3730A3"></span>{{s.distributorPhone}}</span>
+      <div style="width: 360px; height: 800px; border-radius: 28px; overflow: hidden; position: relative; background: var(--bg); box-shadow: 0 0 0 1px var(--outline), 0 18px 40px rgba(20,18,60,0.14); display: flex; flex-direction: column">
+
+        <sc-if value="{{d.home}}" hint-placeholder-val="{{true}}">
+          <div style="height: 60px; flex: none; padding: 0 16px; display: flex; align-items: center; gap: 10px"><span style="width: 38px; height: 38px; border-radius: 12px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 14px; display: flex; align-items: center; justify-content: center">SB</span><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 19px">{{s.greet}}</span></div>
+          <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px">
+            <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+              <button onClick="{{dGoOrders}}" style="text-align: left; border: 0; border-radius: 18px; background: {{d.pendBg}}; color: {{d.pendFg}}; padding: 14px; display: flex; flex-direction: column; gap: 6px; min-height: 104px"><span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 32px; line-height: 32px">{{d.pendingN}}</span><span style="font-size: 14px; font-weight: 700">{{s.pendingOrders}}</span></button>
+              <button onClick="{{dGoRequests}}" style="text-align: left; border: 0; border-radius: 18px; background: var(--pc); color: var(--opc); padding: 14px; display: flex; flex-direction: column; gap: 6px; min-height: 104px"><span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 32px; line-height: 32px">{{d.reqN}}</span><span style="font-size: 14px; font-weight: 700">{{s.joinRequests}}</span></button>
+            </div>
+            <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--text2)">{{s.activity}}</span>
+            <div style="border-radius: 18px; background: var(--surface); overflow: hidden">
+              <sc-for list="{{d.activity}}" as="a" hint-placeholder-count="3"><div style="padding: 10px 14px; border-bottom: 1px solid var(--outline); font-size: 14px; line-height: 19px; display: flex; gap: 10px; align-items: flex-start"><span style="width: 8px; height: 8px; flex: none; margin-top: 6px; border-radius: 4px; background: {{a.dot}}"></span>{{a.text}}</div></sc-for>
+              <sc-if value="{{d.noActivity}}" hint-placeholder-val="{{false}}"><div style="padding: 14px; font-size: 14px; color: var(--text2)">{{s.noActivity}}</div></sc-if>
+            </div>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{d.requests}}" hint-placeholder-val="{{false}}">
+          <div style="height: 60px; flex: none; padding: 0 16px; display: flex; align-items: center"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px">{{s.joinRequests}}</span></div>
+          <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px">
+            <sc-if value="{{d.hasReq}}" hint-placeholder-val="{{false}}">
+              <div style="border-radius: 20px; background: var(--surface); padding: 14px; display: flex; flex-direction: column; gap: 10px">
+                <span style="display: flex; justify-content: space-between; gap: 8px"><span style="display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 16px; font-weight: 700">{{d.req.shop}}</span><span style="font-size: 14px; color: var(--text2)">{{d.req.name}} · +91 {{d.req.phone}}</span><span style="font-size: 13px; color: var(--text2)">{{d.req.area}}</span></span><span style="height: 24px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; background: {{d.req.chipBg}}; color: {{d.req.chipFg}}">{{d.req.status}}</span></span>
+                <sc-if value="{{d.req.pending}}" hint-placeholder-val="{{true}}"><div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px"><button onClick="{{dReject}}" style="height: 44px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-size: 14px; font-weight: 700">{{s.reject}}</button><button onClick="{{dApprove}}" style="height: 44px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 14px; font-weight: 700">{{s.approve}}</button></div></sc-if>
+              </div>
+            </sc-if>
+            <sc-if value="{{d.noReq}}" hint-placeholder-val="{{true}}"><div style="padding: 40px 12px; text-align: center; font-size: 15px; color: var(--text2)">{{s.noRequests}}</div></sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{d.orders}}" hint-placeholder-val="{{false}}">
+          <div style="height: 60px; flex: none; padding: 0 16px; display: flex; align-items: center"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px">{{s.orders}}</span></div>
+          <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 10px">
+            <sc-if value="{{d.hasOrder}}" hint-placeholder-val="{{false}}">
+              <button onClick="{{dOpenOrder}}" style="text-align: left; border: 0; border-radius: 20px; background: var(--surface); color: var(--text); padding: 14px; display: flex; flex-direction: column; gap: 6px">
+                <span style="display: flex; justify-content: space-between"><span style="font-size: 14px; font-weight: 700; color: var(--text2)">#1041</span><span style="height: 24px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; background: {{ord.dChipBg}}; color: {{ord.dChipFg}}">{{ord.dStatus}}</span></span>
+                <span style="font-size: 16px; font-weight: 700">Saini Kirana &amp; General</span>
+                <span style="display: flex; justify-content: space-between; gap: 8px; font-size: 14px"><sc-if value="{{ord.short}}" hint-placeholder-val="{{false}}"><span style="height: 22px; padding: 0 8px; border-radius: 6px; background: var(--dangerBg); color: var(--dangerFg); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center">{{s.shortStock}}</span></sc-if><span style="margin-left: auto; font-weight: 800">{{ord.total}}</span></span>
+              </button>
+            </sc-if>
+            <sc-if value="{{d.noOrder}}" hint-placeholder-val="{{true}}"><div style="padding: 40px 12px; text-align: center; font-size: 15px; color: var(--text2)">{{s.noOrders}}</div></sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{d.order}}" hint-placeholder-val="{{false}}">
+          <div style="height: 60px; flex: none; padding: 0 16px 0 4px; display: flex; align-items: center; gap: 4px"><button onClick="{{dGoOrders}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"></path></svg></button><span style="flex: 1; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 19px">#1041 · Saini Kirana</span><span style="height: 26px; padding: 0 9px; border-radius: 999px; font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; background: {{ord.dChipBg}}; color: {{ord.dChipFg}}">{{ord.dStatus}}</span></div>
+          <div style="flex: 1; overflow-y: auto; padding: 0 16px 12px; display: flex; flex-direction: column; gap: 8px">
+            <sc-for list="{{ord.dLines}}" as="l" hint-placeholder-count="3">
+              <div style="border-radius: 16px; background: var(--surface); border: 1.5px solid {{l.border}}; padding: 10px 12px; display: flex; flex-direction: column; gap: 6px">
+                <span style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 15px; font-weight: 700">{{l.name}}</span><span style="font-size: 15px; font-weight: 800">{{l.amount}}</span></span>
+                <span style="display: flex; justify-content: space-between; gap: 8px; font-size: 13px"><span style="color: var(--text2)">{{l.asked}}</span><sc-if value="{{l.showStock}}" hint-placeholder-val="{{true}}"><span style="font-weight: 700; color: {{l.stockFg}}">{{l.stockText}}</span></sc-if><sc-if value="{{l.decided}}" hint-placeholder-val="{{false}}"><span style="font-weight: 800; color: {{l.accFg}}">→ {{l.acc}}</span></sc-if></span>
+                <sc-if value="{{l.editing}}" hint-placeholder-val="{{false}}">
+                  <div style="display: flex; align-items: center; gap: 6px"><button onClick="{{l.dec}}" aria-label="−" style="width: 42px; height: 42px; border-radius: 12px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-size: 20px; font-weight: 800">−</button><span style="flex: 1; height: 42px; border-radius: 12px; background: var(--field); display: flex; align-items: center; justify-content: center; font-size: 16px; font-weight: 800">{{l.editVal}}</span><button onClick="{{l.inc}}" aria-label="+" style="width: 42px; height: 42px; border-radius: 12px; border: 0; background: {{l.incBg}}; color: {{l.incFg}}; font-size: 20px; font-weight: 800">+</button><button onClick="{{l.max}}" style="height: 42px; padding: 0 8px; border: 0; background: transparent; color: var(--primary); font-size: 13px; font-weight: 800">{{s.max}}</button></div>
+                </sc-if>
+              </div>
+            </sc-for>
+            <section style="border-radius: 14px; background: var(--surface); padding: 10px 14px; display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 14px; font-weight: 700">{{ord.dTotalLabel}}</span><span style="font-size: 19px; font-weight: 800">{{ord.dTotal}}</span></section>
+          </div>
+          <div style="flex: none; padding: 10px 16px 16px; background: var(--sheet); border-top: 1px solid var(--outline); display: flex; flex-direction: column; gap: 8px">
+            <sc-if value="{{ord.canDecide}}" hint-placeholder-val="{{true}}">
+              <sc-if value="{{ord.short}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; font-weight: 600; color: var(--dangerFg)">{{s.shortHint}}</span></sc-if>
+              <div style="display: grid; grid-template-columns: 1fr 1fr 1.3fr; gap: 8px"><button onClick="{{dRejectOrder}}" style="height: 46px; border-radius: 999px; border: 1.5px solid var(--danger); background: transparent; color: var(--danger); font-size: 14px; font-weight: 700">{{s.reject}}</button><button onClick="{{dPartial}}" style="height: 46px; border-radius: 999px; border: 0; background: var(--pc); color: var(--opc); font-size: 14px; font-weight: 700">{{s.partial}}</button><button onClick="{{dAcceptAll}}" style="height: 46px; border-radius: 999px; border: 0; background: {{ord.allBg}}; color: {{ord.allFg}}; font-size: 14px; font-weight: 700">{{s.acceptAll}}</button></div>
+            </sc-if>
+            <sc-if value="{{ord.editing}}" hint-placeholder-val="{{false}}"><button onClick="{{dConfirmPartial}}" style="height: 50px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 15px; font-weight: 800">{{ord.confirmLabel}}</button></sc-if>
+            <sc-if value="{{ord.canDispatch}}" hint-placeholder-val="{{false}}"><button onClick="{{dDispatch}}" style="height: 50px; border-radius: 999px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 15px; font-weight: 800">{{s.markDispatched}}</button></sc-if>
+            <sc-if value="{{ord.canDeliver}}" hint-placeholder-val="{{false}}"><button onClick="{{dDeliver}}" style="height: 50px; border-radius: 999px; border: 0; background: var(--success); color: var(--onSuccess); font-size: 15px; font-weight: 800">{{s.markDelivered}}</button></sc-if>
+            <sc-if value="{{ord.finished}}" hint-placeholder-val="{{false}}"><span style="text-align: center; font-size: 14px; font-weight: 700; color: var(--successFg)">{{ord.finishedText}}</span></sc-if>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{d.showNav}}" hint-placeholder-val="{{true}}">
+          <nav style="height: 72px; flex: none; background: var(--navBg); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: center">
+            <sc-for list="{{d.nav}}" as="n" hint-placeholder-count="3">
+              <button onClick="{{n.pick}}" aria-current="{{n.current}}" style="border: 0; background: transparent; height: 60px; display: flex; flex-direction: column; align-items: center; gap: 3px; color: {{n.fg}}">
+                <span style="position: relative; width: 56px; height: 30px; border-radius: 15px; background: {{n.pill}}; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{n.icon}}"></path></svg><sc-if value="{{n.hasBadge}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: -2px; right: 8px; min-width: 16px; height: 16px; padding: 0 4px; box-sizing: border-box; border-radius: 8px; background: var(--danger); color: var(--onDanger); font-size: 11px; font-weight: 700; line-height: 16px; text-align: center">{{n.badge}}</span></sc-if></span>
+                <span style="font-size: 12px; font-weight: 700">{{n.label}}</span>
+              </button>
+            </sc-for>
+          </nav>
+        </sc-if>
+
+        <sc-if value="{{dToast.show}}" hint-placeholder-val="{{false}}"><div role="status" style="position: absolute; left: 12px; right: 12px; top: 12px; min-height: 48px; padding: 10px 14px; box-sizing: border-box; border-radius: 12px; background: var(--inv); color: var(--onInv); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(20,18,60,0.3)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#F2B33D" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M6 8a6 6 0 1 1 12 0c0 7 3 9 3 9H3s3-2 3-9M10 21h4"></path></svg>{{dToast.text}}</div></sc-if>
+      </div>
+    </div>
+  </div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"$preview":{"width":1520,"height":1000}}'>
+class Component extends DCLogic {
+  constructor(props) { super(props); this.state = this.fresh(); }
+  fresh() {
+    return { lang: 'en', r: 'store', d: 'home', join: { name: 'Deepak Saini', shop: 'Saini Kirana & General', phone: '9828077777', area: 'Pratap Nagar' },
+      request: null, approved: false, rejected: false, phone: '9828077777', notReg: false, logged: false,
+      stock: [120000, 850500, 6500, 320000, 85000, 48000], cart: {}, order: null, editing: null, seen: false, justPlaced: false,
+      activity: [], rToast: null, dToast: null };
+  }
+  toM(q) { const [a, b = ''] = String(q).split('.'); return parseInt(a || '0', 10) * 1000 + parseInt((b + '000').slice(0, 3), 10); }
+  fq(m) { const s = `${Math.floor(m / 1000)}.${String(m % 1000).padStart(3, '0')}`.replace(/\.?0+$/, ''); return s || '0'; }
+  componentWillUnmount() { clearTimeout(this.rT); clearTimeout(this.dT); }
+  rToast(text) { clearTimeout(this.rT); this.setState({ rToast: text }); this.rT = setTimeout(() => this.setState({ rToast: null }), 3200); }
+  dToast(text) { clearTimeout(this.dT); this.setState({ dToast: text }); this.dT = setTimeout(() => this.setState({ dToast: null }), 3200); }
+  log(text, dot) { return [{ text, dot }, ...this.state.activity].slice(0, 6); }
+
+  renderVals() {
+    const st = this.state;
+    const dark = this.props.dark ?? false;
+    const lang = st.lang;
+    const L = { board: '#E4E3EE', bg: '#F7F6FC', surface: '#EEEDF8', field: '#E3E2F1', sheet: '#FFFFFF', outline: '#DCDBEA', outline2: '#8F8EA8', navBg: '#EAE9F5',
+      text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF', pc: '#E4E2FB', opc: '#1E1B4B', success: '#15803D', onSuccess: '#FFFFFF',
+      danger: '#B91C1C', onDanger: '#FFFFFF', dangerBg: '#FEE2E2', dangerFg: '#991B1B', warnBg: '#FEF3C7', warnFg: '#92400E', successBg: '#DCFCE7', successFg: '#166534',
+      inv: '#1E1B4B', onInv: '#F2F1FA', disabled: '#D3D2E3', onDisabled: '#6B6A85' };
+    const D = { board: '#05050B', bg: '#0E0D1A', surface: '#1A1930', field: '#24223F', sheet: '#16152B', outline: '#2C2A45', outline2: '#7C7A99', navBg: '#16152B',
+      text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760', pc: '#2E2A78', opc: '#E4E2FB', success: '#4ADE80', onSuccess: '#052E16',
+      danger: '#F87171', onDanger: '#2A0606', dangerBg: '#450A0A', dangerFg: '#FCA5A5', warnBg: '#422006', warnFg: '#FCD34D', successBg: '#052E16', successFg: '#86EFAC',
+      inv: '#EEEDF7', onInv: '#16152B', disabled: '#2C2A45', onDisabled: '#8E8CA8' };
+    const vars = Object.entries(dark ? D : L).map(([k, v]) => `--${k}: ${v}`).join('; ');
+    const T = {
+      en: {
+        title: 'One order, both apps', reset: 'Reset demo', retailerPhone: 'Retailer · phone browser (PWA)', distributorPhone: 'Distributor · Android app', back: 'Back',
+        orderNow: 'Order now', join: 'Join as retailer', joinTitle: 'Request to get added', joinIntro: 'Shree Balaji Traders will check your details and add you.',
+        fields: ['Your name', 'Shop name', 'Mobile number', 'Area or landmark'], sendRequest: 'Send request',
+        sentTitle: 'Request sent', sentSub: 'Shree Balaji Traders will add you. Then tap Order now and enter this number.',
+        approvedTitle: "You're added!", approvedSub: 'You can order now with +91 98280 77777.', rejectedTitle: 'Request not approved', rejectedSub: 'Contact Shree Balaji Traders for details.', backStore: 'Back to storefront',
+        phoneTitle: 'Enter your mobile number', mobile: 'Mobile number', continue: 'Continue',
+        notReg: 'This number is not on the retailer list yet. Your request is waiting for approval.', notRegNone: 'This number is not on the retailer list. Send a join request first.',
+        orderingAs: 'Ordering as Saini Kirana & General', myOrder: 'My order', add: 'Add', place: 'Place order', items: (n) => `${n} item${n === 1 ? '' : 's'}`,
+        order: 'Order', placedBanner: 'Order placed. The distributor will confirm quantities.',
+        rStatus: { PENDING: 'Waiting', ACCEPTED: 'Confirmed', PARTIALLY_ACCEPTED: 'Partly confirmed', REJECTED: 'Not accepted', DISPATCHED: 'On the way', DELIVERED: 'Delivered' },
+        dStatus: { PENDING: 'Pending', ACCEPTED: 'Accepted', PARTIALLY_ACCEPTED: 'Partially accepted', REJECTED: 'Rejected', DISPATCHED: 'Dispatched', DELIVERED: 'Delivered' },
+        rSteps: ['Order placed', 'Confirmed by distributor', 'On the way', 'Delivered'], estTotal: 'Estimated total', finalTotal: 'Final amount',
+        greet: 'Namaste, Ramesh', pendingOrders: 'Pending orders', joinRequests: 'Join requests', activity: 'ACTIVITY', noActivity: 'Nothing new yet. Waiting for retailers…',
+        reject: 'Reject', approve: 'Approve', noRequests: 'No join requests', reqStatus: { PENDING: 'Pending', APPROVED: 'Approved', REJECTED: 'Rejected' },
+        orders: 'Orders', noOrders: 'No orders yet', shortStock: 'Short on stock', partial: 'Partial', acceptAll: 'Accept all', max: 'Max',
+        shortHint: 'Not enough Toor Dal. Use Partial to accept what you have.', confirmPartial: 'Confirm partial', confirmAll: 'Accept all',
+        markDispatched: 'Mark as dispatched', markDelivered: 'Mark as delivered', delivered: 'Delivered. Order complete.', rejectedOrder: 'Order rejected.',
+        reqTotal: 'Requested', accTotal: 'Accepted total', inStock: (q) => `${q} in stock`, onlyStock: (q) => `Only ${q} in stock`,
+        nav: ['Home', 'Requests', 'Orders'],
+        toastReq: 'New join request · Saini Kirana & General', toastOrder: (a) => `New order #1041 · Saini Kirana · ${a}`, toastApproved: 'Approved. Saini Kirana can order now',
+        toastDecided: (s) => `Order #1041 ${s}`, toastStock: 'Stock updated',
+        actReq: 'Join request from Saini Kirana & General', actApproved: 'You added Saini Kirana as a retailer', actOrder: (a) => `Order #1041 received · ${a}`,
+        actDecided: (s) => `You ${s} order #1041 · stock updated`, actDispatched: 'Order #1041 dispatched', actDelivered: 'Order #1041 delivered',
+        storyLabel: 'FOLLOW THE STORY', storyTitle: 'A new shop joins, orders, and gets a partial delivery', progress: (n) => `${n} of 7 steps done`,
+        who: { R: 'RETAILER', D: 'DISTRIBUTOR' },
+        steps: [
+          ['R', 'Scan the QR and send a join request', 'Left phone: tap "Join as retailer", then "Send request".'],
+          ['D', 'Approve the join request', 'Right phone: open Requests, tap Approve.'],
+          ['R', 'Log in with the mobile number', 'Left phone: "Order now", then Continue.'],
+          ['R', 'Add items and place the order', 'Tip: add 10 kg of Toor Dal. Only 6.5 kg is in stock.'],
+          ['D', 'Accept the order (partially if short)', 'Right phone: Orders → #1041 → Partial → Confirm.'],
+          ['R', 'See what was confirmed', 'Left phone: My order shows asked → confirmed.'],
+          ['D', 'Dispatch, then deliver', 'Right phone: Mark as dispatched, then delivered.'],
+        ],
+        liveStock: 'LIVE STOCK (DISTRIBUTOR ONLY)', liveStockSub: 'Drops when an order is accepted',
+        decidedWord: { ACCEPTED: 'accepted', PARTIALLY_ACCEPTED: 'partially accepted', REJECTED: 'rejected' },
+        hl: [['Same-day delivery', 'Order by 2 PM, get it today'], ['7-day credit', 'For regular retailers'], ['Order from your phone', 'No calls, no notebooks']],
+        units: { PACK: 'pack', KG: 'kg', L: 'L', DOZEN: 'dozen', PCS: 'pcs' },
+      },
+      hi: {
+        title: 'एक ऑर्डर, दोनों ऐप', reset: 'डेमो रीसेट करें', retailerPhone: 'रिटेलर · फ़ोन ब्राउज़र (PWA)', distributorPhone: 'डिस्ट्रीब्यूटर · Android ऐप', back: 'वापस',
+        orderNow: 'ऑर्डर करें', join: 'रिटेलर बनें', joinTitle: 'जुड़ने का अनुरोध', joinIntro: 'Shree Balaji Traders आपकी जानकारी देखकर आपको जोड़ेंगे।',
+        fields: ['आपका नाम', 'दुकान का नाम', 'मोबाइल नंबर', 'इलाका या लैंडमार्क'], sendRequest: 'अनुरोध भेजें',
+        sentTitle: 'अनुरोध भेज दिया गया', sentSub: 'Shree Balaji Traders आपको जोड़ेंगे। फिर "ऑर्डर करें" दबाकर यही नंबर डालें।',
+        approvedTitle: 'आप जुड़ गए!', approvedSub: 'अब +91 98280 77777 से ऑर्डर कर सकते हैं।', rejectedTitle: 'अनुरोध मंज़ूर नहीं हुआ', rejectedSub: 'जानकारी के लिए Shree Balaji Traders से संपर्क करें।', backStore: 'स्टोर पर वापस',
+        phoneTitle: 'अपना मोबाइल नंबर डालें', mobile: 'मोबाइल नंबर', continue: 'आगे बढ़ें',
+        notReg: 'यह नंबर अभी रिटेलर लिस्ट में नहीं है। आपका अनुरोध मंज़ूरी का इंतज़ार कर रहा है।', notRegNone: 'यह नंबर रिटेलर लिस्ट में नहीं है। पहले जुड़ने का अनुरोध भेजें।',
+        orderingAs: 'Saini Kirana & General के रूप में ऑर्डर', myOrder: 'मेरा ऑर्डर', add: 'जोड़ें', place: 'ऑर्डर करें', items: (n) => `${n} आइटम`,
+        order: 'ऑर्डर', placedBanner: 'ऑर्डर हो गया। डिस्ट्रीब्यूटर मात्रा कन्फ़र्म करेंगे।',
+        rStatus: { PENDING: 'इंतज़ार', ACCEPTED: 'कन्फ़र्म', PARTIALLY_ACCEPTED: 'आंशिक कन्फ़र्म', REJECTED: 'स्वीकार नहीं', DISPATCHED: 'रास्ते में', DELIVERED: 'डिलीवर' },
+        dStatus: { PENDING: 'लंबित', ACCEPTED: 'स्वीकार', PARTIALLY_ACCEPTED: 'आंशिक स्वीकार', REJECTED: 'अस्वीकार', DISPATCHED: 'भेजा गया', DELIVERED: 'डिलीवर' },
+        rSteps: ['ऑर्डर दिया', 'डिस्ट्रीब्यूटर ने कन्फ़र्म किया', 'रास्ते में', 'डिलीवर हुआ'], estTotal: 'अनुमानित कुल', finalTotal: 'अंतिम रकम',
+        greet: 'नमस्ते, रमेश', pendingOrders: 'लंबित ऑर्डर', joinRequests: 'जुड़ने के अनुरोध', activity: 'गतिविधि', noActivity: 'अभी कुछ नया नहीं। रिटेलर का इंतज़ार…',
+        reject: 'अस्वीकार', approve: 'मंज़ूर करें', noRequests: 'कोई अनुरोध नहीं', reqStatus: { PENDING: 'लंबित', APPROVED: 'मंज़ूर', REJECTED: 'अस्वीकार' },
+        orders: 'ऑर्डर', noOrders: 'अभी कोई ऑर्डर नहीं', shortStock: 'स्टॉक कम', partial: 'आंशिक', acceptAll: 'सब स्वीकार', max: 'पूरा',
+        shortHint: 'तूर दाल का स्टॉक कम है। जितना है उतना \'आंशिक\' से स्वीकार करें।', confirmPartial: 'आंशिक कन्फ़र्म करें', confirmAll: 'सब स्वीकार करें',
+        markDispatched: 'भेजा गया मार्क करें', markDelivered: 'डिलीवर मार्क करें', delivered: 'डिलीवर हो गया। ऑर्डर पूरा।', rejectedOrder: 'ऑर्डर अस्वीकार किया।',
+        reqTotal: 'माँगा गया', accTotal: 'कुल स्वीकार', inStock: (q) => `${q} स्टॉक में`, onlyStock: (q) => `सिर्फ़ ${q} स्टॉक में`,
+        nav: ['होम', 'अनुरोध', 'ऑर्डर'],
+        toastReq: 'नया अनुरोध · Saini Kirana & General', toastOrder: (a) => `नया ऑर्डर #1041 · Saini Kirana · ${a}`, toastApproved: 'मंज़ूर। Saini Kirana अब ऑर्डर कर सकते हैं',
+        toastDecided: (s) => `ऑर्डर #1041 ${s}`, toastStock: 'स्टॉक अपडेट',
+        actReq: 'Saini Kirana & General का जुड़ने का अनुरोध', actApproved: 'आपने Saini Kirana को रिटेलर बनाया', actOrder: (a) => `ऑर्डर #1041 मिला · ${a}`,
+        actDecided: (s) => `आपने ऑर्डर #1041 ${s} किया · स्टॉक अपडेट`, actDispatched: 'ऑर्डर #1041 भेजा गया', actDelivered: 'ऑर्डर #1041 डिलीवर हुआ',
+        storyLabel: 'कहानी देखें', storyTitle: 'नई दुकान जुड़ती है, ऑर्डर करती है और आंशिक डिलीवरी पाती है', progress: (n) => `7 में से ${n} कदम पूरे`,
+        who: { R: 'रिटेलर', D: 'डिस्ट्रीब्यूटर' },
+        steps: [
+          ['R', 'QR स्कैन करें और जुड़ने का अनुरोध भेजें', 'बायाँ फ़ोन: "रिटेलर बनें", फिर "अनुरोध भेजें"।'],
+          ['D', 'अनुरोध मंज़ूर करें', 'दायाँ फ़ोन: अनुरोध खोलें, "मंज़ूर करें" दबाएँ।'],
+          ['R', 'मोबाइल नंबर से लॉग इन करें', 'बायाँ फ़ोन: "ऑर्डर करें", फिर "आगे बढ़ें"।'],
+          ['R', 'आइटम जोड़ें और ऑर्डर करें', 'सुझाव: 10 किलो तूर दाल जोड़ें। स्टॉक में सिर्फ़ 6.5 किलो है।'],
+          ['D', 'ऑर्डर स्वीकार करें (कम हो तो आंशिक)', 'दायाँ फ़ोन: ऑर्डर → #1041 → आंशिक → कन्फ़र्म।'],
+          ['R', 'देखें क्या कन्फ़र्म हुआ', 'बायाँ फ़ोन: "मेरा ऑर्डर" में माँगा → कन्फ़र्म दिखेगा।'],
+          ['D', 'भेजें, फिर डिलीवर करें', 'दायाँ फ़ोन: भेजा गया, फिर डिलीवर मार्क करें।'],
+        ],
+        liveStock: 'लाइव स्टॉक (सिर्फ़ डिस्ट्रीब्यूटर)', liveStockSub: 'ऑर्डर स्वीकार होने पर घटता है',
+        decidedWord: { ACCEPTED: 'स्वीकार', PARTIALLY_ACCEPTED: 'आंशिक स्वीकार', REJECTED: 'अस्वीकार' },
+        hl: [['आज ही डिलीवरी', '2 बजे तक ऑर्डर, आज ही माल'], ['7 दिन का उधार', 'नियमित रिटेलर के लिए'], ['फ़ोन से ऑर्डर', 'न कॉल, न कॉपी']],
+        units: { PACK: 'पैक', KG: 'किलो', L: 'लीटर', DOZEN: 'दर्जन', PCS: 'पीस' },
+      },
+    };
+    const t = T[lang];
+    const ITEMS = [['Aashirvaad Atta 10 kg', 'PACK', 46500, 'At', 0], ['Sugar (loose)', 'KG', 4250, 'Su', 0], ['Toor Dal', 'KG', 13800, 'TD', 2], ['Fortune Sunflower Oil', 'L', 15500, 'FO', 1], ['Maggi Noodles 70 g', 'DOZEN', 16800, 'Mg', 3], ['Amul Butter 500 g', 'PCS', 27500, 'AB', 2]];
+    const TINT = dark ? [['#2E2A78', '#E4E2FB'], ['#3A2A08', '#F7CF7A'], ['#0B3B36', '#99F6E4'], ['#4C0519', '#FDA4AF']] : [['#E4E2FB', '#1E1B4B'], ['#FDF0D5', '#7A4A00'], ['#D5F2EE', '#115E59'], ['#FBE3E8', '#9F1239']];
+    const STEP = {};
+    const inr = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(p / 100);
+    const pay = (rate, m) => Math.floor((rate * m + 500) / 1000);
+    const q = (m, u) => `${this.fq(m)} ${t.units[u]}`;
+    const CH = { PENDING: ['#FEF3C7', '#92400E', '#422006', '#FCD34D'], ACCEPTED: ['#DCFCE7', '#166534', '#052E16', '#86EFAC'], PARTIALLY_ACCEPTED: ['#CCFBF1', '#115E59', '#042F2E', '#5EEAD4'],
+      REJECTED: ['#FEE2E2', '#991B1B', '#450A0A', '#FCA5A5'], DISPATCHED: ['#DBEAFE', '#1E40AF', '#172554', '#93C5FD'], DELIVERED: ['#065F46', '#FFFFFF', '#34D399', '#022C22'], APPROVED: ['#DCFCE7', '#166534', '#052E16', '#86EFAC'] };
+    const chipBg = (s) => (dark ? CH[s][2] : CH[s][0]); const chipFg = (s) => (dark ? CH[s][3] : CH[s][1]);
+
+    // ---------- retailer phone
+    const cartIds = Object.keys(st.cart).map(Number);
+    const cartTotal = cartIds.reduce((s, i) => s + pay(ITEMS[i][2], st.cart[i]), 0);
+    const reqStatus = st.request ? (st.approved ? 'APPROVED' : st.rejected ? 'REJECTED' : 'PENDING') : null;
+    const r = {
+      store: st.r === 'store', join: st.r === 'join', joined: st.r === 'joined', phone: st.r === 'phone', catalog: st.r === 'catalog', order: st.r === 'order',
+      highlights: t.hl.map(([title, text], i) => ({ title, text, icon: ['M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', 'M3 6h18v12H3zM3 10h18M7 15h3', 'M7 3h10v18H7zM11 18h2'][i] })),
+      joinFields: ['name', 'shop', 'phone', 'area'].map((k, i) => ({ label: t.fields[i], value: st.join[k], on: (e) => this.setState({ join: { ...st.join, [k]: k === 'phone' ? e.target.value.replace(/\D/g, '').slice(0, 10) : e.target.value } }) })),
+      joinedTitle: reqStatus === 'APPROVED' ? t.approvedTitle : reqStatus === 'REJECTED' ? t.rejectedTitle : t.sentTitle,
+      joinedSub: reqStatus === 'APPROVED' ? t.approvedSub : reqStatus === 'REJECTED' ? t.rejectedSub : t.sentSub,
+      joinedBg: reqStatus === 'REJECTED' ? 'var(--dangerBg)' : reqStatus === 'APPROVED' ? 'var(--successBg)' : 'var(--pc)',
+      joinedFg: reqStatus === 'REJECTED' ? 'var(--dangerFg)' : reqStatus === 'APPROVED' ? 'var(--successFg)' : 'var(--opc)',
+      joinedIcon: reqStatus === 'APPROVED' ? 'M5 12.5l4.5 4.5L19 7.5' : reqStatus === 'REJECTED' ? 'M6 6l12 12M18 6L6 18' : 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2',
+      phoneVal: st.phone, notReg: st.notReg, notRegText: st.request ? t.notReg : t.notRegNone,
+      items: ITEMS.map(([name, unit, rate, initials, ti], i) => { const n = st.cart[i] || 0; const step = STEP[unit] || 1000; const [bg, fg] = TINT[ti];
+        return { name, initials, bg, fg, rate: `${inr(rate)} / ${t.units[unit]}`, empty: !n, inCart: n > 0, qty: q(n, unit),
+          add: () => this.setState({ cart: { ...st.cart, [i]: 1000 } }), inc: () => this.setState({ cart: { ...st.cart, [i]: n + step } }),
+          dec: () => { const c = { ...st.cart }; if (n - step <= 0) delete c[i]; else c[i] = n - step; this.setState({ cart: c }); } }; }),
+      hasCart: cartIds.length > 0 && !st.order, cartCount: t.items(cartIds.length), cartTotal: inr(cartTotal), hasOrder: !!st.order, justPlaced: st.justPlaced && st.order && st.order.status === 'PENDING',
+    };
+
+    // ---------- order (shared)
+    const o = st.order;
+    let ord = { steps: [], rLines: [], dLines: [] };
+    if (o) {
+      const decided = o.status !== 'PENDING';
+      const shortLines = o.lines.filter((l) => st.stock[l.item] < l.reqM);
+      const reqT = o.lines.reduce((s, l) => s + pay(ITEMS[l.item][2], l.reqM), 0);
+      const accT = o.lines.reduce((s, l) => s + (l.accM === null ? 0 : pay(ITEMS[l.item][2], l.accM)), 0);
+      const reached = { PENDING: 0, ACCEPTED: 1, PARTIALLY_ACCEPTED: 1, DISPATCHED: 2, DELIVERED: 3, REJECTED: 1 }[o.status];
+      const editing = st.editing;
+      let editTotal = 0; let allFull = true;
+      ord = {
+        rStatus: t.rStatus[o.status], rChipBg: chipBg(o.status), rChipFg: chipFg(o.status), dStatus: t.dStatus[o.status], dChipBg: chipBg(o.status), dChipFg: chipFg(o.status),
+        steps: t.rSteps.map((label, i) => ({ label: o.status === 'REJECTED' && i === 1 ? t.rStatus.REJECTED : (o.status === 'PARTIALLY_ACCEPTED' || o.wasPartial) && i === 1 ? t.rStatus.PARTIALLY_ACCEPTED : label,
+          hasLine: i < 3, dot: i <= reached ? (o.status === 'REJECTED' && i === 1 ? 'var(--danger)' : 'var(--primary)') : 'transparent', ring: i <= reached ? (o.status === 'REJECTED' && i === 1 ? 'var(--danger)' : 'var(--primary)') : 'var(--outline2)', fg: i <= reached ? 'var(--text)' : 'var(--text2)' })),
+        rLines: o.lines.map((l) => { const [name, unit, rate] = ITEMS[l.item]; const diff = decided && l.accM !== l.reqM;
+          return { name, asked: q(l.reqM, unit), acc: decided ? q(l.accM, unit) : '', decided, strike: diff ? 'line-through' : 'none', accFg: diff ? 'var(--warnFg)' : 'var(--successFg)', border: diff ? 'var(--warnFg)' : 'transparent', amount: inr(pay(rate, decided ? l.accM : l.reqM)) }; }),
+        totalLabel: decided ? t.finalTotal : t.estTotal, total: inr(decided ? accT : reqT),
+        short: !decided && shortLines.length > 0,
+        dLines: o.lines.map((l, j) => { const [name, unit, rate] = ITEMS[l.item]; const stock = st.stock[l.item]; const cap = Math.min(l.reqM, stock); const short = !decided && stock < l.reqM; const step = STEP[unit] || 1000;
+          const ev = editing ? editing[j] : 0; if (editing) { editTotal += pay(rate, ev); if (ev !== l.reqM) allFull = false; }
+          const setE = (v) => this.setState({ editing: editing.map((x, k) => (k === j ? v : x)) });
+          return { name, asked: q(l.reqM, unit), showStock: !decided, stockText: short ? t.onlyStock(q(stock, unit)) : t.inStock(q(stock, unit)), stockFg: short ? 'var(--dangerFg)' : 'var(--text2)',
+            border: short ? 'var(--danger)' : 'transparent', decided, acc: decided ? q(l.accM, unit) : '', accFg: decided && l.accM !== l.reqM ? 'var(--warnFg)' : 'var(--successFg)',
+            amount: inr(editing ? pay(rate, ev) : decided ? pay(rate, l.accM) : pay(rate, l.reqM)), editing: !!editing, editVal: editing ? q(ev, unit) : '',
+            incBg: editing && ev >= cap ? 'var(--field)' : 'var(--primary)', incFg: editing && ev >= cap ? 'var(--text2)' : 'var(--onPrimary)',
+            dec: () => setE(Math.max(0, ev - step)), inc: () => setE(Math.min(cap, ev + step)), max: () => setE(cap) }; }),
+        dTotalLabel: decided || editing ? t.accTotal : t.reqTotal, dTotal: inr(editing ? editTotal : decided ? accT : reqT),
+        canDecide: o.status === 'PENDING' && !editing, editing: !!editing, confirmLabel: allFull ? t.confirmAll : t.confirmPartial,
+        allBg: shortLines.length ? 'var(--disabled)' : 'var(--primary)', allFg: shortLines.length ? 'var(--onDisabled)' : 'var(--onPrimary)',
+        canDispatch: o.status === 'ACCEPTED' || o.status === 'PARTIALLY_ACCEPTED', canDeliver: o.status === 'DISPATCHED',
+        finished: o.status === 'DELIVERED' || o.status === 'REJECTED', finishedText: o.status === 'REJECTED' ? t.rejectedOrder : t.delivered,
+        decideWith: (accMs) => {
+          const full = o.lines.every((l, j) => accMs[j] === l.reqM);
+          const status = full ? 'ACCEPTED' : 'PARTIALLY_ACCEPTED';
+          const stock = st.stock.map((s, i) => s - o.lines.reduce((a, l, j) => a + (l.item === i ? accMs[j] : 0), 0));
+          this.setState({ order: { ...o, status, wasPartial: !full, lines: o.lines.map((l, j) => ({ ...l, accM: accMs[j] })) }, stock, editing: null, seen: st.seen || st.r === 'order', justPlaced: false, activity: this.log(t.actDecided(t.decidedWord[status]), 'var(--successFg)') });
+          this.dToast(t.toastStock); this.rToast(t.toastDecided(t.rStatus[status]));
+        },
+      };
+    }
+
+    // ---------- distributor phone
+    const pendingN = o && o.status === 'PENDING' ? 1 : 0;
+    const reqN = reqStatus === 'PENDING' ? 1 : 0;
+    const dTab = st.d === 'home' ? 0 : st.d === 'requests' ? 1 : 2;
+    const d = {
+      home: st.d === 'home', requests: st.d === 'requests', orders: st.d === 'orders', order: st.d === 'order', showNav: st.d !== 'order',
+      pendingN, reqN, pendBg: pendingN ? 'var(--warnBg)' : 'var(--surface)', pendFg: pendingN ? 'var(--warnFg)' : 'var(--text)',
+      activity: st.activity, noActivity: st.activity.length === 0,
+      hasReq: !!st.request, noReq: !st.request,
+      req: st.request ? { ...st.request, status: t.reqStatus[reqStatus], chipBg: chipBg(reqStatus), chipFg: chipFg(reqStatus), pending: reqStatus === 'PENDING' } : {},
+      hasOrder: !!o, noOrder: !o,
+      nav: t.nav.map((label, i) => ({ label, current: i === dTab ? 'page' : 'false', pill: i === dTab ? 'var(--pc)' : 'transparent', fg: i === dTab ? 'var(--text)' : 'var(--text2)',
+        icon: ['M3 10.5L12 3l9 7.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z', 'M15 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 3 17.5V19M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM19 8v6M22 11h-6', 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6'][i],
+        badge: [0, reqN, pendingN][i], hasBadge: [0, reqN, pendingN][i] > 0, pick: () => this.setState({ d: ['home', 'requests', 'orders'][i] }) })),
+    };
+
+    // ---------- story
+    const done = [!!st.request, st.approved, st.logged, !!o, !!o && o.status !== 'PENDING', st.seen, !!o && (o.status === 'DELIVERED' || o.status === 'REJECTED')];
+    const cur = done.findIndex((x) => !x);
+    const nDone = done.filter(Boolean).length;
+    const story = {
+      progress: t.progress(nDone), pct: `${Math.round((nDone / 7) * 100)}%`,
+      steps: t.steps.map(([who, title, hint], i) => ({ n: i + 1, who: t.who[who], title, hint, done: done[i], todo: !done[i], current: i === cur,
+        bg: i === cur ? 'var(--sheet)' : 'transparent', ringW: i === cur ? '2px' : '0px', fg: done[i] ? 'var(--text2)' : 'var(--text)',
+        dotBg: done[i] ? 'var(--successFg)' : i === cur ? 'var(--primary)' : 'var(--field)', dotFg: done[i] ? 'var(--successBg)' : i === cur ? 'var(--onPrimary)' : 'var(--text2)',
+        whoBg: who === 'R' ? '#FDF0D5' : '#E4E2FB', whoFg: who === 'R' ? '#7A4A00' : '#1E1B4B' })),
+      stock: ITEMS.map(([name, unit], i) => { const base = [120000, 850500, 6500, 320000, 85000, 48000][i]; const changed = st.stock[i] !== base;
+        return { name, qty: q(st.stock[i], unit), bg: changed ? 'var(--warnBg)' : 'var(--surface)', fg: st.stock[i] === 0 ? 'var(--danger)' : changed ? 'var(--warnFg)' : 'var(--text)' }; }),
+    };
+
+    const on = (x) => (x ? 'var(--primary)' : 'transparent'); const onFg = (x) => (x ? 'var(--onPrimary)' : 'var(--text)');
+    return {
+      vars, s: t, r, d, ord, story,
+      rToast: { show: !!st.rToast, text: st.rToast || '' }, dToast: { show: !!st.dToast, text: st.dToast || '' },
+      toEn: () => this.setState({ lang: 'en' }), toHi: () => this.setState({ lang: 'hi' }), enBg: on(lang === 'en'), enFg: onFg(lang === 'en'), hiBg: on(lang === 'hi'), hiFg: onFg(lang === 'hi'),
+      reset: () => { clearTimeout(this.rT); clearTimeout(this.dT); this.setState({ ...this.fresh(), lang }); },
+      rGoStore: () => this.setState({ r: st.request ? 'joined' : 'store', notReg: false }),
+      rGoJoin: () => this.setState({ r: st.request ? 'joined' : 'join' }),
+      rGoPhone: () => this.setState({ r: st.logged ? 'catalog' : 'phone', notReg: false }),
+      rGoCatalog: () => this.setState({ r: 'catalog' }), rGoOrder: () => this.setState({ r: 'order', seen: st.seen || (!!o && o.status !== 'PENDING') }),
+      rOnPhone: (e) => this.setState({ phone: e.target.value.replace(/\D/g, '').slice(0, 10), notReg: false }),
+      rSendRequest: () => { this.setState({ request: { ...st.join }, r: 'joined', activity: this.log(t.actReq, 'var(--primary)') }); this.dToast(t.toastReq); },
+      rContinue: () => (st.approved && st.request && st.phone === st.request.phone ? this.setState({ logged: true, r: 'catalog' }) : this.setState({ notReg: true })),
+      rPlace: () => {
+        const lines = cartIds.map((i) => ({ item: i, reqM: st.cart[i], accM: null }));
+        this.setState({ order: { status: 'PENDING', lines }, cart: {}, r: 'order', justPlaced: true, activity: this.log(t.actOrder(inr(cartTotal)), 'var(--warnFg)') });
+        this.dToast(t.toastOrder(inr(cartTotal)));
+      },
+      dGoOrders: () => this.setState({ d: 'orders' }), dGoRequests: () => this.setState({ d: 'requests' }), dOpenOrder: () => this.setState({ d: 'order' }),
+      dApprove: () => { this.setState({ approved: true, activity: this.log(t.actApproved, 'var(--successFg)') }); this.dToast(t.toastApproved); },
+      dReject: () => this.setState({ rejected: true }),
+      dPartial: () => this.setState({ editing: o.lines.map((l) => Math.min(l.reqM, st.stock[l.item])) }),
+      dAcceptAll: () => (ord.short ? null : ord.decideWith(o.lines.map((l) => l.reqM))),
+      dConfirmPartial: () => { if (st.editing.every((v) => v === 0)) return; ord.decideWith(st.editing); },
+      dRejectOrder: () => { this.setState({ seen: st.seen || st.r === 'order', order: { ...o, status: 'REJECTED', lines: o.lines.map((l) => ({ ...l, accM: 0 })) }, activity: this.log(t.actDecided(t.decidedWord.REJECTED), 'var(--danger)') }); this.rToast(t.toastDecided(t.rStatus.REJECTED)); },
+      dDispatch: () => { this.setState({ order: { ...o, status: 'DISPATCHED' }, activity: this.log(t.actDispatched, 'var(--primary)') }); this.rToast(t.toastDecided(t.rStatus.DISPATCHED)); },
+      dDeliver: () => { this.setState({ order: { ...o, status: 'DELIVERED' }, activity: this.log(t.actDelivered, 'var(--successFg)') }); this.rToast(t.toastDecided(t.rStatus.DELIVERED)); },
+    };
+  }
+}
+</script>
+</body>
+</html>
