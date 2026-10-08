@@ -8,7 +8,7 @@
 - **Retailer web = native-feeling PWA.** Centred app shell (max-w 480 px), bottom tabs, sticky cart bar, safe-area insets, 44 px targets.
 - Light + dark (system default, with a toggle in the prototype). Inter font. ₹ with en-IN grouping (₹1,25,000.50). Layouts leave room for Hindi.
 - Every list has **loading (skeleton) / empty / error / content** states, with a state switcher in the prototype.
-- **No stock anywhere** (ADR-014). Quantities can be decimal for KG/G/L/ML (ADR-011).
+- **Stock is distributor-only** (ADR-016): shown throughout the Android app, **never** in the retailer web. Quantities can be decimal for KG/G/L/ML (ADR-011).
 
 ## 2. Brand & tokens (finalised in UI-0)
 - **Name:** DistributeKaro. **Logo:** designed in UI-0. I'll offer 2–3 wordmark + icon directions (e.g. a box/route mark, a "DK" monogram) as inline SVG; you pick one.
@@ -26,11 +26,11 @@
 | spacing | 4-pt scale | |
 | type | Inter; display 28/34, title 20/28, body 16/24, label 14/20, caption 12/16 | |
 
-**Status chips:** PENDING amber · ACCEPTED green · PARTIALLY_ACCEPTED teal · REJECTED red · CANCELLED slate · DISPATCHED blue · DELIVERED emerald. Each pairs colour with an icon. Request chips: PENDING amber · APPROVED green · REJECTED red. The "New device" flag is an outline chip with an info icon.
+**Status chips:** PENDING amber · ACCEPTED green · PARTIALLY_ACCEPTED teal · REJECTED red · CANCELLED slate · DISPATCHED blue · DELIVERED emerald. Each pairs colour with an icon. Request chips: PENDING amber · APPROVED green · REJECTED red. The "New device" flag is an outline chip with an info icon. Stock badges (distributor only): In stock (neutral) · Low (amber) · Out (red).
 
 ## 3. Screen inventory
 ### Distributor app (Android, M3)
-Nav bar: **Home · Orders · Catalog · Retailers · More**. The Retailers tab has segments **Retailers | Requests (badge) | Enquiries (badge)**. More holds QR, Profile, Settings.
+Nav bar: **Home · Orders · Catalog · Retailers · More**. The Catalog tab has segments **Items | Stock report**. The Retailers tab has segments **Retailers | Requests (badge) | Enquiries (badge)**. More holds QR, Profile, Settings.
 
 | ID | Screen | Key elements | States | Fixtures |
 |---|---|---|---|---|
@@ -40,17 +40,20 @@ Nav bar: **Home · Orders · Catalog · Retailers · More**. The Retailers tab h
 | D-04 | Log in | phone, password, Forgot password? | invalid credentials, locked (with countdown) | problem.invalid-credentials, problem.account-locked |
 | D-05 | Reset password | "Ask support for a reset code" note, code, new password (QB) | invalid/expired code | — |
 | D-06 | Onboarding profile | business name*, owner name*, email, address, GSTIN, logo picker; phone read-only | validation | distributor-me.onboarding |
-| D-07 | Dashboard | greeting, today's orders + ₹ requested/accepted, Pending orders → Orders, New requests / enquiries → Retailers tab, recent orders; **new-account checklist** (profile → add items → add retailers → share QR) | skeleton, new account | dashboard, dashboard.new-account |
-| D-08 | Catalog list | search, category chips, Available/Unavailable filter, sort, rows (thumb, name, unit, ₹rate/unit, "Unavailable" dimmed), FAB | skeleton / empty / error / no results | items.page, categories |
-| D-09 | Add/Edit item | image, name*, SKU, unit*, rate per unit*, category (autocomplete), description, **Available to order** switch, delete | validation, saving, uploading | item |
+| D-07 | Dashboard | greeting, today's orders + ₹ requested/accepted, **sold today / 7 d**, **low & out-of-stock list** → item, Pending orders → Orders, New requests / enquiries → Retailers tab, recent orders; **new-account checklist** (profile → add items → add retailers → share QR) | skeleton, new account | dashboard, dashboard.new-account |
+| D-08 | Catalog list | search, category chips, filters (Available/Unavailable, Low/Out of stock), sort (incl. stock), rows (thumb, name, ₹rate/unit, **remaining qty + stock badge**, "Unavailable" dimmed), FAB | skeleton / empty / error / no results | items.page, categories |
+| D-09 | Add/Edit item | image, name*, SKU, unit*, rate per unit*, category, description, **Available to order** switch; create: **opening stock**, low-stock alert level; edit: remaining stock card with **Restock** / **Adjust** buttons + "View history" | validation, saving, uploading | item |
+| D-09a | Restock / Adjust sheet | Restock: qty received + note; Adjust: +/− toggle, qty, reason chips (Damaged, Expired, Count correction, Other); shows new balance preview | negative balance blocked | item |
+| D-09b | Stock history | per-item ledger: type icon, ±qty, balance after, order link for SALE, reason, time; filter by type | skeleton / empty / error | stock-movements.page |
+| D-09c | Stock report | period chips (Today · 7 d · 30 d · Custom), total sold ₹, rows per item: **sold qty · sold ₹ · remaining**, sort by sold / remaining, tap → stock history | skeleton / empty / error | stock-report |
 | D-10 | Retailers list | search, active filter, rows (photo/initials, name, shop, phone, location label, last order) | skeleton / empty / error | retailers.page |
 | D-11 | Add/Edit retailer | shop photo, name*, shop name, phone*, email, address, "Use current location" + label, active switch (deactivation warns that it signs them out) | duplicate phone, location denied | retailer |
 | D-12 | Access requests | cards (name, shop, phone, address, time), **Approve** → D-11 pre-filled (QD), **Reject** (note), Call / WhatsApp | skeleton / empty / error | access-requests.page |
 | D-13 | Enquiries | cards (name, phone, message, time, NEW badge), Call / WhatsApp, Mark read / Close | skeleton / empty / error | enquiries.page |
 | D-14 | My QR | QR card (logo, business name, short URL), Share, Save PNG, Print-friendly view, Rotate (confirm: old QR stops working) | rotating | distributor-me |
 | D-15 | Orders inbox | tabs with counts: Pending · Accepted · Dispatched · Completed · Closed; cards (order no, retailer, shop, ₹, lines, time, status chip, New device flag) | skeleton / empty per tab / error | orders.page, inbox-counts |
-| D-16 | Order detail | header, lines (qty + unit, rate, line ₹), retailer note, totals, timeline; bottom bar per `allowedActions` | all 7 status variants | order-detail.* |
-| D-17 | Partial-accept editor | per line: stepper 0…requested (unit step, tap to type decimals), line note, "Accept full" per line; live accepted total; Confirm | — | order-detail.pending |
+| D-16 | Order detail | header, lines (qty + unit, rate, line ₹, **remaining stock** while PENDING, shortage highlighted), retailer note, totals, timeline; bottom bar per `allowedActions` | all 7 status variants | order-detail.* |
+| D-17 | Partial-accept editor | per line: stepper 0…**min(requested, remaining stock)** (unit step, tap to type decimals), "In stock: x" hint, line note, "Max" per line, "Fill from stock" for all; live accepted total; Confirm | insufficient stock (409) from a concurrent sale → refresh lines | order-detail.pending, problem.insufficient-stock |
 | D-18 | Reject sheet | reason chips (Can't supply now, Area not served, Other) + text | — | — |
 | D-19 | Profile / Settings | edit profile, change password, theme, language, log out, version | — | distributor-me |
 
@@ -77,7 +80,7 @@ App bar · nav bar / bottom tabs · segmented tabs with badges · list cell (thu
 |---|---|---|
 | **UI-0** | Logo directions, tokens (light/dark), type, component sheet (M3 + web side by side) | Brand, colour, density, chips, stepper |
 | **UI-1** | D-01…D-06 | Sign-up/login friction, onboarding fields |
-| **UI-2** | D-07…D-09 | Dashboard usefulness, catalog + item form |
+| **UI-2** | D-07…D-09c | Dashboard usefulness, catalog + item form, restock/adjust, stock history, sold-vs-remaining report |
 | **UI-3** | D-10…D-14 | Retailer form, requests/enquiries handling, QR card |
 | **UI-4** | D-15…D-19 | Order decision UX (core flow), settings |
 | **UI-5** | R-01…R-04 | QR entry, not-registered path, forms |
@@ -92,4 +95,4 @@ App bar · nav bar / bottom tabs · segmented tabs with badges · list cell (thu
 - AA contrast in both themes
 - touch targets
 - en-IN formatting and decimal qty display (`2.5 kg`, `12 pcs`)
-- no stock shown anywhere
+- stock visible everywhere in the distributor app, **nowhere** in the retailer web

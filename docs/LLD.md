@@ -61,7 +61,7 @@ totalPaise = Σ linePaise
 DB equivalent: `round(rate_paise * qty)::bigint` on `numeric`. `fixtures/qty-money-vectors.json` holds the test vectors run by the TS, Kotlin and DB tests.
 
 ### 2.3 Error codes (`packages/shared/src/errors.ts`)
-`VALIDATION_FAILED 422` · `UNAUTHENTICATED 401` · `TOKEN_EXPIRED 401` · `INVALID_CREDENTIALS 401` · `ACCOUNT_LOCKED 429` · `FORBIDDEN 403` · `NOT_FOUND 404` · `SLUG_INVALID 404` · `CONFLICT 409` · `INVALID_TRANSITION 409` · `IDEMPOTENCY_KEY_REUSED 409` · `PHONE_ALREADY_EXISTS 409` · `REQUEST_ALREADY_PENDING 409` · `ITEM_UNAVAILABLE 422` · `WEAK_PASSWORD 422` · `RATE_LIMITED 429` · `UPLOAD_INVALID 422` · `INTERNAL 500`
+`VALIDATION_FAILED 422` · `UNAUTHENTICATED 401` · `TOKEN_EXPIRED 401` · `INVALID_CREDENTIALS 401` · `ACCOUNT_LOCKED 429` · `FORBIDDEN 403` · `NOT_FOUND 404` · `SLUG_INVALID 404` · `CONFLICT 409` · `INVALID_TRANSITION 409` · `INSUFFICIENT_STOCK 409` · `IDEMPOTENCY_KEY_REUSED 409` · `PHONE_ALREADY_EXISTS 409` · `REQUEST_ALREADY_PENDING 409` · `ITEM_UNAVAILABLE 422` · `WEAK_PASSWORD 422` · `RATE_LIMITED 429` · `UPLOAD_INVALID 422` · `INTERNAL 500`
 
 ## 3. Data model (PostgreSQL 18)
 All tables: `id uuid PK`, `created_at`, `updated_at timestamptz` (trigger). Tenant tables carry `distributor_id`.
@@ -82,10 +82,12 @@ password_reset_codes (                           -- QB: created by admin CLI onl
   distributor_id uuid NOT NULL, code_hash text NOT NULL, expires_at timestamptz NOT NULL, used_at timestamptz
 )
 
-items (                                          -- catalog; no stock (ADR-014)
+items (                                          -- catalog + distributor-only stock (ADR-016)
   distributor_id uuid NOT NULL REFERENCES distributors,
   name text NOT NULL, sku text, unit text NOT NULL,
   rate_paise bigint NOT NULL CHECK (rate_paise >= 0),
+  stock_qty numeric(12,3) NOT NULL DEFAULT 0 CHECK (stock_qty >= 0),   -- remaining; = Σ stock_movements.delta_qty
+  low_stock_threshold numeric(12,3) NOT NULL DEFAULT 0,               -- 0 = no alert
   category text, description text, image_key text,
   is_active bool NOT NULL DEFAULT true,          -- "available to order"
   deleted_at timestamptz
@@ -102,6 +104,20 @@ retailers (
   source text NOT NULL DEFAULT 'MANUAL' CHECK (source IN ('MANUAL','ACCESS_REQUEST')),
   UNIQUE (distributor_id, phone)
 )
+
+stock_movements (                                -- append-only ledger (REVOKE UPDATE, DELETE from dk_app)
+  distributor_id uuid NOT NULL, item_id uuid NOT NULL REFERENCES items,
+  type text NOT NULL CHECK (type IN ('OPENING','RESTOCK','SALE','ADJUSTMENT')),
+  delta_qty numeric(12,3) NOT NULL CHECK (delta_qty <> 0),            -- + in, − out
+  balance_after numeric(12,3) NOT NULL,
+  rate_paise_snapshot bigint,                                         -- SALE only (for sold ₹)
+  amount_paise bigint,                                                -- SALE only = accepted_paise of the line
+  order_id uuid, order_item_id uuid UNIQUE,                           -- SALE only; UNIQUE = no double-sale
+  reason text,                                                        -- required for ADJUSTMENT
+  actor_id uuid NOT NULL
+)
+  INDEX (distributor_id, item_id, created_at DESC)
+  INDEX (distributor_id, type, created_at)                            -- sold-in-period reports
 
 access_requests (
   distributor_id uuid NOT NULL, phone text NOT NULL,
@@ -156,7 +172,7 @@ sessions (                                       -- no RLS; auth module only
 )
   INDEX (subject_type, subject_id) WHERE revoked_at IS NULL
 ```
-**RLS:** enabled + forced on `items, retailers, access_requests, enquiries, orders, order_items, order_events`. Policy: `distributor_id = current_setting('app.distributor_id')::uuid` (USING + WITH CHECK).
+**RLS:** enabled + forced on `items, stock_movements, retailers, access_requests, enquiries, orders, order_items, order_events`. Policy: `distributor_id = current_setting('app.distributor_id')::uuid` (USING + WITH CHECK).
 - Roles: `dk_owner` (migrations) and `dk_app` (runtime, no BYPASSRLS).
 - `withTenant(did, tx => …)` runs `select set_config('app.distributor_id', $1, true)` first. Repositories require that tx by type.
 - Public endpoints resolve slug → `did` from `distributors` (no RLS), then enter `withTenant`.
@@ -164,16 +180,16 @@ sessions (                                       -- no RLS; auth module only
 ## 4. Field limits
 - **Names and text:** name / shopName 1–120 · businessName 2–120 · sku ≤ 40 · category ≤ 40 · description ≤ 500 · note / lineNote / reason / message ≤ 500 · email ≤ 254 · address ≤ 300 · locationLabel ≤ 120.
 - **Formats:** gstin `^\d{2}[A-Z]{5}\d{4}[A-Z][1-9A-Z]Z[0-9A-Z]$` · password 8–128, not in the common list, not equal to the phone.
-- **Numbers:** ratePaise 0–10^10 · qty ≤ 9 999 999.999.
+- **Numbers:** ratePaise 0–10^10 · qty / stockQty ≤ 9 999 999.999 · adjustment reason 3–200.
 - **Orders:** 1–100 lines, unique itemIds.
 
 ## 5. Order state machine (`packages/shared/src/orderMachine.ts`)
 | From | To | Actor | Guard / effect |
 |---|---|---|---|
 | — | PENDING | RETAILER | items active & not deleted; snapshot name/unit/rate; qty valid for unit |
-| PENDING | ACCEPTED | DISTRIBUTOR | every line accepted == requested |
-| PENDING | PARTIALLY_ACCEPTED | DISTRIBUTOR | Σ accepted > 0 and some line accepted < requested |
-| PENDING | REJECTED | DISTRIBUTOR | reason required; accepted = 0 everywhere |
+| PENDING | ACCEPTED | DISTRIBUTOR | every line accepted == requested; accepted ≤ stock; write SALE movements |
+| PENDING | PARTIALLY_ACCEPTED | DISTRIBUTOR | Σ accepted > 0 and some line accepted < requested; accepted ≤ stock; write SALE movements |
+| PENDING | REJECTED | DISTRIBUTOR | reason required; accepted = 0 everywhere; no stock change |
 | PENDING | CANCELLED | RETAILER | own order |
 | ACCEPTED, PARTIALLY_ACCEPTED | DISPATCHED | DISTRIBUTOR | — |
 | DISPATCHED | DELIVERED | DISTRIBUTOR | — |
@@ -189,11 +205,36 @@ withTenant(did):
           PARTIAL    → body lists every line exactly once; 0 ≤ accepted ≤ requested; unit decimal rule;
                        all==requested ⇒ ACCEPTED ; all==0 ⇒ 422 (use REJECT)
           REJECT     → accepted=0 ; reason required
+  if any accepted > 0:
+    stock = SELECT id, stock_qty, deleted_at FROM items WHERE id = ANY($itemIds) ORDER BY id FOR UPDATE
+    -- lines sharing an item are summed per item before the check
+    shortages = items where Σ accepted > (deleted ? 0 : stock_qty)
+    if shortages: 409 INSUFFICIENT_STOCK, errors[] = {lineId, itemId, requested, accepted, available}
+    UPDATE items SET stock_qty = stock_qty - Σaccepted              -- CHECK (>= 0) is the backstop
+    INSERT stock_movements (type='SALE', delta=-accepted, balance_after, rate, amount, order_id, order_item_id)
   UPDATE order_items SET accepted_qty, accepted_paise, line_note
   UPDATE orders SET status, total_accepted_paise, decided_at, rejection_reason
   INSERT order_events(from, to, payload={lines:[{lineId, requested, accepted}], reason})
 ```
-Cancel and status changes take the same `FOR UPDATE` lock. **Tests:** decision ∥ cancel → exactly one succeeds; two decisions in parallel → one 200, one 409.
+Lock order: order row first, then item rows by id. Every stock writer (decision, restock, adjustment) locks items in id order, so they can't deadlock. Cancel and status changes take the same order lock.
+**Tests:**
+- decision ∥ cancel → exactly one succeeds
+- the same order decided twice in parallel → one 200, one 409
+- **two different orders accepted in parallel against stock that covers only one → one 200, one 409 `INSUFFICIENT_STOCK`; final stock ≥ 0 and equal to Σ movements**
+
+### 5.1b Stock writes (`POST /v1/d/items/:id/stock`)
+```
+withTenant(did):
+  item = SELECT … FROM items WHERE id=$id FOR UPDATE
+  RESTOCK    → delta = +qty (qty > 0)
+  ADJUSTMENT → delta = ±qty, reason required; new balance must be ≥ 0 (else 422)
+  UPDATE items SET stock_qty = stock_qty + delta
+  INSERT stock_movements (type, delta, balance_after, reason, actor_id)
+```
+Item create with `openingStockQty > 0` writes an `OPENING` movement in the same tx. `PATCH /items/:id` **cannot** change `stockQty` directly; only movements can.
+
+### 5.1c Stock report (`GET /v1/d/reports/stock?from&to&q&category&cursor`)
+Per item: `soldQty = −Σ delta_qty`, `soldPaise = Σ amount_paise` over SALE movements in `[from, to)`. `restockedQty = Σ delta` of RESTOCK + OPENING in the period, `adjustedQty = Σ delta` of ADJUSTMENT in the period, and `remainingQty = items.stock_qty` (now). Totals row = Σ soldPaise. Sort: `-soldPaise` (default), `remainingQty`, `name`. Uses the `(distributor_id, type, created_at)` index.
 
 ### 5.2 Order creation (`POST /v1/r/:slug/orders`)
 ```
@@ -233,10 +274,13 @@ Base `/v1`. `D` = distributor bearer (aud `dk-distributor`). `R` = retailer bear
 | GET / PATCH `/d/me` | D | `DistributorProfileInput` | 200 `DistributorMe` |
 | POST `/d/me/qr/rotate` | D | – | 200 `DistributorMe` |
 | GET `/d/dashboard` | D | – | 200 `Dashboard` |
-| GET `/d/items` | D | `?q&category&active&sort=name\|-updatedAt\|rate\|-rate&cursor&limit` | 200 `Page<Item>` |
+| GET `/d/items` | D | `?q&category&active&stock=LOW\|OUT&sort=name\|-updatedAt\|rate\|-rate\|stock&cursor&limit` | 200 `Page<Item>` |
 | POST `/d/items` · PATCH `/d/items/:id` | D | `ItemInput` | 201 / 200 `Item` |
 | GET / DELETE `/d/items/:id` | D | – | 200 `Item` / 204 (soft) |
 | GET `/d/items/categories` | D | – | 200 `{data: string[]}` |
+| POST `/d/items/:id/stock` | D | `StockMovementInput` | 200 `{item: Item, movement: StockMovement}` |
+| GET `/d/items/:id/stock-movements` | D | `?type&cursor&limit` | 200 `Page<StockMovement>` |
+| GET `/d/reports/stock` | D | `?from&to&q&category&sort&cursor&limit` | 200 `StockReport` |
 | GET `/d/retailers` | D | `?q&active&cursor&limit` | 200 `Page<Retailer>` |
 | POST `/d/retailers` · PATCH `/d/retailers/:id` | D | `RetailerInput` | 201 / 200 `Retailer` |
 | GET / DELETE `/d/retailers/:id` | D | – | 200 / 204 (deactivate + revoke sessions) |
@@ -285,16 +329,32 @@ type InboxCounts = { orders: Record<OrderStatus, number>; accessRequestsPending:
 type Dashboard = {
   today: { orderCount: number; requestedPaise: number; acceptedPaise: number };
   counts: InboxCounts;
+  sales: { todaySoldPaise: number; last7dSoldPaise: number };
+  lowStockItems: Item[];                             // active, stockQty <= lowStockThreshold (incl. 0), max 10
   recentOrders: OrderSummary[];                      // max 5
   setup: { hasProfile: boolean; itemCount: number; retailerCount: number; qrShared: boolean };  // new-account checklist
 };
 
 // ---------- catalog
+type StockStatus = "IN_STOCK"|"LOW"|"OUT";
 type Item = { id: string; name: string; sku: string | null; unit: Unit; ratePaise: number;
+  stockQty: Qty; lowStockThreshold: Qty; stockStatus: StockStatus;          // distributor only
   category: string | null; description: string | null; imageUrl: string | null;
   isActive: boolean; createdAt: string; updatedAt: string };
 type ItemInput = { name: string; sku?: string|null; unit: Unit; ratePaise: number; category?: string|null;
-  description?: string|null; isActive?: boolean; imageUploadId?: string|null };
+  description?: string|null; isActive?: boolean; imageUploadId?: string|null;
+  lowStockThreshold?: Qty; openingStockQty?: Qty };                        // openingStockQty: POST only
+type StockMovementInput =
+  | { type: "RESTOCK"; qty: Qty; note?: string|null }
+  | { type: "ADJUSTMENT"; deltaQty: Qty /* may start with "-" */; reason: string };
+type StockMovement = { id: string; type: "OPENING"|"RESTOCK"|"SALE"|"ADJUSTMENT";
+  deltaQty: Qty; balanceAfter: Qty; amountPaise: number | null;
+  order: { id: string; orderNo: number; retailerName: string } | null;     // SALE only
+  reason: string | null; createdAt: string };
+type StockReportRow = { item: Pick<Item,"id"|"name"|"unit"|"imageUrl"|"category"|"stockStatus">;
+  soldQty: Qty; soldPaise: number; restockedQty: Qty; adjustedQty: Qty; remainingQty: Qty };
+type StockReport = { from: string; to: string; totals: { soldPaise: number; itemsSold: number };
+  data: StockReportRow[]; nextCursor: string | null };
 
 // ---------- retailers, requests, enquiries
 type Retailer = { id: string; name: string; shopName: string | null; phone: string;
@@ -319,7 +379,8 @@ type OrderSummary = { id: string; orderNo: number; status: OrderStatus;
   createdAt: string; updatedAt: string };
 type OrderLine = { id: string; itemId: string; name: string; unit: Unit; ratePaise: number;
   requestedQty: Qty; acceptedQty: Qty | null; requestedPaise: number; acceptedPaise: number | null;
-  lineNote: string | null };
+  lineNote: string | null;
+  availableStockQty?: Qty };                                                // distributor view, PENDING only
 type OrderEvent = { id: string; fromStatus: OrderStatus | null; toStatus: OrderStatus;
   actorType: "DISTRIBUTOR"|"RETAILER"|"SYSTEM"; note: string | null; createdAt: string };
 type OrderDetail = OrderSummary & { note: string | null; rejectionReason: string | null;
@@ -343,18 +404,18 @@ type AccessRequestInput = { phone: string; name: string; shopName: string; addre
   locationLabel?: string|null; website?: "" };      // `website` = honeypot, must be empty
 type EnquiryInput = { phone: string; name: string; message: string; website?: "" };
 type CatalogItem = { id: string; name: string; unit: Unit; ratePaise: number; category: string | null;
-  description: string | null; imageUrl: string | null };                      // no stock (ADR-014)
+  description: string | null; imageUrl: string | null };                      // never any stock info (ADR-016)
 type Catalog = { distributor: PublicDistributor; categories: string[]; items: CatalogItem[]; version: string };
 type PlaceOrderInput = { lines: { itemId: string; qty: Qty }[]; note?: string|null };
 ```
 
 **Fixture files** (`packages/shared/fixtures/`):
 - **Distributor auth & profile:** `distributor-session.json`, `distributor-me.onboarding.json`, `distributor-me.json`, `dashboard.json`, `dashboard.new-account.json`.
-- **Catalog:** `items.page.json`, `item.json`, `categories.json`.
+- **Catalog & stock:** `items.page.json`, `item.json`, `categories.json`, `stock-movements.page.json`, `stock-report.json`.
 - **Retailers, requests, enquiries:** `retailers.page.json`, `retailer.json`, `access-requests.page.json`, `enquiries.page.json`, `inbox-counts.json`.
 - **Orders:** `orders.page.json`, `order-detail.{pending,partial,accepted,rejected,dispatched,delivered,cancelled}.json`.
 - **Retailer side:** `public-distributor.json`, `identify.authenticated.json`, `identify.not-registered.json`, `identify.not-registered-pending.json`, `catalog.json`, `retailer-orders.page.json`, `retailer-order-detail.json`.
-- **Shared:** `empty.page.json`, `qty-money-vectors.json`, `problem.{validation,invalid-credentials,account-locked,rate-limited,slug-invalid,request-pending,item-unavailable}.json`.
+- **Shared:** `empty.page.json`, `qty-money-vectors.json`, `problem.{validation,invalid-credentials,account-locked,rate-limited,slug-invalid,request-pending,item-unavailable,insufficient-stock}.json`.
 
 ## 7. Auth details
 **Distributor passwords:** argon2id (m=19456 KiB, t=2, p=1). Verify runs against a dummy hash when the phone is unknown, so the timing is equal.
@@ -436,7 +497,7 @@ Headers: `RateLimit-Policy` and `RateLimit` (IETF draft), plus `Retry-After` on 
 | 2 | Playwright: QR URL → identify → catalog → order with a decimal qty → history |
 | 3 | API: identify unknown phone → `NOT_REGISTERED`, no cookie; catalog without token → 401; access request/enquiry visible to the owning distributor only |
 | 4 | API: approve request → retailer exists → identify → `AUTHENTICATED` |
-| 5 | API: partial decision → line/total paise per vectors; retailer view shows requested vs accepted |
-| 6 | Testcontainers PG: decision ∥ cancel and decision ∥ decision → exactly one wins; cross-tenant ids → 404; RLS raw-query test returns 0 rows |
+| 5 | API: partial decision → stock decremented, SALE movements written, line/total paise per vectors; retailer view shows requested vs accepted and no stock fields; stock report sold/remaining correct |
+| 6 | Testcontainers PG: two orders ∥ accepted over limited stock → no oversell, stock = Σ movements; decision ∥ cancel and decision ∥ decision → exactly one wins; cross-tenant ids → 404; RLS raw-query test returns 0 rows |
 | 7 | Each rate-limit rule at limit+1 → 429 + `Retry-After` + `RateLimit` headers; login lockout |
 | — | Unit: state machine table, unit/qty validation, money vectors (TS + Kotlin), password policy, refresh reuse → revoke |

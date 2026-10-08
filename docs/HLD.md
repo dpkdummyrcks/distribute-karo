@@ -3,7 +3,7 @@
 > Requirements: [`BRIEF.md`](BRIEF.md) · Overrides: [`../memory/DECISIONS.md`](../memory/DECISIONS.md) · Details: [`LLD.md`](LLD.md) · Screens: [`UI-SPEC.md`](UI-SPEC.md)
 
 ## 1. Goal
-Distributors manage their **catalog** (what they can supply) and their retailers from an **Android app**. Retailers scan the distributor's **QR code** and enter their phone number in a **mobile web PWA**:
+Distributors manage their **catalog with private stock tracking** (sold vs remaining) and their retailers from an **Android app**. Retailers scan the distributor's **QR code** and enter their phone number in a **mobile web PWA**:
 - **Registered** retailers go straight in and place orders.
 - **Unregistered** visitors can send an enquiry or ask to be added.
 
@@ -16,7 +16,7 @@ The distributor accepts each order fully or partially, or rejects it, then marks
 | Distributor auth | Phone OTP | **Phone + password** (argon2id) | ADR-012 |
 | Retailer auth | Phone OTP, registered only | **Phone only**; unregistered → public page (Enquire / Request access) | ADR-013 |
 | SMS provider | MSG91 / Twilio | **Not needed in Phase 1** | ADR-012/013 |
-| Stock | Decrement on acceptance, low-stock alerts | **None.** Catalog with available/unavailable toggle | ADR-014 |
+| Stock | Decrement on acceptance, low-stock alerts | Same, plus a **stock ledger** (opening / restock / sale / adjustment) and a **sold vs remaining report**. **Distributor-only**: retailers never see stock and can order freely | ADR-016 |
 | Quantity | Integer | **Decimal (3 dp)** for weight/volume units | ADR-011 |
 | Contract with mobile | Shared Zod | **OpenAPI → generated Kotlin DTOs** | ADR-003 |
 | API framework | Hono | **Hono** (not Express — rationale in ADR-003) | ADR-003 |
@@ -44,7 +44,7 @@ flowchart LR
 ## 4. Components
 | Component | Responsibility | Tech |
 |---|---|---|
-| **Distributor App** | Sign-up/login, onboarding, catalog, retailers, access requests & enquiries, QR, order decisions, dashboard | Kotlin 2.x, Compose, M3, Hilt, Retrofit + OkHttp + kotlinx.serialization, Coil 3, Paging 3, DataStore + Tink, Credential Manager, ZXing |
+| **Distributor App** | Sign-up/login, onboarding, catalog + stock (restock, adjust, sold/remaining report), retailers, access requests & enquiries, QR, order decisions, dashboard | Kotlin 2.x, Compose, M3, Hilt, Retrofit + OkHttp + kotlinx.serialization, Coil 3, Paging 3, DataStore + Tink, Credential Manager, ZXing |
 | **Retailer PWA** | QR landing, phone entry, public page (enquire/request), catalog, cart, orders, reorder | React 19, Vite, Tailwind v4, shadcn/ui, TanStack Router + Query, RHF + Zod, vite-plugin-pwa |
 | **API** | Auth, tenancy, business rules, order state machine, requests/enquiries, uploads, OpenAPI | Hono + `@hono/zod-openapi`, Drizzle, `jose`, `@node-rs/argon2`, `sharp`, pino, OTel |
 | **packages/shared** | Zod schemas, DTO types, error codes, order state machine, unit rules, money/qty maths, fixtures | TS |
@@ -100,7 +100,9 @@ sequenceDiagram
   end
 ```
 
-**Order decision:** distributor opens a PENDING order → *Accept all* / *Partial* (per-line `acceptedQty` 0…requested, with an optional note) / *Reject* (reason). One transaction locks the order row, validates the transition, writes lines + totals + `order_events`. Then *Dispatched* → *Delivered*. The retailer sees requested vs accepted per line.
+**Order decision:** distributor opens a PENDING order → *Accept all* / *Partial* (per-line `acceptedQty` 0…min(requested, remaining stock), with an optional note) / *Reject* (reason). One transaction locks the order row and then the item rows (`FOR UPDATE`, in id order), checks stock, decrements it, writes `SALE` stock movements, lines, totals and `order_events`. Then *Dispatched* → *Delivered*. The retailer sees requested vs accepted per line.
+
+**Stock:** create item (opening stock) → *Restock* when goods arrive → stock drops automatically on acceptance → *Adjust* (with a reason) for damage or count corrections. Every change is a row in the ledger. **Stock report** = sold qty + ₹ in a period, and remaining now, per item.
 
 **QR rotate:** new random slug. The old URL shows "This QR is no longer valid". Existing retailer sessions stay valid because they're bound to `distributor_id`.
 
@@ -130,8 +132,8 @@ sequenceDiagram
 2. A registered retailer scans the QR, enters their number, is let in, and places an order (with decimal quantities where the unit allows).
 3. An unregistered number cannot see the catalog. It can only send an enquiry or an access request, and these show up in the distributor app.
 4. Approving an access request creates a retailer who can then log in.
-5. The distributor partially accepts an order, and the retailer sees requested vs accepted quantities and amounts.
-6. Concurrent decision/cancel on one order: exactly one wins (proven by test). Cross-tenant access is impossible (proven by test).
+5. The distributor partially accepts an order, stock and the sold/remaining report update correctly, and the retailer sees requested vs accepted (and never stock).
+6. Two concurrent acceptances cannot oversell stock; concurrent decision/cancel on one order: exactly one wins (proven by test). Cross-tenant access is impossible (proven by test).
 7. Rate limits return correct 429 responses (proven by test).
 8. The full stack runs on one VPS via Docker Compose with only OSS components.
 
@@ -152,6 +154,7 @@ sequenceDiagram
 | Retailer impersonation (phone-only) | Rate limits, distributor review of every order, new-device flag, deactivation revokes sessions; PIN/OTP in Phase 2 |
 | Fake distributor signups / phone squatting (no verification) | Signup rate limit per IP; phone verification in Phase 2 |
 | Spam enquiries / access requests | Honeypot, rate limits, dedupe; open-source PoW captcha (ALTCHA) if needed |
+| Stock drift (`stock_qty` ≠ ledger) | Single write path (movements only), same tx, consistency test + nightly check query |
 | Decimal maths mismatch between clients and server | Shared milli-unit integer algorithm + cross-language test vectors in fixtures |
 | Kotlin DTO drift | Generated from OpenAPI, CI diff |
 | Garage gaps | Spike in 1B; SeaweedFS fallback |

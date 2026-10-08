@@ -5,7 +5,7 @@
 
 ## Current checkpoint
 - **Phase:** 0 — Planning
-- **Last completed:** 0.6 Owner answers applied (ADR-011…015); docs revised; git baseline commit
+- **Last completed:** 0.7 Stock tracking re-added as distributor-only ledger (ADR-016); docs revised
 - **Next step:** 1A.0 write fixtures per LLD §6.2, then 1A.1 UI-0 (logo directions + design system artifact)
 - **Blockers:** none. QA–QD are running on documented assumptions (see DECISIONS.md *Open questions*); confirm during UI review
 
@@ -17,6 +17,7 @@
 - [x] 0.4 UI spec (tokens, screen inventory, batches) → `docs/UI-SPEC.md`
 - [x] 0.5 Owner answered Q1–Q9 → ADR-011 decimal qty, ADR-012 distributor password, ADR-013 retailer phone-only + public page, ADR-014 no stock, ADR-015 brand; HLD/LLD/UI-SPEC revised
 - [x] 0.6 `git init`, first commit `docs: planning baseline`
+- [x] 0.7 Owner: distributor tracks stock (sold vs remaining) → ADR-016 stock ledger; LLD/HLD/UI-SPEC updated
 
 ### Phase 1A — UI prototypes (Artifacts)
 | Step | Batch | Status | Artifact URL |
@@ -24,7 +25,7 @@
 | 1A.0 | Fixtures in `packages/shared/fixtures` per LLD §6.2 | not started | — |
 | 1A.1 | UI-0 Logo directions + design system | not started | — |
 | 1A.2 | UI-1 Distributor sign-up/login & onboarding (D-01…D-06) | not started | — |
-| 1A.3 | UI-2 Dashboard & catalog (D-07…D-09) | not started | — |
+| 1A.3 | UI-2 Dashboard, catalog & stock (D-07…D-09c) | not started | — |
 | 1A.4 | UI-3 Retailers, requests, enquiries, QR (D-10…D-14) | not started | — |
 | 1A.5 | UI-4 Orders & decisions, settings (D-15…D-19) | not started | — |
 | 1A.6 | UI-5 Retailer entry + public page + forms (R-01…R-04) | not started | — |
@@ -44,11 +45,11 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 ### Phase 1C — API
 - [ ] 1C.1 Core middleware (request id, logger masking, headers, problem+json, rate limiter)
 - [ ] 1C.2 Auth: distributor signup/login/password (argon2id, lockout, admin reset), retailer identify, sessions, JWT, refresh rotation + reuse detection
-- [ ] 1C.3 Distributor: me, QR rotate, dashboard, items, categories, retailers, access requests, enquiries, inbox counts
+- [ ] 1C.3 Distributor: me, QR rotate, dashboard, items, categories, stock movements (restock/adjust), stock report, retailers, access requests, enquiries, inbox counts
 - [ ] 1C.4 Orders: create (idempotent), list/detail, decision, status, cancel
 - [ ] 1C.5 Uploads presign + finalise (sharp)
 - [ ] 1C.6 OpenAPI → `docs/openapi.json`, `/docs` dev only
-- [ ] 1C.7 Tests: isolation, rate limit, lockout, decision∥cancel concurrency, state machine, qty/money vectors, refresh reuse; coverage ≥ 80 %
+- [ ] 1C.7 Tests: isolation, rate limit, lockout, oversell concurrency, stock = Σ ledger, decision∥cancel concurrency, state machine, qty/money vectors, refresh reuse; coverage ≥ 80 %
 
 ### Phase 1D — Retailer web
 - [ ] 1D.1 Vite + Tailwind v4 + shadcn + router scaffold
@@ -59,7 +60,7 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 ### Phase 1E — Android
 - [ ] 1E.1 Network layer (generated DTOs, auth interceptor/authenticator, secure storage)
 - [ ] 1E.2 Sign-up/login (Credential Manager) + onboarding
-- [ ] 1E.3 Catalog + image upload
+- [ ] 1E.3 Catalog + image upload, restock/adjust, stock history, stock report
 - [ ] 1E.4 Retailers + location, access requests, enquiries
 - [ ] 1E.5 QR + share
 - [ ] 1E.6 Orders + decision flow, dashboard
@@ -76,3 +77,4 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 |---|---|
 | 2026-10-08 | Analysed brief. Wrote BRIEF (verbatim), HLD, LLD, UI-SPEC, DECISIONS (ADR-001…010, Q1–Q9), PROGRESS, CLAUDE.md. Awaiting owner answers. |
 | 2026-10-08 | Owner answers: Android only, PG18, Garage, Hono (Express rationale in ADR-003), decimal qty, distributor password, retailer phone-only + public page (enquire / request access), no stock, brand DistributeKaro. Rewrote DECISIONS, HLD, LLD, UI-SPEC. git init + baseline commit. |
+| 2026-10-08 | Owner: stock tracking IS needed for the distributor (sold vs remaining). Added ADR-016 (stock ledger, decrement at acceptance, no oversell, report), new screens D-09a/b/c. New assumptions QE (sold at acceptance), QF (no auto-hide at 0). |

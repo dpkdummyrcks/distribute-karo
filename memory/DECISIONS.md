@@ -19,8 +19,9 @@
 | ADR-011 | Money = integer paise; **quantities = decimal (3 dp)**, unit decides if fractions allowed | Accepted | 2026-10-08 |
 | ADR-012 | **Distributor auth = phone + password** (argon2id); no OTP/SMS in Phase 1 | Accepted | 2026-10-08 |
 | ADR-013 | **Retailer auth = phone number only**, scoped to the scanned distributor; unregistered → public page (Enquire / Request access) | Accepted | 2026-10-08 |
-| ADR-014 | **No stock tracking.** Inventory = catalog of what the distributor can supply; retailers see no stock; orders unconstrained by stock | Accepted (assumption → QA) | 2026-10-08 |
+| ADR-014 | ~~No stock tracking~~ | Superseded by ADR-016 | 2026-10-08 |
 | ADR-015 | Brand name **DistributeKaro**; logo to be designed during UI-0 | Accepted | 2026-10-08 |
+| ADR-016 | **Distributor-only stock tracking** via a stock ledger: sold vs remaining per item; retailers never see stock and can order freely | Accepted | 2026-10-08 |
 
 ---
 
@@ -88,12 +89,27 @@ The PWA is served at `/`, the retailer entry is `/d/<slug>`, and Caddy proxies `
   - the distributor can deactivate a retailer, which revokes their sessions
 - **Phase 2 option:** retailer PIN or OTP on new devices.
 
-## ADR-014 — No stock tracking
+## ADR-014 — No stock tracking — **Superseded by ADR-016**
 - Items have no `stock_qty` and there's no low-stock logic. Retailers never see stock.
 - `isActive` is the "can supply / can't supply right now" toggle, and only active items appear in the catalog.
 - Partial acceptance stays: the distributor sets `acceptedQty` per line (0 … requested), e.g. when they can't supply everything.
 - Concurrency still matters for order state (decision vs cancel, double decision). The order row lock handles it.
 - The brief's dashboard low-stock card is replaced with pending requests and enquiries.
+
+## ADR-016 — Distributor-only stock tracking
+**Owner:** "Stock tracking for the distributor is there: how much he has sold, and how much is left that is not yet sold."
+- `items.stock_qty` = **remaining** stock, `numeric(12,3)`, ≥ 0, following the unit's decimal rule. A `low_stock_threshold` per item drives the dashboard alerts.
+- **Stock ledger** `stock_movements` (append-only) records every change:
+  - `OPENING`: initial stock when the item is created
+  - `RESTOCK`: new goods received (+)
+  - `SALE`: written when an order is accepted (−accepted qty, linked to the order line)
+  - `ADJUSTMENT`: ± with a required reason (damage, expiry, count correction)
+
+  `stock_qty` is kept in sync in the same transaction, and a consistency test checks `stock_qty = Σ movements`.
+- **Sold** = Σ `SALE` movements (qty and ₹) over a period. **Remaining** = `stock_qty`. Both are shown per item and in a stock report (today / 7 d / 30 d / custom).
+- **At acceptance:** `acceptedQty` must be ≤ remaining stock, so stock never goes negative. The partial-accept editor shows each line's remaining stock and caps the stepper there. *Accept all* with a shortage returns `INSUFFICIENT_STOCK` and offers the partial editor. Item rows are locked (`FOR UPDATE`, in id order), so two concurrent acceptances can't oversell. This restores the brief's AC #5.
+- **Retailers:** never see stock in any form. They can order any quantity of an active item. Stock reaching 0 does **not** hide the item (QF).
+- PENDING, REJECTED and CANCELLED orders never touch stock.
 
 ---
 
@@ -110,11 +126,13 @@ The PWA is served at `/`, the retailer entry is `/d/<slug>`, and Caddy proxies `
 | Q8 | Brand | DistributeKaro; logo designed with UI |
 | Q9 | Order out-of-stock | Moot (no stock) |
 | — | git init + baseline commit | Yes |
+| QA | Stock tracking? | Yes, distributor-only: sold vs remaining — ADR-016 |
 
 ## Open questions
 | # | Question | Assumption used until answered |
 |---|---|---|
-| QA | Stock: confirm **no stock tracking at all**, even internally for the distributor? (Alternative: distributor-only stock number, decremented on acceptance, never shown to retailers) | No stock tracking |
 | QB | Distributor forgot password in Phase 1 (no SMS/email)? | Admin CLI `pnpm admin:reset-password <phone>` prints a one-time reset code (15 min) the distributor enters in the app; OTP/email reset in Phase 2 |
 | QC | Should the unregistered public page show the catalog (items, with or without prices)? | No: distributor card + Enquire + Request access only |
+| QE | Count an item as **sold at acceptance** or only at **delivery**? | At acceptance (stock is committed to that retailer once accepted) |
+| QF | When remaining stock hits 0, should the item auto-hide from the retailer catalog? | No, it stays orderable; the distributor sees it as out of stock and can partially accept or restock |
 | QD | When a distributor approves an access request, add the retailer straight away or open the pre-filled retailer form first? | Open the pre-filled form (distributor can add photo/location), then save |
