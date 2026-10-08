@@ -29,10 +29,10 @@
 | 1A.2 | UI-1 Distributor sign-up/login & onboarding (D-01…D-06) · EN/HI (sources: `prototypes/ui-1/project/`) | approved (defaults kept: confirm password, attempts warning from 3rd try, biz + owner required) | https://claude.ai/artifact/1fKKLFvphehUmeTUPSzpyk |
 | 1A.3 | UI-2 Dashboard, catalog & stock (D-07…D-09c) · EN/HI (sources: `prototypes/ui-2/project/`) | approved (no horizontal scroll fix applied) | https://claude.ai/artifact/63pT5g1DJhpUuNWGEgzcHA |
 | 1A.4 | UI-3 Retailers, requests, enquiries, QR, storefront editor + zone map (D-10…D-15) · EN/HI (sources: `prototypes/ui-3/project/`) | approved (defaults: approve opens prefilled form, no phone on QR poster, circle zones, deactivate signs out) | https://claude.ai/artifact/LB8NnNzh4R4Ups4kc6F9pg |
-| 1A.5 | UI-4 Orders & decisions, settings (D-15…D-19) · EN/HI (sources: `prototypes/ui-4/project/`) | in review | https://claude.ai/artifact/R3NEGEoDYbgnBxcQrU4TpN |
+| 1A.5 | UI-4 Orders & decisions, settings (D-15…D-19) · EN/HI (sources: `prototypes/ui-4/project/`) | approved (defaults: Accept all blocked when short, 4 reject reasons, confirm dialogs, settings under More) | https://claude.ai/artifact/R3NEGEoDYbgnBxcQrU4TpN |
 | 1A.6 | UI-5 Storefront, public products, entry, not-registered, forms (R-01…R-04) · EN/HI (sources: `prototypes/ui-5/project/`) | approved (R-01 replaced by v2) | https://claude.ai/artifact/TMsp8DxKnpVKywaqwDZhUb |
 | 1A.6b | Storefront v2: decorative/interactive redesign of R-01 (sources: `prototypes/storefront-v2/project/`) | approved, real map with delivery hotspots added | https://claude.ai/artifact/WqqY59SbZsCn2BERC6HjVE |
-| 1A.7 | UI-6 Retailer catalog → cart → orders (R-05…R-09) | not started | — |
+| 1A.7 | UI-6 Retailer catalog → cart → orders (R-05…R-09) · EN/HI (sources: `prototypes/ui-6/project/`) | in review | https://claude.ai/artifact/NHwipyCfbcgs86icTBVzYb |
 | 1A.8 | UI-7 Combined end-to-end prototype → **sign-off, freeze contract v0** | not started | — |
 Status values: `not started` · `in progress` · `in review` · `changes requested` · `approved`
 
@@ -93,3 +93,4 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 | 2026-10-08 | Owner: no horizontal scrolling in the app → UI-2 catalog filters, category chips and history filters now wrap (ADR-024). Open QH: same rule for retailer web? |
 | 2026-10-08 | UI-2 approved. UI-3 published (artifact LB8NnNzh4R4Ups4kc6F9pg). Prototype QR is a visual stand-in (correct finder patterns, random modules, not scannable); real app uses ZXing. Zone editor: tap-to-add, radius slider 0.5–10 km, move godown. |
 | 2026-10-08 | UI-3 approved (owner said proceed). UI-4 published (artifact R3NEGEoDYbgnBxcQrU4TpN). Accept all is blocked when any line is short on stock → Partial. Remaining batches: UI-6, UI-7. |
+| 2026-10-08 | UI-4 approved (owner: finish). UI-6 published (artifact NHwipyCfbcgs86icTBVzYb): catalog w/ category bottom sheet (no horizontal scroll on web either), typed decimal steppers, cart w/ unavailable item, placed w/ cut-off ETA, history, detail w/ cancel + reorder. |

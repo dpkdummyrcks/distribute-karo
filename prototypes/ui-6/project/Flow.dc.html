@@ -1,0 +1,546 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Retailer ordering flow</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700;800&amp;family=Anek+Devanagari:wght@500;600;700;800&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+</style>
+</helmet>
+<div style="width: 390px; height: 844px; position: relative; overflow: hidden; display: flex; flex-direction: column; font-family: 'Mukta', 'Anek Devanagari', system-ui, sans-serif; {{vars}}; background: var(--bg); color: var(--text)">
+
+  <!-- ===================================================== HEADER (catalog / history) -->
+  <sc-if value="{{showHeader}}" hint-placeholder-val="{{true}}">
+    <div style="flex: none; padding: 12px 14px 8px 16px; display: flex; align-items: center; gap: 10px">
+      <span style="width: 40px; height: 40px; flex: none; border-radius: 12px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center">SB</span>
+      <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 20px">
+        <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{header.title}}</span>
+        <span style="font-size: 13px; color: var(--text2); white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{s.orderingAs}}</span>
+      </span>
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; flex: none; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-family: inherit; font-size: 14px; font-weight: 700; cursor: pointer">{{s.langBtn}}</button>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== R-05 CATALOG -->
+  <sc-if value="{{scr.catalog}}" hint-placeholder-val="{{true}}">
+    <div style="flex: none; padding: 0 16px 8px; display: flex; gap: 8px">
+      <label style="flex: 1; height: 46px; border-radius: 14px; background: var(--field); display: flex; align-items: center; gap: 10px; padding: 0 14px; color: var(--text2)">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg>
+        <input aria-label="{{s.search}}" placeholder="{{s.search}}" value="{{cat.q}}" onChange="{{onQ}}" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 16px; color: var(--text); outline: none">
+      </label>
+      <button onClick="{{openCats}}" aria-haspopup="dialog" style="height: 46px; max-width: 150px; padding: 0 12px; flex: none; border-radius: 14px; border: 1.5px solid {{cat.catBorder}}; background: {{cat.catBg}}; color: {{cat.catFg}}; font-family: inherit; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M4 6h16M7 12h10M10 18h4"></path></svg><span style="white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{cat.catLabel}}</span></button>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 12px; display: flex; flex-direction: column; gap: 8px">
+      <sc-if value="{{cat.loading}}" hint-placeholder-val="{{false}}">
+        <sc-for list="{{skeleton}}" as="sk" hint-placeholder-count="6">
+          <div aria-hidden="true" style="border-radius: 16px; background: var(--surface); padding: 10px; display: flex; gap: 12px; align-items: center; opacity: {{sk.o}}">
+            <span style="width: 56px; height: 56px; flex: none; border-radius: 12px; background: var(--field)"></span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 8px"><span style="height: 13px; width: 75%; border-radius: 6px; background: var(--field)"></span><span style="height: 11px; width: 40%; border-radius: 6px; background: var(--field)"></span></span>
+            <span style="width: 76px; height: 40px; border-radius: 12px; background: var(--field)"></span>
+          </div>
+        </sc-for>
+      </sc-if>
+      <sc-for list="{{cat.items}}" as="p" hint-placeholder-count="6">
+        <div style="border-radius: 16px; background: var(--surface); padding: 10px; display: flex; flex-direction: column; gap: 8px">
+          <div style="display: flex; gap: 12px; align-items: center">
+            <span style="width: 56px; height: 56px; flex: none; border-radius: 12px; background: {{p.bg}}; color: {{p.fg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 18px; display: flex; align-items: center; justify-content: center">{{p.initials}}</span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 600">{{p.name}}</span><span style="font-size: 15px; font-weight: 800">{{p.rate}}</span></span>
+            <sc-if value="{{p.empty}}" hint-placeholder-val="{{true}}"><button onClick="{{p.add}}" aria-label="{{p.addAria}}" style="height: 42px; min-width: 76px; padding: 0 14px; flex: none; border-radius: 12px; border: 1.5px solid var(--primary); background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 800; cursor: pointer">{{s.add}}</button></sc-if>
+          </div>
+          <sc-if value="{{p.inCart}}" hint-placeholder-val="{{false}}">
+            <div style="display: flex; align-items: center; gap: 6px">
+              <button onClick="{{p.dec}}" aria-label="{{p.decAria}}" style="width: 44px; height: 44px; flex: none; border-radius: 12px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+              <label style="flex: 1; min-width: 0; height: 44px; box-sizing: border-box; border-radius: 12px; background: var(--field); border: 2px solid {{p.inputBorder}}; display: flex; align-items: center; padding: 0 10px; gap: 4px">
+                <input aria-label="{{p.qtyAria}}" value="{{p.qty}}" onChange="{{p.onInput}}" inputmode="{{p.inputMode}}" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; text-align: center; font-family: inherit; font-size: 17px; font-weight: 800; color: var(--text); outline: none">
+                <span style="font-size: 13px; font-weight: 600; color: var(--text2)">{{p.unit}}</span>
+              </label>
+              <button onClick="{{p.inc}}" aria-label="{{p.incAria}}" style="width: 44px; height: 44px; flex: none; border-radius: 12px; border: 0; background: var(--primary); color: var(--onPrimary); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+              <span style="min-width: 74px; text-align: right; font-size: 14px; font-weight: 800">{{p.lineTotal}}</span>
+            </div>
+            <sc-if value="{{p.err}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{p.errText}}</span></sc-if>
+          </sc-if>
+        </div>
+      </sc-for>
+      <sc-if value="{{cat.noResults}}" hint-placeholder-val="{{false}}">
+        <div style="padding: 48px 16px; display: flex; flex-direction: column; align-items: center; gap: 8px; text-align: center">
+          <span style="width: 64px; height: 64px; border-radius: 32px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M11 18a7 7 0 1 0 0-14 7 7 0 0 0 0 14zM20 20l-4-4"></path></svg></span>
+          <span style="font-size: 17px; font-weight: 700">{{s.noResults}}</span>
+          <span style="font-size: 14px; line-height: 20px; color: var(--text2)">{{s.noResultsSub}}</span>
+          <button onClick="{{clearFilters}}" style="margin-top: 4px; height: 44px; padding: 0 16px; border-radius: 12px; border: 1.5px solid var(--outline2); background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.clearFilters}}</button>
+        </div>
+      </sc-if>
+    </div>
+    <sc-if value="{{cartBar.show}}" hint-placeholder-val="{{true}}">
+      <div style="flex: none; margin: 0 12px 8px; min-height: 58px; border-radius: 16px; background: var(--inv); color: var(--onInv); display: flex; align-items: center; justify-content: space-between; gap: 8px; padding: 6px 8px 6px 16px; box-sizing: border-box">
+        <span style="display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 13px; opacity: 0.85">{{cartBar.count}}</span><span style="font-size: 17px; font-weight: 800">{{cartBar.total}} <span style="font-size: 12px; font-weight: 500; opacity: 0.8">{{s.est}}</span></span></span>
+        <button onClick="{{goCart}}" style="height: 44px; padding: 0 16px; border-radius: 12px; border: 0; background: #F2B33D; color: #2A1A00; font-family: inherit; font-size: 15px; font-weight: 800; display: flex; align-items: center; gap: 6px; cursor: pointer">{{s.viewCart}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></button>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <!-- ===================================================== R-06 CART -->
+  <sc-if value="{{scr.cart}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 14px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{goCatalog}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+      <h1 style="flex: 1; margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px">{{s.cart}}</h1>
+      <span style="font-size: 14px; color: var(--text2)">{{cartBar.count}}</span>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 12px; display: flex; flex-direction: column; gap: 10px">
+      <sc-if value="{{cart.hasUnavailable}}" hint-placeholder-val="{{false}}">
+        <div role="alert" style="border-radius: 14px; padding: 12px 14px; background: var(--dangerBg); color: var(--dangerFg); font-size: 14px; line-height: 20px; display: flex; gap: 10px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M12 3.5l9 16H3zM12 10v4M12 17v.01"></path></svg><span><span style="font-weight: 800">{{s.unavailTitle}}</span> {{s.unavailBody}}</span></div>
+      </sc-if>
+      <sc-for list="{{cart.lines}}" as="l" hint-placeholder-count="3">
+        <div style="border-radius: 16px; background: var(--surface); border: 1.5px solid {{l.border}}; padding: 10px; display: flex; flex-direction: column; gap: 8px; opacity: {{l.opacity}}">
+          <div style="display: flex; gap: 10px; align-items: center">
+            <span style="width: 44px; height: 44px; flex: none; border-radius: 12px; background: {{l.bg}}; color: {{l.fg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center">{{l.initials}}</span>
+            <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 15px; font-weight: 600">{{l.name}}</span><span style="font-size: 13px; color: var(--text2)">{{l.rate}}</span></span>
+            <button onClick="{{l.remove}}" aria-label="{{l.removeAria}}" style="width: 40px; height: 40px; flex: none; border: 0; border-radius: 20px; background: transparent; color: var(--text2); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"></path></svg></button>
+          </div>
+          <sc-if value="{{l.unavailable}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; font-weight: 700; color: var(--dangerFg)">{{s.noLonger}}</span></sc-if>
+          <sc-if value="{{l.available}}" hint-placeholder-val="{{true}}">
+            <div style="display: flex; align-items: center; gap: 6px">
+              <button onClick="{{l.dec}}" aria-label="{{l.decAria}}" style="width: 44px; height: 44px; flex: none; border-radius: 12px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M5 12h14"></path></svg></button>
+              <label style="flex: 1; min-width: 0; height: 44px; box-sizing: border-box; border-radius: 12px; background: var(--field); border: 2px solid {{l.inputBorder}}; display: flex; align-items: center; padding: 0 10px; gap: 4px">
+                <input aria-label="{{l.qtyAria}}" value="{{l.qty}}" onChange="{{l.onInput}}" inputmode="{{l.inputMode}}" style="flex: 1; min-width: 0; border: 0; background: transparent; padding: 0; text-align: center; font-family: inherit; font-size: 17px; font-weight: 800; color: var(--text); outline: none">
+                <span style="font-size: 13px; font-weight: 600; color: var(--text2)">{{l.unit}}</span>
+              </label>
+              <button onClick="{{l.inc}}" aria-label="{{l.incAria}}" style="width: 44px; height: 44px; flex: none; border-radius: 12px; border: 0; background: var(--primary); color: var(--onPrimary); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" aria-hidden="true"><path d="M12 5v14M5 12h14"></path></svg></button>
+              <span style="min-width: 74px; text-align: right; font-size: 15px; font-weight: 800">{{l.lineTotal}}</span>
+            </div>
+            <sc-if value="{{l.err}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{l.errText}}</span></sc-if>
+          </sc-if>
+        </div>
+      </sc-for>
+      <sc-if value="{{cart.empty}}" hint-placeholder-val="{{false}}">
+        <div style="padding: 56px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+          <span style="width: 80px; height: 80px; border-radius: 40px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 4h2.5l2.2 11h10.6L20.5 7H6.4M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM17 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z"></path></svg></span>
+          <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.cartEmpty}}</span>
+          <span style="font-size: 14px; color: var(--text2)">{{s.cartEmptySub}}</span>
+          <button onClick="{{goCatalog}}" style="margin-top: 4px; height: 46px; padding: 0 18px; border-radius: 12px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.browse}}</button>
+        </div>
+      </sc-if>
+      <sc-if value="{{cart.hasLines}}" hint-placeholder-val="{{true}}">
+        <label style="display: flex; flex-direction: column">
+          <span style="box-sizing: border-box; border-radius: 14px; background: var(--field); padding: 8px 14px; display: flex; flex-direction: column">
+            <span style="font-size: 12px; font-weight: 600; color: var(--text2)">{{s.noteLabel}}</span>
+            <textarea value="{{cart.note}}" onChange="{{onNote}}" rows="2" maxlength="500" placeholder="{{s.notePh}}" style="border: 0; background: transparent; padding: 0; font-family: inherit; font-size: 15px; line-height: 21px; color: var(--text); outline: none; width: 100%; resize: none"></textarea>
+          </span>
+        </label>
+        <div style="border-radius: 14px; padding: 12px 14px; background: var(--pc); color: var(--opc); font-size: 14px; line-height: 20px; display: flex; gap: 10px; align-items: flex-start"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none; margin-top: 1px"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 11v5M12 8v.01"></path></svg>{{s.estNote}}</div>
+      </sc-if>
+    </div>
+    <sc-if value="{{cart.hasLines}}" hint-placeholder-val="{{true}}">
+      <div style="flex: none; padding: 12px 16px 16px; background: var(--sheet); border-top: 1px solid var(--outline); display: flex; flex-direction: column; gap: 10px">
+        <span style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 15px; font-weight: 600">{{s.estTotal}}</span><span style="font-size: 22px; font-weight: 800">{{cartBar.total}}</span></span>
+        <button onClick="{{placeOrder}}" aria-disabled="{{cart.blocked}}" style="height: 52px; border-radius: 14px; border: 0; background: {{cart.btnBg}}; color: {{cart.btnFg}}; font-family: inherit; font-size: 17px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 10px; cursor: pointer">
+          <sc-if value="{{cart.placing}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 40 40" aria-hidden="true"><circle cx="20" cy="20" r="15" fill="none" stroke="currentColor" stroke-opacity="0.3" stroke-width="5"></circle><path d="M20 5a15 15 0 0 1 15 15" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><animateTransform attributeName="transform" type="rotate" from="0 20 20" to="360 20 20" dur="0.8s" repeatCount="indefinite"></animateTransform></path></svg></sc-if>{{cart.btnLabel}}
+        </button>
+      </div>
+    </sc-if>
+  </sc-if>
+
+  <!-- ===================================================== R-07 PLACED -->
+  <sc-if value="{{scr.placed}}" hint-placeholder-val="{{false}}">
+    <div style="flex: 1; padding: 32px 20px 16px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 12px; overflow-y: auto">
+      <span style="width: 96px; height: 96px; border-radius: 48px; background: var(--successBg); color: var(--successFg); display: flex; align-items: center; justify-content: center"><svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></span>
+      <h1 role="status" style="margin: 4px 0 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 28px">{{placed.title}}</h1>
+      <p style="margin: 0; max-width: 310px; font-size: 16px; line-height: 23px; color: var(--text2)">{{s.placedSub}}</p>
+      <div style="width: 100%; border-radius: 18px; background: var(--surface); padding: 14px 16px; box-sizing: border-box; display: flex; flex-direction: column; gap: 8px; text-align: left; margin-top: 8px">
+        <span style="display: flex; justify-content: space-between; font-size: 15px"><span style="color: var(--text2)">{{s.itemsLabel}}</span><span style="font-weight: 700">{{placed.lines}}</span></span>
+        <span style="display: flex; justify-content: space-between; font-size: 15px"><span style="color: var(--text2)">{{s.estTotal}}</span><span style="font-weight: 800">{{placed.total}}</span></span>
+        <span style="display: flex; gap: 8px; align-items: center; padding-top: 8px; border-top: 1px solid var(--outline); font-size: 14px; font-weight: 700; color: var(--accentFg)"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"></path></svg>{{placed.eta}}</span>
+      </div>
+    </div>
+    <div style="flex: none; padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px">
+      <button onClick="{{viewPlaced}}" style="height: 52px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 16px; font-weight: 800; cursor: pointer">{{s.viewOrder}}</button>
+      <button onClick="{{goCatalog}}" style="height: 48px; border-radius: 14px; border: 1.5px solid var(--outline2); background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.keepShopping}}</button>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== R-08 HISTORY -->
+  <sc-if value="{{scr.history}}" hint-placeholder-val="{{false}}">
+    <div style="flex: 1; overflow-y: auto; padding: 4px 16px 16px; display: flex; flex-direction: column; gap: 10px">
+      <h2 style="margin: 4px 0 2px; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px">{{s.myOrders}}</h2>
+      <sc-for list="{{history}}" as="h" hint-placeholder-count="4">
+        <button onClick="{{h.open}}" style="width: 100%; text-align: left; border: 0; border-radius: 18px; background: var(--surface); color: var(--text); padding: 14px; display: flex; flex-direction: column; gap: 8px; font-family: inherit; cursor: pointer">
+          <span style="display: flex; justify-content: space-between; align-items: center; gap: 8px"><span style="font-size: 16px; font-weight: 800">#{{h.no}}</span><span style="display: inline-flex; align-items: center; gap: 4px; height: 26px; padding: 0 9px 0 7px; border-radius: 999px; font-size: 12px; font-weight: 700; background: {{h.chipBg}}; color: {{h.chipFg}}"><svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.chipIcon}}"></path></svg>{{h.status}}</span></span>
+          <span style="display: flex; justify-content: space-between; align-items: baseline; gap: 8px; font-size: 14px; color: var(--text2)"><span>{{h.date}} · {{h.lines}}</span><span style="display: flex; gap: 6px; align-items: baseline"><span style="text-decoration: {{h.strike}}">{{h.req}}</span><sc-if value="{{h.hasAcc}}" hint-placeholder-val="{{false}}"><span style="font-size: 16px; font-weight: 800; color: var(--text)">{{h.acc}}</span></sc-if></span></span>
+        </button>
+      </sc-for>
+      <sc-if value="{{historyEmpty}}" hint-placeholder-val="{{false}}">
+        <div style="padding: 56px 20px; display: flex; flex-direction: column; align-items: center; gap: 10px; text-align: center">
+          <span style="width: 80px; height: 80px; border-radius: 40px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6"></path></svg></span>
+          <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.noOrders}}</span>
+          <span style="font-size: 14px; color: var(--text2)">{{s.noOrdersSub}}</span>
+          <button onClick="{{goCatalog}}" style="margin-top: 4px; height: 46px; padding: 0 18px; border-radius: 12px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.browse}}</button>
+        </div>
+      </sc-if>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== R-09 DETAIL -->
+  <sc-if value="{{scr.detail}}" hint-placeholder-val="{{false}}">
+    <div style="height: 60px; flex: none; padding: 0 16px 0 4px; display: flex; align-items: center; gap: 4px">
+      <button onClick="{{goHistory}}" aria-label="{{s.back}}" style="width: 44px; height: 44px; border: 0; border-radius: 22px; background: transparent; color: var(--text); display: flex; align-items: center; justify-content: center; cursor: pointer"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 5l-7 7 7 7"></path></svg></button>
+      <span style="flex: 1; display: flex; flex-direction: column; line-height: 20px"><span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px">{{s.order}} #{{d.no}}</span><span style="font-size: 13px; color: var(--text2)">{{d.date}}</span></span>
+      <span style="display: inline-flex; align-items: center; gap: 4px; height: 28px; padding: 0 10px 0 8px; border-radius: 999px; font-size: 13px; font-weight: 700; background: {{d.chipBg}}; color: {{d.chipFg}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{d.chipIcon}}"></path></svg>{{d.status}}</span>
+    </div>
+    <div style="flex: 1; overflow-y: auto; padding: 0 16px 16px; display: flex; flex-direction: column; gap: 12px">
+      <section style="border-radius: 18px; background: var(--surface); padding: 14px 16px; display: flex; flex-direction: column">
+        <sc-for list="{{d.steps}}" as="sp" hint-placeholder-count="4">
+          <div style="display: flex; gap: 12px">
+            <div style="display: flex; flex-direction: column; align-items: center; width: 18px"><span style="width: 14px; height: 14px; box-sizing: border-box; border-radius: 7px; margin-top: 3px; background: {{sp.dot}}; border: 2px solid {{sp.ring}}"></span><sc-if value="{{sp.hasLine}}" hint-placeholder-val="{{true}}"><span style="width: 2px; flex: 1; min-height: 16px; background: {{sp.line}}"></span></sc-if></div>
+            <div style="display: flex; flex-direction: column; padding-bottom: 10px; line-height: 19px"><span style="font-size: 15px; font-weight: 700; color: {{sp.fg}}">{{sp.label}}</span><span style="font-size: 13px; color: var(--text2)">{{sp.time}}</span></div>
+          </div>
+        </sc-for>
+      </section>
+      <sc-if value="{{d.hasNote}}" hint-placeholder-val="{{false}}"><div style="border-radius: 14px; padding: 10px 14px; background: var(--sheet); font-size: 14px; line-height: 20px"><span style="font-weight: 700">{{s.yourNote}}: </span>{{d.note}}</div></sc-if>
+      <span style="font-size: 13px; font-weight: 800; letter-spacing: 0.05em; color: var(--text2)">{{d.linesTitle}}</span>
+      <sc-for list="{{d.lines}}" as="l" hint-placeholder-count="3">
+        <div style="border-radius: 14px; background: var(--surface); border: 1.5px solid {{l.border}}; padding: 10px 12px; display: flex; flex-direction: column; gap: 4px">
+          <span style="display: flex; justify-content: space-between; gap: 8px"><span style="font-size: 15px; font-weight: 600">{{l.name}}</span><span style="flex: none; font-size: 15px; font-weight: 800">{{l.amount}}</span></span>
+          <span style="display: flex; align-items: center; gap: 8px; font-size: 14px"><span style="color: var(--text2); text-decoration: {{l.strike}}">{{l.asked}}</span><sc-if value="{{l.decided}}" hint-placeholder-val="{{false}}"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="color: var(--text2)"><path d="M5 12h14M13 6l6 6-6 6"></path></svg><span style="font-weight: 800; color: {{l.accFg}}">{{l.acc}}</span></sc-if></span>
+          <sc-if value="{{l.hasNote}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; padding: 6px 8px; border-radius: 8px; background: var(--warnBg); color: var(--warnFg)">{{s.fromDistributor}}: {{l.note}}</span></sc-if>
+        </div>
+      </sc-for>
+      <section style="border-radius: 16px; background: var(--surface); padding: 12px 14px; display: flex; flex-direction: column; gap: 6px">
+        <span style="display: flex; justify-content: space-between; font-size: 14px; color: var(--text2)"><span>{{s.estTotal}}</span><span style="text-decoration: {{d.reqStrike}}">{{d.reqTotal}}</span></span>
+        <sc-if value="{{d.hasFinal}}" hint-placeholder-val="{{false}}"><span style="display: flex; justify-content: space-between; align-items: baseline"><span style="font-size: 15px; font-weight: 700">{{s.finalTotal}}</span><span style="font-size: 22px; font-weight: 800">{{d.accTotal}}</span></span></sc-if>
+      </section>
+    </div>
+    <div style="flex: none; padding: 12px 16px 16px; background: var(--sheet); border-top: 1px solid var(--outline); display: flex; gap: 8px">
+      <sc-if value="{{d.canCancel}}" hint-placeholder-val="{{false}}"><button onClick="{{askCancel}}" style="flex: 1; height: 50px; border-radius: 14px; border: 1.5px solid var(--danger); background: transparent; color: var(--danger); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.cancelOrder}}</button></sc-if>
+      <button onClick="{{reorder}}" style="flex: 1.4; height: 50px; border-radius: 14px; border: 0; background: var(--primary); color: var(--onPrimary); font-family: inherit; font-size: 15px; font-weight: 800; display: flex; align-items: center; justify-content: center; gap: 8px; cursor: pointer"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 12a8 8 0 0 1 13.7-5.6M20 4v5h-5M20 12a8 8 0 0 1-13.7 5.6M4 20v-5h5"></path></svg>{{s.reorder}}</button>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== TABS -->
+  <sc-if value="{{showTabs}}" hint-placeholder-val="{{true}}">
+    <nav style="flex: none; height: 64px; border-top: 1px solid var(--outline); background: var(--sheet); display: grid; grid-template-columns: repeat(3, minmax(0, 1fr))">
+      <sc-for list="{{tabs}}" as="tb" hint-placeholder-count="3">
+        <button onClick="{{tb.pick}}" aria-current="{{tb.current}}" style="border: 0; background: transparent; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; color: {{tb.fg}}; font-family: inherit; font-size: 12px; font-weight: 700; cursor: pointer">
+          <span style="position: relative; display: flex"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{tb.icon}}"></path></svg><sc-if value="{{tb.hasBadge}}" hint-placeholder-val="{{false}}"><span style="position: absolute; top: -6px; right: -12px; min-width: 18px; height: 18px; padding: 0 5px; box-sizing: border-box; border-radius: 9px; background: #F2B33D; color: #2A1A00; font-size: 11px; font-weight: 800; line-height: 18px; text-align: center">{{tb.badge}}</span></sc-if></span>{{tb.label}}
+        </button>
+      </sc-for>
+    </nav>
+  </sc-if>
+
+  <!-- ===================================================== CATEGORY SHEET -->
+  <sc-if value="{{catSheet.open}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end">
+      <button onClick="{{closeCats}}" aria-label="{{s.close}}" style="position: absolute; inset: 0; border: 0; background: var(--scrim); cursor: pointer"></button>
+      <div role="dialog" aria-label="{{s.categories}}" style="position: relative; background: var(--sheet); border-radius: 26px 26px 0 0; padding: 10px 16px 20px; display: flex; flex-direction: column; gap: 12px">
+        <span style="align-self: center; width: 36px; height: 4px; border-radius: 2px; background: var(--outline2)"></span>
+        <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 20px; padding: 0 4px">{{s.categories}}</span>
+        <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+          <sc-for list="{{catSheet.items}}" as="c" hint-placeholder-count="12">
+            <button onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="min-height: 52px; border-radius: 14px; border: 2px solid {{c.ring}}; background: {{c.bg}}; color: {{c.fg}}; padding: 6px 12px; display: flex; align-items: center; gap: 10px; font-family: inherit; text-align: left; cursor: pointer">
+              <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="{{c.icon}}"></path></svg>
+              <span style="flex: 1; display: flex; flex-direction: column; line-height: 17px"><span style="font-size: 14px; font-weight: 700">{{c.label}}</span><span style="font-size: 12px; opacity: 0.8">{{c.count}}</span></span>
+            </button>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== CANCEL DIALOG -->
+  <sc-if value="{{dialog}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; z-index: 11; background: var(--scrim); display: flex; align-items: center; justify-content: center; padding: 24px">
+      <div role="alertdialog" aria-label="{{s.cancelTitle}}" style="width: 100%; background: var(--sheet); border-radius: 24px; padding: 22px; display: flex; flex-direction: column; gap: 12px">
+        <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px; line-height: 26px">{{s.cancelTitle}}</span>
+        <span style="font-size: 15px; line-height: 22px; color: var(--text2)">{{s.cancelBody}}</span>
+        <div style="display: flex; justify-content: flex-end; gap: 8px; margin-top: 6px">
+          <button onClick="{{keepOrder}}" style="height: 44px; padding: 0 16px; border: 0; border-radius: 12px; background: transparent; color: var(--primary); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.keep}}</button>
+          <button onClick="{{confirmCancel}}" style="height: 44px; padding: 0 18px; border: 0; border-radius: 12px; background: var(--danger); color: var(--onDanger); font-family: inherit; font-size: 15px; font-weight: 700; cursor: pointer">{{s.cancelOrder}}</button>
+        </div>
+      </div>
+    </div>
+  </sc-if>
+
+  <!-- ===================================================== TOAST -->
+  <sc-if value="{{snack.show}}" hint-placeholder-val="{{false}}">
+    <div role="status" style="position: absolute; left: 12px; right: 12px; top: 12px; z-index: 12; min-height: 48px; padding: 10px 14px; box-sizing: border-box; border-radius: 14px; background: var(--inv); color: var(--onInv); font-size: 14px; font-weight: 600; display: flex; align-items: center; gap: 10px; box-shadow: 0 8px 24px rgba(20,18,60,0.25)">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#4ADE80" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" style="flex: none"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l2.8 2.8L16.5 9.5"></path></svg>{{snack.text}}
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"start":{"editor":"enum","default":"catalog","options":["catalog","catalogLoading","noResults","categories","cart","cartUnavailable","placed","history","historyEmpty","detailPending","detailDispatched","detailCancelled"]},"lang":{"editor":"enum","default":"en","options":["en","hi"]},"dark":{"editor":"boolean","default":false},"auto":{"editor":"boolean","default":true},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = this.initState(props.start ?? 'catalog');
+  }
+  toM(q) { const [a, b = ''] = String(q).split('.'); return parseInt(a || '0', 10) * 1000 + parseInt((b + '000').slice(0, 3), 10); }
+  fq(m) { const a = Math.abs(m); const s = `${Math.floor(a / 1000)}.${String(a % 1000).padStart(3, '0')}`.replace(/\.?0+$/, ''); return s || '0'; }
+  // fixtures/catalog.json (19 active) + one item that became unavailable (Everest, id 18)
+  baseItems() {
+    return [['Aashirvaad Shudh Chakki Atta 10 kg', 'PACK', 46500, 'Staples'], ['Tata Salt 1 kg (case of 25)', 'CASE', 60000, 'Staples'], ['Sugar (loose)', 'KG', 4250, 'Staples'],
+      ['Fortune Sunflower Oil', 'L', 15500, 'Edible Oil'], ['Toor Dal', 'KG', 13800, 'Pulses'], ['Basmati Rice (loose)', 'KG', 9600, 'Staples'], ['Parle-G 80 g (box of 48)', 'BOX', 48000, 'Biscuits'],
+      ['Britannia Good Day Cashew 200 g', 'PCS', 4000, 'Biscuits'], ['Maggi 2-Minute Noodles 70 g', 'DOZEN', 16800, 'Instant Food'], ['Amul Butter 500 g', 'PCS', 27500, 'Dairy'],
+      ['Amul Taaza Toned Milk', 'L', 5400, 'Dairy'], ['Surf Excel Easy Wash 1 kg', 'PCS', 14000, 'Home Care'], ['Vim Dishwash Bar 200 g (pack of 4)', 'PACK', 8800, 'Home Care'],
+      ['Colgate Strong Teeth 200 g', 'PCS', 11000, 'Personal Care'], ['Dettol Original Soap 125 g (pack of 4)', 'PACK', 22000, 'Personal Care'], ['Red Label Tea 1 kg', 'PCS', 52000, 'Beverages'],
+      ['Bru Instant Coffee 200 g', 'PCS', 38500, 'Beverages'], ["Haldiram's Aloo Bhujia 1 kg", 'PCS', 26000, 'Snacks'], ['Everest Garam Masala 100 g', 'PCS', 8200, 'Spices'], ['Haldi Powder (loose)', 'G', 30, 'Spices']]
+      .map(([name, unit, rate, cat], id) => ({ id, name, unit, rate, cat, active: id !== 18 }));
+  }
+  // fixtures/retailer-orders.page.json (Sharma General Store)
+  baseOrders() {
+    return [
+      { no: 1040, status: 'PENDING', note: 'Please send before 5 PM', lines: [[0, '5'], [2, '25.5'], [4, '50'], [8, '4'], [9, '10']], events: [['PENDING', '2026-10-08T05:12:00Z']] },
+      { no: 1035, status: 'DISPATCHED', note: null, lines: [[4, '75', '75'], [2, '50', '40', '40 kg now, rest on Friday'], [10, '20', '20']], events: [['PENDING', '2026-10-07T05:50:00Z'], ['PARTIALLY_ACCEPTED', '2026-10-07T06:35:00Z'], ['DISPATCHED', '2026-10-07T11:00:00Z']] },
+      { no: 1031, status: 'CANCELLED', note: null, lines: [[6, '2'], [7, '24']], events: [['PENDING', '2026-10-04T06:30:00Z'], ['CANCELLED', '2026-10-04T06:50:00Z']] },
+    ].map((o) => ({ ...o, lines: o.lines.map(([item, req, acc = null, note = null]) => ({ item, reqM: this.toM(req), accM: acc === null ? null : this.toM(acc), note })),
+      events: o.events.map(([to, at]) => ({ to, at })) }));
+  }
+  initState(start) {
+    const base = { screen: 'catalog', lang: null, items: this.baseItems(), orders: this.baseOrders(), q: '', cat: 'All', catSheet: false,
+      cart: { 0: '2', 2: '10' }, note: '', loading: false, placing: false, openNo: 1040, placedNo: null, dialog: false, snack: null, nextNo: 1041 };
+    const m = {
+      catalog: {}, catalogLoading: { loading: true }, noResults: { q: 'patanjali' }, categories: { catSheet: true },
+      cart: { screen: 'cart', cart: { 0: '2', 2: '10', 4: '12.5', 9: '6' }, note: 'Please deliver before 4 PM' },
+      cartUnavailable: { screen: 'cart', cart: { 0: '2', 18: '10', 4: '5' } },
+      placed: { screen: 'placed', placedNo: 1041, cart: {}, orders: [{ no: 1041, status: 'PENDING', note: null,
+        lines: [{ item: 0, reqM: 2000, accM: null, note: null }, { item: 2, reqM: 10000, accM: null, note: null }], events: [{ to: 'PENDING', at: new Date().toISOString() }] }, ...this.baseOrders()] },
+      history: { screen: 'history' }, historyEmpty: { screen: 'history', orders: [] },
+      detailPending: { screen: 'detail', openNo: 1040 }, detailDispatched: { screen: 'detail', openNo: 1035 }, detailCancelled: { screen: 'detail', openNo: 1031 },
+    };
+    return { ...base, ...(m[start] ?? {}) };
+  }
+  componentDidMount() { if ((this.props.auto ?? true) && this.state.loading) this.loadT = setTimeout(() => this.setState({ loading: false }), 1500); }
+  componentWillUnmount() { clearTimeout(this.loadT); clearTimeout(this.snackT); clearTimeout(this.placeT); }
+  componentDidUpdate(prev) {
+    if (prev.start !== this.props.start) this.setState(this.initState(this.props.start ?? 'catalog'));
+    else if (prev.lang !== this.props.lang && this.state.lang !== null) this.setState({ lang: null });
+  }
+  toast(text, extra = {}) { clearTimeout(this.snackT); this.setState({ ...extra, snack: text }); this.snackT = setTimeout(() => this.setState({ snack: null }), 3000); }
+
+  renderVals() {
+    const st = this.state;
+    const dark = this.props.dark ?? false;
+    const lang = st.lang ?? this.props.lang ?? 'en';
+    const L = { bg: '#F7F6FC', surface: '#EEEDF8', field: '#E3E2F1', sheet: '#FFFFFF', outline: '#DCDBEA', outline2: '#8F8EA8',
+      text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF', pc: '#E4E2FB', opc: '#1E1B4B', accentFg: '#7A4A00',
+      danger: '#B91C1C', onDanger: '#FFFFFF', dangerBg: '#FEE2E2', dangerFg: '#991B1B', warnBg: '#FEF3C7', warnFg: '#92400E',
+      successBg: '#DCFCE7', successFg: '#166534', inv: '#1E1B4B', onInv: '#F2F1FA', scrim: 'rgba(14,13,26,0.5)', disabled: '#D3D2E3', onDisabled: '#6B6A85' };
+    const D = { bg: '#0E0D1A', surface: '#1A1930', field: '#24223F', sheet: '#222039', outline: '#34324F', outline2: '#7C7A99',
+      text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760', pc: '#2E2A78', opc: '#E4E2FB', accentFg: '#F7CF7A',
+      danger: '#F87171', onDanger: '#2A0606', dangerBg: '#450A0A', dangerFg: '#FCA5A5', warnBg: '#422006', warnFg: '#FCD34D',
+      successBg: '#052E16', successFg: '#86EFAC', inv: '#EEEDF7', onInv: '#16152B', scrim: 'rgba(0,0,0,0.6)', disabled: '#2C2A45', onDisabled: '#8E8CA8' };
+    const vars = Object.entries(dark ? D : L).map(([k, v]) => `--${k}: ${v}`).join('; ');
+
+    const T = {
+      en: {
+        langBtn: 'हिंदी', langAria: 'Switch to Hindi', back: 'Back', close: 'Close', orderingAs: 'Ordering as Sharma General Store',
+        search: 'Search products', all: 'All products', categories: 'Categories', add: 'Add', est: 'est.', viewCart: 'View cart',
+        noResults: 'No products found', noResultsSub: 'Try another word, or ask Shree Balaji Traders to add it.', clearFilters: 'Clear search',
+        cart: 'Your cart', items: (n) => `${n} item${n === 1 ? '' : 's'}`, cartEmpty: 'Your cart is empty', cartEmptySub: 'Add products from the catalog.', browse: 'Browse products',
+        unavailTitle: 'Some items are no longer available.', unavailBody: 'Remove them to place your order.', noLonger: 'No longer available',
+        noteLabel: 'Note for the distributor · optional', notePh: 'e.g. Deliver before 4 PM',
+        estNote: 'This is an estimate. Shree Balaji Traders confirms the final quantities and amount.', estTotal: 'Estimated total', finalTotal: 'Final amount',
+        place: 'Place order', placing: 'Placing order…', removeFirst: 'Remove unavailable items',
+        errQty: 'Enter a valid quantity', errWhole: (u) => `Whole numbers only for ${u}`,
+        placedTitle: (n) => `Order #${n} placed`, placedSub: 'Shree Balaji Traders will confirm quantities. You will see any changes in My orders.',
+        itemsLabel: 'Items', etaToday: 'Placed before the 2 PM cut-off · arrives today', etaTomorrow: 'Arrives tomorrow (after the 2 PM cut-off)',
+        viewOrder: 'View order', keepShopping: 'Continue shopping', myOrders: 'My orders', order: 'Order',
+        noOrders: 'No orders yet', noOrdersSub: 'Your orders and their status show up here.',
+        status: { PENDING: 'Waiting', ACCEPTED: 'Confirmed', PARTIALLY_ACCEPTED: 'Partly confirmed', REJECTED: 'Not accepted', CANCELLED: 'Cancelled', DISPATCHED: 'On the way', DELIVERED: 'Delivered' },
+        steps: ['Order placed', 'Confirmed by distributor', 'On the way', 'Delivered'], partly: 'Partly confirmed by distributor', notAccepted: 'Not accepted by distributor', cancelledStep: 'Cancelled by you', waiting: 'Waiting',
+        yourNote: 'Your note', linesTitle: (n) => `${n} ITEMS · ASKED → CONFIRMED`, fromDistributor: 'Distributor',
+        cancelOrder: 'Cancel order', reorder: 'Reorder', cancelTitle: 'Cancel this order?', cancelBody: 'You can cancel only while the distributor has not confirmed it.', keep: 'Keep order',
+        cancelledSnack: 'Order cancelled', reordered: (n, sk) => `${n} items added to cart${sk ? ` · ${sk} unavailable skipped` : ''}`,
+        tabs: ['Catalog', 'Cart', 'Orders'],
+        units: { PCS: 'pcs', BOX: 'box', DOZEN: 'dozen', PACK: 'pack', CASE: 'case', KG: 'kg', G: 'g', L: 'L' },
+        cats: { Staples: 'Staples', Pulses: 'Pulses', 'Edible Oil': 'Edible Oil', Dairy: 'Dairy', Biscuits: 'Biscuits', 'Instant Food': 'Instant Food', Beverages: 'Beverages', Snacks: 'Snacks', Spices: 'Spices', 'Home Care': 'Home Care', 'Personal Care': 'Personal Care' },
+      },
+      hi: {
+        langBtn: 'English', langAria: 'Switch to English', back: 'वापस', close: 'बंद करें', orderingAs: 'Sharma General Store के रूप में ऑर्डर',
+        search: 'प्रोडक्ट खोजें', all: 'सभी प्रोडक्ट', categories: 'कैटेगरी', add: 'जोड़ें', est: 'अनुमान', viewCart: 'कार्ट देखें',
+        noResults: 'कोई प्रोडक्ट नहीं मिला', noResultsSub: 'कोई दूसरा शब्द आज़माएँ, या Shree Balaji Traders से इसे जोड़ने को कहें।', clearFilters: 'खोज हटाएँ',
+        cart: 'आपका कार्ट', items: (n) => `${n} आइटम`, cartEmpty: 'आपका कार्ट खाली है', cartEmptySub: 'कैटलॉग से प्रोडक्ट जोड़ें।', browse: 'प्रोडक्ट देखें',
+        unavailTitle: 'कुछ आइटम अब उपलब्ध नहीं हैं।', unavailBody: 'ऑर्डर करने के लिए उन्हें हटाएँ।', noLonger: 'अब उपलब्ध नहीं',
+        noteLabel: 'डिस्ट्रीब्यूटर के लिए नोट · वैकल्पिक', notePh: 'जैसे 4 बजे से पहले भेजें',
+        estNote: 'यह अनुमान है। अंतिम मात्रा और रकम Shree Balaji Traders कन्फ़र्म करेंगे।', estTotal: 'अनुमानित कुल', finalTotal: 'अंतिम रकम',
+        place: 'ऑर्डर करें', placing: 'ऑर्डर हो रहा है…', removeFirst: 'उपलब्ध नहीं वाले आइटम हटाएँ',
+        errQty: 'सही मात्रा डालें', errWhole: (u) => `${u} के लिए सिर्फ़ पूरे अंक`,
+        placedTitle: (n) => `ऑर्डर #${n} हो गया`, placedSub: 'Shree Balaji Traders मात्रा कन्फ़र्म करेंगे। कोई बदलाव हो तो "मेरे ऑर्डर" में दिखेगा।',
+        itemsLabel: 'आइटम', etaToday: 'दोपहर 2 बजे से पहले ऑर्डर · आज पहुँचेगा', etaTomorrow: 'कल पहुँचेगा (2 बजे के बाद ऑर्डर)',
+        viewOrder: 'ऑर्डर देखें', keepShopping: 'और खरीदें', myOrders: 'मेरे ऑर्डर', order: 'ऑर्डर',
+        noOrders: 'अभी कोई ऑर्डर नहीं', noOrdersSub: 'आपके ऑर्डर और उनकी स्थिति यहाँ दिखेगी।',
+        status: { PENDING: 'इंतज़ार', ACCEPTED: 'कन्फ़र्म', PARTIALLY_ACCEPTED: 'आंशिक कन्फ़र्म', REJECTED: 'स्वीकार नहीं', CANCELLED: 'रद्द', DISPATCHED: 'रास्ते में', DELIVERED: 'डिलीवर' },
+        steps: ['ऑर्डर दिया', 'डिस्ट्रीब्यूटर ने कन्फ़र्म किया', 'रास्ते में', 'डिलीवर हुआ'], partly: 'डिस्ट्रीब्यूटर ने आंशिक कन्फ़र्म किया', notAccepted: 'डिस्ट्रीब्यूटर ने स्वीकार नहीं किया', cancelledStep: 'आपने रद्द किया', waiting: 'इंतज़ार',
+        yourNote: 'आपका नोट', linesTitle: (n) => `${n} आइटम · माँगा → कन्फ़र्म`, fromDistributor: 'डिस्ट्रीब्यूटर',
+        cancelOrder: 'ऑर्डर रद्द करें', reorder: 'फिर से ऑर्डर', cancelTitle: 'यह ऑर्डर रद्द करें?', cancelBody: 'डिस्ट्रीब्यूटर के कन्फ़र्म करने से पहले ही रद्द कर सकते हैं।', keep: 'ऑर्डर रखें',
+        cancelledSnack: 'ऑर्डर रद्द हुआ', reordered: (n, sk) => `${n} आइटम कार्ट में जुड़े${sk ? ` · ${sk} उपलब्ध नहीं` : ''}`,
+        tabs: ['कैटलॉग', 'कार्ट', 'ऑर्डर'],
+        units: { PCS: 'पीस', BOX: 'बॉक्स', DOZEN: 'दर्जन', PACK: 'पैक', CASE: 'केस', KG: 'किलो', G: 'ग्राम', L: 'लीटर' },
+        cats: { Staples: 'राशन', Pulses: 'दालें', 'Edible Oil': 'खाद्य तेल', Dairy: 'डेयरी', Biscuits: 'बिस्किट', 'Instant Food': 'इंस्टेंट फ़ूड', Beverages: 'पेय', Snacks: 'स्नैक्स', Spices: 'मसाले', 'Home Care': 'घर की सफ़ाई', 'Personal Care': 'पर्सनल केयर' },
+      },
+    };
+    const t = T[lang];
+    const STEP = { KG: 500, L: 500, G: 50000 };
+    const FIRST = { G: 250000 };
+    const inr = (p) => new Intl.NumberFormat('en-IN', { style: 'currency', currency: 'INR', minimumFractionDigits: 2 }).format(p / 100);
+    const pay = (rate, m) => Math.floor((rate * m + 500) / 1000);
+    const U = (u) => t.units[u];
+    const when = (iso) => new Date(iso).toLocaleString(lang === 'hi' ? 'hi-IN' : 'en-IN', { day: 'numeric', month: 'short', hour: 'numeric', minute: '2-digit', timeZone: 'Asia/Kolkata' });
+    const TINT = dark ? [['#2E2A78', '#E4E2FB'], ['#3A2A08', '#F7CF7A'], ['#0B3B36', '#99F6E4'], ['#4C0519', '#FDA4AF']]
+      : [['#E4E2FB', '#1E1B4B'], ['#FDF0D5', '#7A4A00'], ['#D5F2EE', '#115E59'], ['#FBE3E8', '#9F1239']];
+    const CATS = ['Staples', 'Pulses', 'Edible Oil', 'Dairy', 'Biscuits', 'Instant Food', 'Beverages', 'Snacks', 'Spices', 'Home Care', 'Personal Care'];
+    const tint = (c) => TINT[Math.max(0, CATS.indexOf(c)) % 4];
+    const initials = (n) => n.replace(/[^A-Za-z ]/g, '').split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join('').toUpperCase();
+    const CI = {
+      All: 'M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z',
+      Staples: 'M12 21V9M12 9c0-3 2-5 4-6 0 3-1.5 5-4 6zM12 9c0-3-2-5-4-6 0 3 1.5 5 4 6zM12 14c0-2.5 2-4.5 4-5 0 2.5-1.5 4.5-4 5zM12 14c0-2.5-2-4.5-4-5 0 2.5 1.5 4.5 4 5z',
+      Pulses: 'M3 11h18a9 9 0 0 1-18 0zM8 8h.01M12 6.5h.01M16 8h.01', 'Edible Oil': 'M10 3h4v3l2 3v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9l2-3zM8 13h8',
+      Dairy: 'M8 3h8v3l2 3v12H6V9l2-3zM6 9h12M10 14h4', Biscuits: 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9 9h.01M14 8h.01M15 13h.01M10 15h.01M12 12h.01',
+      'Instant Food': 'M3 12h18a9 9 0 0 1-18 0zM7 12V4M11 12V3M15 4l-2 8', Beverages: 'M5 8h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17M9 3v2M13 3v2',
+      Snacks: 'M6 3h12l-1 3 1 3-1 3 1 3-1 3 1 3H6l1-3-1-3 1-3-1-3 1-3zM10 10h4', Spices: 'M8 3h8v3H8zM7 6h10v14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1zM10 12h4',
+      'Home Care': 'M9 9h6v12H9zM10 9V6h4l3-2M15 6h3M12 13v4', 'Personal Care': 'M4 12a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM9 4.5h.01M13 3h.01',
+    };
+    const qtyCheck = (raw, unit) => {
+      const s = String(raw).trim();
+      if (!/^\d{1,7}(\.\d{1,3})?$/.test(s) || this.toM(s) === 0) return t.errQty;
+      if (!STEP[unit] && s.includes('.')) return t.errWhole(U(unit));
+      return null;
+    };
+    const setQty = (id, v) => { const cart = { ...st.cart }; if (v === null) delete cart[id]; else cart[id] = v; this.setState({ cart }); };
+    const stepper = (it) => {
+      const raw = st.cart[it.id];
+      const err = qtyCheck(raw, it.unit);
+      const m = err ? 0 : this.toM(raw);
+      const step = STEP[it.unit] || 1000;
+      return {
+        qty: raw, unit: U(it.unit), inputMode: STEP[it.unit] ? 'decimal' : 'numeric', err: !!err, errText: err || '', inputBorder: err ? 'var(--danger)' : 'transparent',
+        lineTotal: inr(pay(it.rate, m)), m,
+        dec: () => { const n = m - step; setQty(it.id, n <= 0 ? null : this.fq(n)); }, inc: () => setQty(it.id, this.fq(m + step)),
+        onInput: (e) => setQty(it.id, e.target.value.replace(/[^\d.]/g, '')),
+        decAria: `${it.name} −`, incAria: `${it.name} +`, qtyAria: it.name,
+      };
+    };
+
+    // ---------- catalog
+    const q = st.q.trim().toLowerCase();
+    const active = st.items.filter((i) => i.active);
+    const shown = st.loading ? [] : active.filter((i) => (st.cat === 'All' || i.cat === st.cat) && (!q || i.name.toLowerCase().includes(q)));
+    const cat = {
+      q: st.q, loading: st.loading, noResults: !st.loading && shown.length === 0,
+      catLabel: st.cat === 'All' ? t.all : t.cats[st.cat], catBg: st.cat === 'All' ? 'transparent' : 'var(--pc)', catFg: st.cat === 'All' ? 'var(--text)' : 'var(--opc)', catBorder: st.cat === 'All' ? 'var(--outline2)' : 'var(--pc)',
+      items: shown.map((it) => { const [bg, fg] = tint(it.cat); const inCart = st.cart[it.id] !== undefined;
+        return { name: it.name, initials: initials(it.name), bg, fg, rate: `${inr(it.unit === 'G' ? it.rate * 1000 : it.rate)} / ${it.unit === 'G' ? U('KG') : U(it.unit)}`,
+          empty: !inCart, inCart, addAria: `${t.add} ${it.name}`, add: () => setQty(it.id, this.fq(FIRST[it.unit] || 1000)), ...(inCart ? stepper(it) : {}) }; }),
+    };
+    const catSheet = { open: st.catSheet, items: ['All', ...CATS].map((c) => { const on = st.cat === c; const n = c === 'All' ? active.length : active.filter((i) => i.cat === c).length; const [bg, fg] = c === 'All' ? ['var(--field)', 'var(--text)'] : tint(c);
+      return { label: c === 'All' ? t.all : t.cats[c], count: t.items(n), icon: CI[c], on, bg, fg, ring: on ? 'var(--primary)' : 'transparent', pick: () => this.setState({ cat: c, catSheet: false }) }; }) };
+
+    // ---------- cart
+    const cartIds = Object.keys(st.cart).map(Number);
+    let total = 0; let anyErr = false; let anyUnavail = false;
+    const lines = cartIds.map((id) => {
+      const it = st.items[id];
+      const [bg, fg] = tint(it.cat);
+      if (!it.active) { anyUnavail = true; return { name: it.name, initials: initials(it.name), bg, fg, rate: `${inr(it.rate)} / ${U(it.unit)}`, unavailable: true, available: false, opacity: 0.75, border: 'var(--danger)', removeAria: it.name, remove: () => setQty(id, null) }; }
+      const sp = stepper(it);
+      if (sp.err) anyErr = true;
+      total += pay(it.rate, sp.m);
+      return { name: it.name, initials: initials(it.name), bg, fg, rate: `${inr(it.rate)} / ${U(it.unit)}`, unavailable: false, available: true, opacity: 1, border: 'transparent', removeAria: it.name, remove: () => setQty(id, null), ...sp };
+    });
+    const blocked = anyUnavail || anyErr || st.placing;
+    const cart = { lines, empty: lines.length === 0, hasLines: lines.length > 0, note: st.note, hasUnavailable: anyUnavail, placing: st.placing, blocked,
+      btnLabel: st.placing ? t.placing : anyUnavail ? t.removeFirst : t.place, btnBg: blocked ? 'var(--disabled)' : 'var(--primary)', btnFg: blocked ? 'var(--onDisabled)' : 'var(--onPrimary)' };
+    const cartBar = { show: lines.length > 0, count: t.items(lines.length), total: inr(total) };
+
+    // ---------- placed
+    const ist = new Date(Date.now() + (330 + new Date().getTimezoneOffset()) * 60000);
+    const beforeCutoff = ist.getHours() < 14 && ist.getDay() !== 0;
+    const po = st.orders.find((o) => o.no === st.placedNo);
+    const placed = po ? { title: t.placedTitle(po.no), lines: t.items(po.lines.length), total: inr(po.lines.reduce((s, l) => s + pay(st.items[l.item].rate, l.reqM), 0)), eta: beforeCutoff ? t.etaToday : t.etaTomorrow } : { title: '', lines: '', total: '', eta: '' };
+
+    // ---------- history / detail
+    const CHIP = {
+      PENDING: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 7v5l3 2', '#FEF3C7', '#92400E', '#422006', '#FCD34D'], ACCEPTED: ['M5 12.5l4.5 4.5L19 7.5', '#DCFCE7', '#166534', '#052E16', '#86EFAC'],
+      PARTIALLY_ACCEPTED: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM12 3v18', '#CCFBF1', '#115E59', '#042F2E', '#5EEAD4'], REJECTED: ['M6 6l12 12M18 6L6 18', '#FEE2E2', '#991B1B', '#450A0A', '#FCA5A5'],
+      CANCELLED: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM5.6 5.6l12.8 12.8', '#E2E8F0', '#334155', '#1E293B', '#CBD5E1'],
+      DISPATCHED: ['M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z', '#DBEAFE', '#1E40AF', '#172554', '#93C5FD'],
+      DELIVERED: ['M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM8 12.5l2.8 2.8L16.5 9.5', '#065F46', '#FFFFFF', '#34D399', '#022C22'],
+    };
+    const chip = (s) => ({ chipIcon: CHIP[s][0], chipBg: dark ? CHIP[s][3] : CHIP[s][1], chipFg: dark ? CHIP[s][4] : CHIP[s][2], status: t.status[s] });
+    const reqT = (o) => o.lines.reduce((s, l) => s + pay(st.items[l.item].rate, l.reqM), 0);
+    const accT = (o) => o.lines.reduce((s, l) => s + (l.accM === null ? 0 : pay(st.items[l.item].rate, l.accM)), 0);
+    const decided = (o) => o.lines.every((l) => l.accM !== null) && o.status !== 'CANCELLED';
+    const history = st.orders.map((o) => ({ no: o.no, ...chip(o.status), date: when(o.events[0].at), lines: t.items(o.lines.length), req: inr(reqT(o)),
+      hasAcc: decided(o) && accT(o) !== reqT(o), acc: inr(accT(o)), strike: decided(o) && accT(o) !== reqT(o) ? 'line-through' : 'none',
+      open: () => this.setState({ screen: 'detail', openNo: o.no }) }));
+    const o = st.orders.find((x) => x.no === st.openNo) || st.orders[0];
+    let d = { steps: [], lines: [] };
+    if (o) {
+      const evAt = (s) => (o.events.find((e) => e.to === s) || {}).at;
+      const confirmedAt = evAt('ACCEPTED') || evAt('PARTIALLY_ACCEPTED');
+      let steps;
+      if (o.status === 'CANCELLED') steps = [[t.steps[0], o.events[0].at, true], [t.cancelledStep, evAt('CANCELLED'), true, true]];
+      else if (o.status === 'REJECTED') steps = [[t.steps[0], o.events[0].at, true], [t.notAccepted, evAt('REJECTED'), true, true]];
+      else steps = [[t.steps[0], o.events[0].at, true], [evAt('PARTIALLY_ACCEPTED') ? t.partly : t.steps[1], confirmedAt, !!confirmedAt], [t.steps[2], evAt('DISPATCHED'), !!evAt('DISPATCHED')], [t.steps[3], evAt('DELIVERED'), !!evAt('DELIVERED')]];
+      d = {
+        no: o.no, ...chip(o.status), date: when(o.events[0].at), hasNote: !!o.note, note: o.note, linesTitle: t.linesTitle(o.lines.length),
+        steps: steps.map(([label, at, done, bad], i, arr) => ({ label, time: at ? when(at) : t.waiting, hasLine: i < arr.length - 1,
+          dot: done ? (bad ? 'var(--danger)' : 'var(--primary)') : 'transparent', ring: done ? (bad ? 'var(--danger)' : 'var(--primary)') : 'var(--outline2)',
+          line: arr[i + 1] && arr[i + 1][2] ? 'var(--primary)' : 'var(--outline)', fg: done ? 'var(--text)' : 'var(--text2)' })),
+        lines: o.lines.map((l) => { const it = st.items[l.item]; const dec = l.accM !== null && o.status !== 'CANCELLED'; const diff = dec && l.accM !== l.reqM;
+          return { name: it.name, asked: `${this.fq(l.reqM)} ${U(it.unit)}`, acc: dec ? `${this.fq(l.accM)} ${U(it.unit)}` : '', decided: dec, strike: diff ? 'line-through' : 'none',
+            accFg: diff ? 'var(--warnFg)' : 'var(--successFg)', border: diff ? 'var(--warnFg)' : 'transparent', amount: inr(pay(it.rate, dec ? l.accM : l.reqM)), hasNote: !!l.note, note: l.note }; }),
+        reqTotal: inr(reqT(o)), hasFinal: decided(o), accTotal: inr(accT(o)), reqStrike: decided(o) && accT(o) !== reqT(o) ? 'line-through' : 'none',
+        canCancel: o.status === 'PENDING',
+      };
+    }
+
+    // ---------- tabs
+    const tabActive = st.screen === 'history' || st.screen === 'detail' ? 2 : st.screen === 'cart' ? 1 : 0;
+    const TI = ['M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8', 'M3 4h2.5l2.2 11h10.6L20.5 7H6.4M9 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2zM17 20a1 1 0 1 0 0-2 1 1 0 0 0 0 2z', 'M6 3h12v18l-3-2-3 2-3-2-3 2zM9 8h6M9 12h6'];
+    const tabs = t.tabs.map((label, i) => ({ label, icon: TI[i], current: i === tabActive ? 'page' : 'false', fg: i === tabActive ? 'var(--primary)' : 'var(--text2)',
+      badge: lines.length, hasBadge: i === 1 && lines.length > 0, pick: () => this.setState({ screen: ['catalog', 'cart', 'history'][i] }) }));
+    const showTabs = st.screen === 'catalog' || st.screen === 'history';
+    const scr = { catalog: st.screen === 'catalog', cart: st.screen === 'cart', placed: st.screen === 'placed', history: st.screen === 'history', detail: st.screen === 'detail' };
+
+    return {
+      vars, s: t, scr, cat, catSheet, cart, cartBar, placed, history, historyEmpty: st.orders.length === 0, d, tabs, showTabs,
+      showHeader: st.screen === 'catalog' || st.screen === 'history', header: { title: 'Shree Balaji Traders' }, dialog: st.dialog,
+      skeleton: [1, 0.8, 0.6, 0.45, 0.3, 0.2].map((x) => ({ o: x })),
+      snack: { show: !!st.snack, text: st.snack || '' },
+      toggleLang: () => this.setState({ lang: lang === 'en' ? 'hi' : 'en' }),
+      onQ: (e) => this.setState({ q: e.target.value }), openCats: () => this.setState({ catSheet: true }), closeCats: () => this.setState({ catSheet: false }),
+      clearFilters: () => this.setState({ q: '', cat: 'All' }),
+      goCart: () => this.setState({ screen: 'cart' }), goCatalog: () => this.setState({ screen: 'catalog' }), goHistory: () => this.setState({ screen: 'history' }),
+      onNote: (e) => this.setState({ note: e.target.value.slice(0, 500) }),
+      placeOrder: () => {
+        if (blocked || lines.length === 0) return;
+        this.setState({ placing: true });
+        clearTimeout(this.placeT);
+        this.placeT = setTimeout(() => {
+          const s2 = this.state;
+          const no = s2.nextNo;
+          const order = { no, status: 'PENDING', note: s2.note || null,
+            lines: Object.entries(s2.cart).map(([id, v]) => ({ item: Number(id), reqM: this.toM(v), accM: null, note: null })), events: [{ to: 'PENDING', at: new Date().toISOString() }] };
+          this.setState({ placing: false, orders: [order, ...s2.orders], cart: {}, note: '', placedNo: no, nextNo: no + 1, screen: 'placed' });
+        }, 900);
+      },
+      viewPlaced: () => this.setState({ screen: 'detail', openNo: st.placedNo }),
+      askCancel: () => this.setState({ dialog: true }), keepOrder: () => this.setState({ dialog: false }),
+      confirmCancel: () => this.toast(t.cancelledSnack, { dialog: false, orders: st.orders.map((x) => (x.no !== o.no ? x : { ...x, status: 'CANCELLED', events: [...x.events, { to: 'CANCELLED', at: new Date().toISOString() }] })) }),
+      reorder: () => {
+        const cartNext = { ...st.cart }; let added = 0; let skipped = 0;
+        o.lines.forEach((l) => { if (st.items[l.item].active) { cartNext[l.item] = this.fq(l.reqM); added += 1; } else skipped += 1; });
+        this.toast(t.reordered(added, skipped), { cart: cartNext, screen: 'cart' });
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

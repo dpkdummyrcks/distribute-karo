@@ -1,0 +1,16 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-08T23:00:00Z" },
+  "title": "DistributeKaro UI-6 Retailer Ordering",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 2680, "h": 2100, "title": "All screens & states · R-05…R-09", "is_interactive": true },
+    "Flow.dc.html": { "x": 2760, "y": 0, "w": 390, "h": 844, "title": "Clickable flow · start here", "is_interactive": true, "radius": 32 }
+  },
+  "order": ["Main.dc.html", "Flow.dc.html"],
+  "notes": {
+    "title": { "x": 0, "y": -300, "text": "UI-6 · Retailer catalog, cart, orders & reorder", "kind": "title1", "maxW": 3150 }
+  },
+  "designSystems": []
+}
