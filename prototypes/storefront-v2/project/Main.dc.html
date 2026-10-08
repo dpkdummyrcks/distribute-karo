@@ -1,0 +1,567 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Storefront v2</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Anek+Latin:wght@500;600;700;800&amp;family=Anek+Devanagari:wght@500;600;700;800&amp;family=Mukta:wght@400;500;600;700&amp;display=swap">
+<style>
+body{margin:0}
+a{color:#3730A3}a:hover{color:#1E1B4B}
+button{cursor:pointer;font-family:inherit}
+button:focus-visible,a:focus-visible,input:focus-visible{outline:3px solid #F2B33D;outline-offset:2px}
+.dk-noscroll{scrollbar-width:none}.dk-noscroll::-webkit-scrollbar{display:none}
+@keyframes dk-swing{0%,100%{transform:rotate(-5deg)}50%{transform:rotate(5deg)}}
+@keyframes dk-marq{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+@keyframes dk-marq-rev{from{transform:translateX(-50%)}to{transform:translateX(0)}}
+@keyframes dk-truck{0%{transform:translateX(-40px)}100%{transform:translateX(400px)}}
+@keyframes dk-pulse{0%{box-shadow:0 0 0 0 rgba(34,197,94,.6)}70%{box-shadow:0 0 0 9px rgba(34,197,94,0)}100%{box-shadow:0 0 0 0 rgba(34,197,94,0)}}
+@keyframes dk-ants{to{stroke-dashoffset:-24}}
+@keyframes dk-float{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes dk-sheet{from{transform:translateY(100%)}to{transform:none}}
+@keyframes dk-fade{from{opacity:0}to{opacity:1}}
+@keyframes dk-ring{0%{transform:scale(.6);opacity:.9}100%{transform:scale(2.4);opacity:0}}
+.dk-still .dk-anim{animation:none !important}
+@media (prefers-reduced-motion: reduce){.dk-anim{animation:none !important}}
+</style>
+</helmet>
+<div class="{{rootClass}}" style="width: 390px; height: 844px; position: relative; overflow: hidden; display: flex; flex-direction: column; font-family: 'Mukta', 'Anek Devanagari', system-ui, sans-serif; {{vars}}; background: var(--bg); color: var(--text)">
+
+  <!-- ======================= collapsing header -->
+  <div style="position: absolute; top: 0; left: 0; right: 0; z-index: 5; height: 60px; padding: 0 12px 0 14px; display: flex; align-items: center; gap: 10px; background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-bottom: 1px solid var(--outline); transition: transform .25s ease, opacity .25s ease; transform: {{headerT}}; opacity: {{headerO}}; pointer-events: {{headerPE}}">
+    <span style="width: 36px; height: 36px; border-radius: 11px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center">SB</span>
+    <span style="flex: 1; min-width: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 18px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">Shree Balaji Traders</span>
+    <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="height: 36px; padding: 0 12px; border-radius: 999px; border: 1.5px solid var(--outline2); background: transparent; color: var(--text); font-size: 14px; font-weight: 700">{{s.langBtn}}</button>
+  </div>
+
+  <div class="dk-noscroll" onScroll="{{onScroll}}" style="flex: 1; overflow-y: auto; overflow-x: hidden; position: relative">
+
+    <!-- ======================= HERO -->
+    <div style="height: 372px; position: relative; overflow: hidden; background: #241F7A">
+      <svg width="390" height="372" viewBox="0 0 390 372" aria-hidden="true" style="position: absolute; inset: 0">
+        <defs>
+          <pattern id="dk-jali" width="28" height="28" patternUnits="userSpaceOnUse">
+            <path d="M14 0L28 14L14 28L0 14Z" fill="none" stroke="#332D9C" stroke-width="1.4"></path>
+            <circle cx="14" cy="14" r="2.2" fill="#3A34A8"></circle>
+            <circle cx="0" cy="0" r="1.6" fill="#3A34A8"></circle>
+          </pattern>
+        </defs>
+        <rect width="390" height="372" fill="url(#dk-jali)"></rect>
+        <circle cx="330" cy="300" r="120" fill="#2E2890"></circle>
+        <path d="M-20 330C70 330 90 250 180 255S300 330 410 300" fill="none" stroke="#F2B33D" stroke-width="3" stroke-dasharray="2 10" stroke-linecap="round" opacity="0.7"></path>
+      </svg>
+
+      <!-- toran (marigold & mango-leaf garland) -->
+      <svg width="390" height="40" viewBox="0 0 390 40" aria-hidden="true" style="position: absolute; top: 0; left: 0">
+        <path d="M0 6Q65 34 130 6Q195 34 260 6Q325 34 390 6" fill="none" stroke="#F2B33D" stroke-width="2"></path>
+      </svg>
+      <sc-for list="{{toran}}" as="tz" hint-placeholder-count="15">
+        <div class="dk-anim" style="position: absolute; left: {{tz.left}}; top: {{tz.top}}; width: 20px; display: flex; flex-direction: column; align-items: center; transform-origin: 50% 0; animation: dk-swing {{tz.dur}} ease-in-out {{tz.delay}} infinite">
+          <span style="width: 1.5px; height: 7px; background: #F2B33D"></span>
+          <sc-if value="{{tz.flower}}" hint-placeholder-val="{{true}}">
+            <svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="9" fill="#F59E0B"></circle><circle cx="10" cy="10" r="6.5" fill="#F97316"></circle><circle cx="10" cy="10" r="2.8" fill="#FCD34D"></circle></svg>
+          </sc-if>
+          <sc-if value="{{tz.leaf}}" hint-placeholder-val="{{false}}">
+            <svg width="12" height="22" viewBox="0 0 12 22" aria-hidden="true"><path d="M6 0C12 7 11 15 6 22C1 15 0 7 6 0Z" fill="#16A34A"></path><path d="M6 2V20" stroke="#0F7A35" stroke-width="1"></path></svg>
+          </sc-if>
+        </div>
+      </sc-for>
+
+      <!-- crates -->
+      <svg class="dk-anim" width="150" height="140" viewBox="0 0 140 130" aria-hidden="true" style="position: absolute; right: 6px; bottom: 70px; animation: dk-float 5s ease-in-out infinite">
+        <path d="M40 60L68 74L40 88L12 74Z" fill="#ABA6FF"></path><path d="M12 74L40 88V120L12 106Z" fill="#5B54D6"></path><path d="M40 88L68 74V106L40 120Z" fill="#4038B0"></path>
+        <path d="M98 66L126 80L98 94L70 80Z" fill="#ABA6FF"></path><path d="M70 80L98 94V126L70 112Z" fill="#5B54D6"></path><path d="M98 94L126 80V112L98 126Z" fill="#4038B0"></path>
+        <path d="M69 30L97 44L69 58L41 44Z" fill="#F2B33D"></path><path d="M41 44L69 58V90L41 76Z" fill="#D99A1E"></path><path d="M69 58L97 44V76L69 90Z" fill="#B97F10"></path>
+        <path d="M55 37L83 51" stroke="#7A4A00" stroke-width="3" opacity="0.45"></path>
+      </svg>
+
+      <button onClick="{{toggleLang}}" aria-label="{{s.langAria}}" style="position: absolute; top: 46px; right: 14px; height: 36px; padding: 0 12px 0 10px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.4); background: rgba(14,13,26,0.35); color: #FFFFFF; font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 6px">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM3 12h18M12 3c2.5 2.6 3.8 5.6 3.8 9s-1.3 6.4-3.8 9c-2.5-2.6-3.8-5.6-3.8-9S9.5 5.6 12 3z"></path></svg>{{s.langBtn}}
+      </button>
+
+      <div style="position: absolute; left: 20px; right: 150px; top: 92px; display: flex; flex-direction: column; gap: 10px">
+        <span style="width: 64px; height: 64px; border-radius: 20px; background: #F2B33D; color: #2A1A00; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 24px; display: flex; align-items: center; justify-content: center; box-shadow: 0 6px 0 #B97F10">SB</span>
+        <h1 style="margin: 6px 0 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 34px; line-height: 34px; color: #FFFFFF; letter-spacing: -0.01em">Shree Balaji Traders</h1>
+        <p style="margin: 0; font-size: 15px; line-height: 21px; color: #D4D1FF">Jaipur's trusted wholesale partner since 1998</p>
+      </div>
+    </div>
+
+    <!-- ======================= LIVE CARD -->
+    <div style="position: relative; margin: -64px 16px 0; background: var(--sheet); border-radius: 22px; padding: 14px 16px 16px; box-shadow: 0 14px 34px rgba(20,18,60,0.18); display: flex; flex-direction: column; gap: 12px">
+      <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px">
+        <span style="display: inline-flex; align-items: center; gap: 8px; font-size: 15px; font-weight: 700; color: {{live.statusFg}}">
+          <span class="dk-anim" style="width: 10px; height: 10px; border-radius: 5px; background: {{live.dot}}; animation: {{live.pulse}}"></span>{{live.status}}
+        </span>
+        <span style="font-size: 13px; font-weight: 600; color: var(--text2)">{{live.sub}}</span>
+      </div>
+      <div style="display: flex; gap: 12px; align-items: center">
+        <span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z"></path></svg></span>
+        <div style="flex: 1; display: flex; flex-direction: column; gap: 6px">
+          <span style="font-size: 15px; font-weight: 700; line-height: 20px">{{live.headline}}</span>
+          <span style="height: 6px; border-radius: 3px; background: var(--field); overflow: hidden"><span style="display: block; height: 6px; border-radius: 3px; background: #F2B33D; width: {{live.progress}}"></span></span>
+          <span style="font-size: 12px; color: var(--text2)">{{s.cutoffLabel}}</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ======================= STATS -->
+    <div style="margin: 18px 16px 0; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 8px">
+      <sc-for list="{{stats}}" as="st" hint-placeholder-count="4">
+        <div style="background: var(--surface); border-radius: 16px; padding: 12px 6px 10px; display: flex; flex-direction: column; align-items: center; text-align: center; gap: 2px">
+          <span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 22px; line-height: 24px; color: var(--primary)">{{st.v}}</span>
+          <span style="font-size: 11.5px; line-height: 14px; font-weight: 600; color: var(--text2)">{{st.l}}</span>
+        </div>
+      </sc-for>
+    </div>
+
+    <!-- ======================= route divider with truck -->
+    <div aria-hidden="true" style="position: relative; height: 46px; margin-top: 10px; overflow: hidden">
+      <svg width="390" height="46" viewBox="0 0 390 46" style="position: absolute; inset: 0"><path d="M0 30C60 30 70 16 130 16S220 34 270 30 350 14 390 18" fill="none" stroke-width="2" stroke-dasharray="6 8" stroke-linecap="round" style="stroke: var(--outline2)"></path></svg>
+      <span class="dk-anim" style="position: absolute; top: 6px; left: 0; color: var(--primary); animation: dk-truck 11s linear infinite">
+        <svg width="34" height="24" viewBox="0 0 24 18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1 2h12v10H1zM13 5h4.5L21 9v3h-8M5.5 15a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2zM17 15a1.6 1.6 0 1 0 0-3.2 1.6 1.6 0 0 0 0 3.2z" style="fill: var(--bg)"></path></svg>
+      </span>
+    </div>
+
+    <!-- ======================= WHY US carousel -->
+    <section style="padding: 6px 0 0; display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0 20px; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px">{{s.whyUs}}</h2>
+      <div class="dk-noscroll" onScroll="{{onCarousel}}" style="display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; padding: 0 20px 4px; scroll-padding: 0 20px">
+        <sc-for list="{{highlights}}" as="h" hint-placeholder-count="6">
+          <div style="flex: none; width: 260px; scroll-snap-align: start; border-radius: 22px; padding: 18px; background: {{h.bg}}; color: {{h.fg}}; display: flex; flex-direction: column; gap: 18px; position: relative; overflow: hidden">
+            <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true" style="position: absolute; right: -24px; bottom: -28px; opacity: 0.14"><path d="{{h.icon}}"></path></svg>
+            <span style="width: 48px; height: 48px; border-radius: 16px; background: {{h.chip}}; display: flex; align-items: center; justify-content: center"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{h.icon}}"></path></svg></span>
+            <div style="display: flex; flex-direction: column; gap: 4px">
+              <span style="font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 21px; line-height: 24px">{{h.title}}</span>
+              <span style="font-size: 15px; line-height: 20px; opacity: 0.85">{{h.text}}</span>
+            </div>
+          </div>
+        </sc-for>
+      </div>
+      <div style="display: flex; justify-content: center; gap: 6px">
+        <sc-for list="{{dots}}" as="dt" hint-placeholder-count="6">
+          <span style="height: 6px; border-radius: 3px; transition: width .2s ease, background .2s ease; width: {{dt.w}}; background: {{dt.bg}}"></span>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ======================= CATEGORIES -->
+    <section style="padding: 26px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0 4px; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px">{{s.shopBy}}</h2>
+      <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 8px">
+        <sc-for list="{{cats}}" as="c" hint-placeholder-count="9">
+          <button onClick="{{c.pick}}" aria-pressed="{{c.on}}" style="min-height: 92px; border-radius: 18px; border: 2px solid {{c.ring}}; background: {{c.bg}}; color: {{c.fg}}; padding: 10px 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 6px; transition: transform .15s ease; transform: {{c.scale}}">
+            <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="{{c.icon}}"></path></svg>
+            <span style="font-size: 13px; font-weight: 700; line-height: 15px; text-align: center">{{c.label}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ======================= POPULAR -->
+    <section style="padding: 26px 0 0; display: flex; flex-direction: column; gap: 12px">
+      <div style="padding: 0 12px 0 20px; display: flex; align-items: center; justify-content: space-between; gap: 8px">
+        <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px">{{popularTitle}}</h2>
+        <sc-if value="{{hasCat}}" hint-placeholder-val="{{false}}">
+          <button onClick="{{clearCat}}" style="height: 36px; padding: 0 10px; border: 0; border-radius: 10px; background: transparent; color: var(--primary); font-size: 14px; font-weight: 700">{{s.clear}}</button>
+        </sc-if>
+      </div>
+      <div class="dk-noscroll" style="display: flex; gap: 12px; overflow-x: auto; padding: 0 20px 6px; scroll-snap-type: x proximity">
+        <sc-for list="{{popular}}" as="p" hint-placeholder-count="4">
+          <button onClick="{{p.open}}" aria-label="{{p.name}}" style="flex: none; width: 148px; scroll-snap-align: start; text-align: left; border: 0; padding: 0; background: transparent; color: var(--text); display: flex; flex-direction: column; gap: 6px">
+            <span style="height: 128px; border-radius: 20px; background: {{p.bg}}; color: {{p.fg}}; position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden">
+              <svg width="88" height="88" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" aria-hidden="true" style="position: absolute; right: -14px; bottom: -14px; opacity: 0.18"><path d="{{p.icon}}"></path></svg>
+              <span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 34px">{{p.initials}}</span>
+            </span>
+            <span style="font-size: 14px; font-weight: 700; line-height: 18px; height: 36px; overflow: hidden">{{p.name}}</span>
+            <span style="align-self: flex-start; display: inline-flex; align-items: center; gap: 4px; font-size: 12px; font-weight: 700; padding: 3px 8px; border-radius: 8px; background: var(--accentSoft); color: var(--accentFg)"><svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"></path></svg>{{s.rateTag}}</span>
+          </button>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ======================= HOW IT WORKS -->
+    <section style="margin: 26px 16px 0; border-radius: 24px; background: var(--pc); color: var(--opc); padding: 20px 18px; display: flex; flex-direction: column; gap: 16px">
+      <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px; line-height: 26px">{{s.how}}</h2>
+      <sc-for list="{{steps}}" as="sp" hint-placeholder-count="3">
+        <div style="display: flex; gap: 14px">
+          <div style="display: flex; flex-direction: column; align-items: center; width: 40px">
+            <span style="width: 40px; height: 40px; flex: none; border-radius: 20px; background: {{sp.circle}}; color: {{sp.circleFg}}; font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 19px; display: flex; align-items: center; justify-content: center">
+              <sc-if value="{{sp.done}}" hint-placeholder-val="{{false}}"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"></path></svg></sc-if>
+              <sc-if value="{{sp.todo}}" hint-placeholder-val="{{true}}">{{sp.n}}</sc-if>
+            </span>
+            <sc-if value="{{sp.line}}" hint-placeholder-val="{{true}}"><span style="flex: 1; width: 0; min-height: 18px; border-left: 2px dashed var(--opc); opacity: 0.35; margin-top: 4px"></span></sc-if>
+          </div>
+          <div style="flex: 1; display: flex; flex-direction: column; gap: 2px; padding: 8px 0 12px">
+            <span style="display: flex; align-items: center; gap: 8px; font-size: 17px; font-weight: 700">{{sp.title}}<sc-if value="{{sp.done}}" hint-placeholder-val="{{false}}"><span style="font-size: 12px; font-weight: 700; padding: 1px 8px; border-radius: 999px; background: var(--successBg); color: var(--successFg)">{{s.doneTag}}</span></sc-if></span>
+            <span style="font-size: 14px; line-height: 19px; opacity: 0.85">{{sp.text}}</span>
+          </div>
+        </div>
+      </sc-for>
+    </section>
+
+    <!-- ======================= BRANDS marquee -->
+    <section style="padding: 26px 0 0; display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0 20px; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px">{{s.brands}}</h2>
+      <div style="overflow: hidden">
+        <div class="dk-anim" style="display: flex; gap: 10px; width: max-content; animation: dk-marq 28s linear infinite">
+          <sc-for list="{{brandsA}}" as="b" hint-placeholder-count="12">
+            <span style="flex: none; height: 44px; padding: 0 18px; border-radius: 14px; background: var(--surface); font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 17px; display: flex; align-items: center; color: var(--text)">{{b}}</span>
+          </sc-for>
+        </div>
+      </div>
+      <div style="overflow: hidden">
+        <div class="dk-anim" style="display: flex; gap: 10px; width: max-content; animation: dk-marq-rev 32s linear infinite">
+          <sc-for list="{{brandsB}}" as="b" hint-placeholder-count="12">
+            <span style="flex: none; height: 44px; padding: 0 18px; border-radius: 14px; border: 1.5px solid var(--outline); font-family: 'Anek Latin', sans-serif; font-weight: 700; font-size: 17px; display: flex; align-items: center; color: var(--text2)">{{b}}</span>
+          </sc-for>
+        </div>
+      </div>
+    </section>
+
+    <!-- ======================= DELIVERY MAP -->
+    <section style="padding: 26px 16px 0; display: flex; flex-direction: column; gap: 12px">
+      <h2 style="margin: 0 4px; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 22px">{{s.areas}}</h2>
+      <div style="position: relative; height: 220px; border-radius: 22px; overflow: hidden; background: var(--mapBg)">
+        <svg width="358" height="220" viewBox="0 0 358 220" aria-hidden="true" style="position: absolute; inset: 0">
+          <ellipse cx="178" cy="112" rx="150" ry="88" fill="none" stroke-width="10" style="stroke: var(--road)"></ellipse>
+          <path d="M0 60C80 70 120 100 178 104S300 150 358 140M60 220C90 160 140 120 178 104S240 30 260 0M0 170C70 150 120 150 190 190" fill="none" stroke-width="6" stroke-linecap="round" style="stroke: var(--road)"></path>
+          <path d="{{route.d}}" fill="none" stroke="#F2B33D" stroke-width="4" stroke-linecap="round" stroke-dasharray="8 4" class="dk-anim" style="animation: dk-ants 1s linear infinite; opacity: {{route.o}}"></path>
+          <circle cx="70" cy="70" r="{{dot.v.r}}" stroke-width="2" style="fill: {{dot.v.f}}; stroke: var(--mapBg)"></circle>
+          <circle cx="205" cy="122" r="{{dot.c.r}}" stroke-width="2" style="fill: {{dot.c.f}}; stroke: var(--mapBg)"></circle>
+          <circle cx="252" cy="86" r="{{dot.rp.r}}" stroke-width="2" style="fill: {{dot.rp.f}}; stroke: var(--mapBg)"></circle>
+          <circle cx="250" cy="150" r="{{dot.mn.r}}" stroke-width="2" style="fill: {{dot.mn.f}}; stroke: var(--mapBg)"></circle>
+          <circle cx="312" cy="170" r="{{dot.j.r}}" stroke-width="2" style="fill: {{dot.j.f}}; stroke: var(--mapBg)"></circle>
+          <circle cx="270" cy="196" r="{{dot.pn.r}}" stroke-width="2" style="fill: {{dot.pn.f}}; stroke: var(--mapBg)"></circle>
+          <circle cx="185" cy="194" r="{{dot.s.r}}" stroke-width="2" style="fill: {{dot.s.f}}; stroke: var(--mapBg)"></circle>
+          <circle cx="96" cy="158" r="{{dot.m.r}}" stroke-width="2" style="fill: {{dot.m.f}}; stroke: var(--mapBg)"></circle>
+          <path d="M170 74c-8 0-14 6-14 14 0 10 14 24 14 24s14-14 14-24c0-8-6-14-14-14z" style="fill: var(--primary)"></path>
+          <circle cx="170" cy="88" r="5" fill="#F2B33D"></circle>
+        </svg>
+        <span class="dk-anim" style="position: absolute; left: {{ring.left}}; top: {{ring.top}}; width: 16px; height: 16px; margin: -8px 0 0 -8px; border-radius: 8px; border: 2px solid #F2B33D; opacity: {{ring.o}}; animation: dk-ring 1.6s ease-out infinite"></span>
+        <span style="position: absolute; left: 12px; top: 12px; height: 28px; padding: 0 10px; border-radius: 999px; background: var(--sheet); font-size: 12px; font-weight: 700; display: inline-flex; align-items: center; gap: 6px; color: var(--text)"><span style="width: 8px; height: 8px; border-radius: 4px; background: var(--primary)"></span>{{s.godown}}</span>
+        <span style="position: absolute; left: 12px; right: 12px; bottom: 12px; min-height: 36px; padding: 6px 12px; box-sizing: border-box; border-radius: 12px; background: var(--sheet); font-size: 14px; font-weight: 700; display: flex; align-items: center; gap: 8px; color: {{route.msgFg}}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21zM12 12a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5z"></path></svg>{{route.msg}}
+        </span>
+      </div>
+      <div style="display: flex; flex-wrap: wrap; gap: 8px">
+        <sc-for list="{{areas}}" as="a" hint-placeholder-count="8">
+          <button onClick="{{a.pick}}" aria-pressed="{{a.on}}" style="height: 36px; padding: 0 12px; border-radius: 999px; font-size: 14px; font-weight: 600; border: 1.5px solid {{a.border}}; background: {{a.bg}}; color: {{a.fg}}">{{a.label}}</button>
+        </sc-for>
+      </div>
+    </section>
+
+    <!-- ======================= OWNER NOTE -->
+    <section style="margin: 26px 16px 0; border-radius: 24px; background: var(--surface); padding: 22px 20px 20px; position: relative; overflow: hidden">
+      <svg width="90" height="70" viewBox="0 0 90 70" aria-hidden="true" style="position: absolute; right: 14px; top: 10px; opacity: 0.18"><path d="M8 66V40C8 20 18 8 36 4l3 8C27 16 22 24 22 34h16v32zM52 66V40C52 20 62 8 80 4l3 8C71 16 66 24 66 34h16v32z" style="fill: var(--primary)"></path></svg>
+      <div style="font-size: 13px; font-weight: 700; letter-spacing: 0.06em; color: var(--primary)">{{s.owner}}</div>
+      <p style="margin: 10px 0 14px; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 600; font-size: 19px; line-height: 27px">Family-run distributor serving 300+ kirana and general stores across Jaipur. We stock leading FMCG brands and staples at wholesale rates, with same-day delivery in the city.</p>
+      <div style="display: flex; align-items: center; gap: 10px">
+        <span style="width: 40px; height: 40px; border-radius: 20px; background: var(--primary); color: var(--onPrimary); font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 15px; display: flex; align-items: center; justify-content: center">RA</span>
+        <span style="display: flex; flex-direction: column; line-height: 18px"><span style="font-size: 15px; font-weight: 700">Ramesh Agarwal</span><span style="font-size: 13px; color: var(--text2)">Mon–Sat · 8 AM – 8 PM</span></span>
+      </div>
+    </section>
+
+    <!-- ======================= ENQUIRY BANNER -->
+    <section style="margin: 16px 16px 0; border-radius: 24px; background: #F2B33D; color: #2A1A00; padding: 20px; position: relative; overflow: hidden; display: flex; flex-direction: column; gap: 10px">
+      <svg width="140" height="140" viewBox="0 0 24 24" fill="none" stroke="#2A1A00" stroke-width="1" aria-hidden="true" style="position: absolute; right: -30px; top: -26px; opacity: 0.12"><path d="M4 5h16v11H9l-5 4zM8 9h8M8 12h5"></path></svg>
+      <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 800; font-size: 24px">{{s.enqTitle}}</h2>
+      <p style="margin: 0; font-size: 15px; line-height: 21px; max-width: 290px">{{s.enqSub}}</p>
+      <a href="#" style="align-self: flex-start; margin-top: 4px; height: 46px; padding: 0 18px; border-radius: 14px; background: #2A1A00; color: #FFF4DC; font-size: 15px; font-weight: 700; display: inline-flex; align-items: center; gap: 8px; text-decoration: none">{{s.enqBtn}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+    </section>
+
+    <div style="padding: 26px 20px 28px; display: flex; align-items: center; justify-content: center; gap: 8px; color: var(--text2); font-size: 13px; font-weight: 600">
+      <svg width="22" height="22" viewBox="0 0 64 64" aria-hidden="true"><rect width="64" height="64" rx="16" fill="#3730A3"></rect><circle cx="23" cy="38" r="9" fill="none" stroke="#FFFFFF" stroke-width="6"></circle><path d="M32 16V47M40 16V47" stroke="#FFFFFF" stroke-width="6" stroke-linecap="round"></path><path d="M50 27L40 37L51 47" fill="none" stroke="#F2B33D" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"></path></svg>{{s.powered}}
+    </div>
+  </div>
+
+  <!-- ======================= STICKY CTA -->
+  <div style="flex: none; position: relative; z-index: 4; background: var(--glass); backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px); border-top: 1px solid var(--outline); padding: 12px 16px 16px; display: flex; flex-direction: column; gap: 8px">
+    <sc-if value="{{signedIn}}" hint-placeholder-val="{{false}}">
+      <div style="display: flex; align-items: center; gap: 12px">
+        <span style="flex: 1; min-width: 0; display: flex; flex-direction: column; line-height: 19px"><span style="font-size: 13px; color: var(--text2)">{{s.welcome}}</span><span style="font-size: 16px; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis">{{viewer}}</span></span>
+        <a href="#" style="height: 50px; padding: 0 20px; border-radius: 16px; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 700; display: flex; align-items: center; gap: 8px; text-decoration: none">{{s.continueOrdering}}<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 5l7 7-7 7"></path></svg></a>
+      </div>
+    </sc-if>
+    <sc-if value="{{visitor}}" hint-placeholder-val="{{true}}">
+      <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+        <button onClick="{{openPhone}}" style="height: 52px; border-radius: 16px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 700">{{s.orderNow}}</button>
+        <a href="#" style="height: 52px; border-radius: 16px; background: #F2B33D; color: #2A1A00; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none; box-shadow: inset 0 -3px 0 #B97F10">{{s.join}}</a>
+      </div>
+    </sc-if>
+  </div>
+
+  <!-- ======================= SHEETS -->
+  <sc-if value="{{sheetOpen}}" hint-placeholder-val="{{false}}">
+    <div style="position: absolute; inset: 0; z-index: 10; display: flex; flex-direction: column; justify-content: flex-end">
+      <button onClick="{{closeSheet}}" aria-label="{{s.close}}" class="dk-anim" style="position: absolute; inset: 0; border: 0; background: var(--scrim); animation: dk-fade .2s ease"></button>
+      <div class="dk-anim" style="position: relative; background: var(--sheet); border-radius: 26px 26px 0 0; padding: 10px 20px 24px; display: flex; flex-direction: column; gap: 14px; animation: dk-sheet .28s cubic-bezier(.2,.8,.2,1)">
+        <span style="align-self: center; width: 40px; height: 4px; border-radius: 2px; background: var(--outline2)"></span>
+
+        <sc-if value="{{sheet.product}}" hint-placeholder-val="{{false}}">
+          <div style="height: 170px; border-radius: 22px; background: {{qp.bg}}; color: {{qp.fg}}; position: relative; overflow: hidden; display: flex; align-items: center; justify-content: center">
+            <svg width="150" height="150" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="0.9" aria-hidden="true" style="position: absolute; right: -20px; bottom: -24px; opacity: 0.2"><path d="{{qp.icon}}"></path></svg>
+            <span style="font-family: 'Anek Latin', sans-serif; font-weight: 800; font-size: 54px">{{qp.initials}}</span>
+          </div>
+          <div style="display: flex; flex-direction: column; gap: 6px">
+            <span style="align-self: flex-start; font-size: 12px; font-weight: 700; padding: 2px 9px; border-radius: 999px; background: var(--surface); color: var(--text2)">{{qp.cat}}</span>
+            <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 24px; line-height: 28px">{{qp.name}}</h2>
+            <span style="font-size: 15px; color: var(--text2)">{{qp.unit}}</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 10px; padding: 12px 14px; border-radius: 14px; background: var(--accentSoft); color: var(--accentFg); font-size: 14px; font-weight: 700">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 11h12v10H6zM8.5 11V7.5a3.5 3.5 0 0 1 7 0V11"></path></svg>{{s.ratesLocked}}
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px">
+            <button onClick="{{openPhone}}" style="height: 52px; border-radius: 16px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 16px; font-weight: 700">{{s.orderNow}}</button>
+            <a href="#" style="height: 52px; border-radius: 16px; background: #F2B33D; color: #2A1A00; font-size: 16px; font-weight: 700; display: flex; align-items: center; justify-content: center; text-decoration: none">{{s.join}}</a>
+          </div>
+        </sc-if>
+
+        <sc-if value="{{sheet.phone}}" hint-placeholder-val="{{false}}">
+          <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 23px; line-height: 28px">{{s.sheetTitle}}</h2>
+          <p style="margin: -6px 0 0; font-size: 15px; line-height: 21px; color: var(--text2)">{{s.sheetSub}}</p>
+          <label style="display: flex; flex-direction: column; gap: 6px">
+            <span style="font-size: 14px; font-weight: 600">{{s.mobile}}</span>
+            <span style="height: 56px; border-radius: 16px; background: var(--field); border: 1.5px solid {{phoneBorder}}; display: flex; align-items: center; gap: 10px; padding: 0 14px; box-sizing: border-box">
+              <span style="font-size: 17px; font-weight: 700; color: var(--text2)">+91</span>
+              <span style="width: 1px; height: 24px; background: var(--outline2)"></span>
+              <input value="{{phone}}" onChange="{{onPhone}}" inputmode="numeric" autocomplete="tel-national" placeholder="98765 43210" style="flex: 1; min-width: 0; border: 0; background: transparent; font-family: inherit; font-size: 19px; font-weight: 600; letter-spacing: 0.04em; color: var(--text); outline: none">
+            </span>
+            <sc-if value="{{phoneErr}}" hint-placeholder-val="{{false}}"><span style="font-size: 13px; color: var(--danger)">{{s.phoneErr}}</span></sc-if>
+          </label>
+          <button onClick="{{submitPhone}}" style="height: 54px; border-radius: 16px; border: 0; background: var(--primary); color: var(--onPrimary); font-size: 17px; font-weight: 700">{{s.continue}}</button>
+        </sc-if>
+
+        <sc-if value="{{sheet.notreg}}" hint-placeholder-val="{{false}}">
+          <h2 style="margin: 0; font-family: 'Anek Latin', 'Anek Devanagari', sans-serif; font-weight: 700; font-size: 23px; line-height: 28px">{{s.notRegTitle}}</h2>
+          <p style="margin: -6px 0 0; font-size: 15px; line-height: 21px; color: var(--text2)">{{phoneDisplay}} · {{s.notRegSub}}</p>
+          <a href="#" style="border-radius: 18px; background: var(--primary); color: var(--onPrimary); padding: 16px; display: flex; gap: 14px; align-items: center; text-decoration: none">
+            <span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: #F2B33D; color: #2A1A00; display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M15 19v-1.5a3.5 3.5 0 0 0-3.5-3.5h-5A3.5 3.5 0 0 0 3 17.5V19M9 11a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7zM19 8v6M22 11h-6"></path></svg></span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">{{s.reqCardTitle}}</span><span style="font-size: 14px; line-height: 19px; opacity: 0.9">{{s.reqCardDesc}}</span></span>
+          </a>
+          <a href="#" style="border-radius: 18px; background: var(--surface); color: var(--text); padding: 16px; display: flex; gap: 14px; align-items: center; text-decoration: none">
+            <span style="width: 44px; height: 44px; flex: none; border-radius: 14px; background: var(--pc); color: var(--opc); display: flex; align-items: center; justify-content: center"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 5h16v11H9l-5 4zM8 9h8M8 12h5"></path></svg></span>
+            <span style="flex: 1; display: flex; flex-direction: column; gap: 2px"><span style="font-size: 17px; font-weight: 700">{{s.enqBtn}}</span><span style="font-size: 14px; line-height: 19px; color: var(--text2)">{{s.enqCardDesc}}</span></span>
+          </a>
+          <button onClick="{{openPhone}}" style="align-self: center; height: 40px; border: 0; background: transparent; color: var(--primary); font-size: 15px; font-weight: 700">{{s.otherNumber}}</button>
+        </sc-if>
+      </div>
+    </div>
+  </sc-if>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"dark":{"editor":"boolean","default":false},"motion":{"editor":"boolean","default":true},"signedIn":{"editor":"boolean","default":false},"$preview":{"width":390,"height":844}}'>
+class Component extends DCLogic {
+  constructor(props) {
+    super(props);
+    this.state = { lang: 'en', scrolled: false, hl: 0, cat: null, area: 'Malviya Nagar', sheet: null, product: null,
+      phone: '', phoneTried: false, signedIn: null, viewer: null, now: Date.now() };
+  }
+  componentDidMount() { this.timer = setInterval(() => this.setState({ now: Date.now() }), 30000); }
+  componentWillUnmount() { clearInterval(this.timer); }
+
+  renderVals() {
+    const st = this.state;
+    const dark = this.props.dark ?? false;
+    const motion = this.props.motion ?? true;
+    const signedIn = st.signedIn ?? (this.props.signedIn ?? false);
+    const lang = st.lang;
+    const L = { bg: '#F7F6FC', surface: '#EEEDF8', field: '#E3E2F1', sheet: '#FFFFFF', glass: 'rgba(255,255,255,0.86)',
+      outline: '#DCDBEA', outline2: '#8F8EA8', text: '#16152B', text2: '#4A4966', primary: '#3730A3', onPrimary: '#FFFFFF',
+      pc: '#E4E2FB', opc: '#1E1B4B', accentSoft: '#FDF0D5', accentFg: '#7A4A00', danger: '#B91C1C',
+      successBg: '#DCFCE7', successFg: '#166534', scrim: 'rgba(14,13,26,0.55)', mapBg: '#E9E8F5', road: '#D6D4EA' };
+    const D = { bg: '#0E0D1A', surface: '#1A1930', field: '#24223F', sheet: '#222039', glass: 'rgba(23,22,42,0.86)',
+      outline: '#34324F', outline2: '#7C7A99', text: '#EEEDF7', text2: '#B9B8D0', primary: '#ABA6FF', onPrimary: '#1B1760',
+      pc: '#2E2A78', opc: '#E4E2FB', accentSoft: '#3A2A08', accentFg: '#F7CF7A', danger: '#F87171',
+      successBg: '#052E16', successFg: '#86EFAC', scrim: 'rgba(0,0,0,0.6)', mapBg: '#1A1930', road: '#2C2A4A' };
+    const vars = Object.entries(dark ? D : L).map(([k, v]) => `--${k}: ${v}`).join('; ');
+    const tints = dark
+      ? [['#2E2A78', '#E4E2FB', '#3D38A0'], ['#3A2A08', '#F7CF7A', '#55400F'], ['#0B3B36', '#99F6E4', '#11524B'], ['#4C0519', '#FDA4AF', '#6B0A25']]
+      : [['#E4E2FB', '#1E1B4B', '#CFCCF7'], ['#FDF0D5', '#7A4A00', '#F8DFA8'], ['#D5F2EE', '#115E59', '#B2E6DF'], ['#FBE3E8', '#9F1239', '#F5C6D0']];
+
+    const T = {
+      en: {
+        langBtn: 'हिंदी', langAria: 'Switch to Hindi', close: 'Close',
+        openNow: 'Open now', closes: 'Closes 8 PM', closedNow: 'Closed now', opens: 'Opens 8 AM',
+        countdown: (h, m) => `Order in ${h}h ${m}m for same-day delivery`, after: 'Order now for delivery tomorrow',
+        closedMsg: 'Order now, we deliver on the next working day', cutoffLabel: 'Same-day delivery cut-off: 2 PM',
+        stats: [['1998', 'Serving since'], ['300+', 'Stores served'], ['500+', 'Products'], ['8', 'Areas covered']],
+        whyUs: 'Why retailers choose us', shopBy: 'Shop by category', popular: 'Popular with retailers',
+        popularIn: (c) => `Popular in ${c}`, clear: 'Show all',
+        how: 'Start ordering in 3 steps', doneTag: 'Done',
+        steps: [['Scan the QR', "You're on our storefront."], ['Request to join', 'Share your shop details. We add you as a retailer.'], ['Order from your phone', 'See your rates, order anytime, track every delivery.']],
+        brands: 'Brands on our shelves', areas: 'Where we deliver', godown: 'Our godown · Kishanpole Bazar',
+        pickArea: 'Tap an area to see the route', areaMsg: (a) => `Same-day delivery to ${a}`,
+        owner: 'FROM THE OWNER', enqTitle: 'Have a question?', enqSub: 'Ask about products, delivery or credit. We reply on call or WhatsApp.',
+        enqBtn: 'Send an enquiry', enqCardDesc: 'Ask about products, delivery or credit.',
+        joinRates: 'Join to see rates', inCatalog: 'Rate in your catalog', ratesLocked: 'Rates are visible to registered retailers',
+        orderNow: 'Order now', join: 'Join as retailer', welcome: 'Welcome back', continueOrdering: 'Order',
+        sheetTitle: 'Enter your mobile number', sheetSub: 'Registered retailers of Shree Balaji Traders go straight to ordering.',
+        mobile: 'Mobile number', continue: 'Continue', phoneErr: 'Enter a valid 10-digit mobile number',
+        notRegTitle: "You're not on our retailer list yet", notRegSub: 'Ask to be added, or send us a question.',
+        reqCardTitle: 'Request to get added', reqCardDesc: 'Share your shop details. Once approved, order with this number.',
+        otherNumber: 'Use a different number', powered: 'Powered by DistributeKaro',
+        units: { PACK: 'pack', KG: 'kg', PCS: 'piece', CASE: 'case', L: 'litre', BOX: 'box', DOZEN: 'dozen', G: 'gram' }, per: (u) => `Sold per ${u}`,
+      },
+      hi: {
+        langBtn: 'English', langAria: 'Switch to English', close: 'बंद करें',
+        openNow: 'अभी खुला है', closes: 'रात 8 बजे बंद', closedNow: 'अभी बंद है', opens: 'सुबह 8 बजे खुलेगा',
+        countdown: (h, m) => `${h} घंटे ${m} मिनट में ऑर्डर करें, आज ही डिलीवरी`, after: 'अभी ऑर्डर करें, कल डिलीवरी',
+        closedMsg: 'अभी ऑर्डर करें, अगले कार्य-दिवस पर डिलीवरी', cutoffLabel: 'आज की डिलीवरी के लिए दोपहर 2 बजे तक ऑर्डर करें',
+        stats: [['1998', 'से सेवा में'], ['300+', 'दुकानों को सप्लाई'], ['500+', 'प्रोडक्ट'], ['8', 'इलाकों में डिलीवरी']],
+        whyUs: 'रिटेलर हमें क्यों चुनते हैं', shopBy: 'कैटेगरी से देखें', popular: 'रिटेलर्स की पसंद',
+        popularIn: (c) => `${c} में लोकप्रिय`, clear: 'सभी दिखाएँ',
+        how: '3 आसान कदमों में ऑर्डर शुरू करें', doneTag: 'हो गया',
+        steps: [['QR स्कैन करें', 'आप हमारे स्टोर पर हैं।'], ['जुड़ने का अनुरोध करें', 'दुकान की जानकारी दें। हम आपको रिटेलर के रूप में जोड़ेंगे।'], ['फ़ोन से ऑर्डर करें', 'अपने रेट देखें, कभी भी ऑर्डर करें, हर डिलीवरी ट्रैक करें।']],
+        brands: 'हमारी शेल्फ़ पर ब्रांड', areas: 'हम कहाँ डिलीवरी करते हैं', godown: 'हमारा गोदाम · किशनपोल बाज़ार',
+        pickArea: 'रूट देखने के लिए इलाका चुनें', areaMsg: (a) => `${a} में आज ही डिलीवरी`,
+        owner: 'मालिक की ओर से', enqTitle: 'कोई सवाल है?', enqSub: 'प्रोडक्ट, डिलीवरी या उधार के बारे में पूछें। हम कॉल या WhatsApp पर जवाब देंगे।',
+        enqBtn: 'पूछताछ भेजें', enqCardDesc: 'प्रोडक्ट, डिलीवरी या उधार के बारे में पूछें।',
+        joinRates: 'रेट देखने के लिए जुड़ें', inCatalog: 'रेट आपके कैटलॉग में', ratesLocked: 'रेट सिर्फ़ रजिस्टर्ड रिटेलर को दिखते हैं',
+        orderNow: 'ऑर्डर करें', join: 'रिटेलर बनें', welcome: 'फिर से स्वागत है', continueOrdering: 'ऑर्डर करें',
+        sheetTitle: 'अपना मोबाइल नंबर डालें', sheetSub: 'Shree Balaji Traders के रजिस्टर्ड रिटेलर सीधे ऑर्डर कर सकते हैं।',
+        mobile: 'मोबाइल नंबर', continue: 'आगे बढ़ें', phoneErr: 'सही 10 अंकों का मोबाइल नंबर डालें',
+        notRegTitle: 'आप अभी हमारी रिटेलर लिस्ट में नहीं हैं', notRegSub: 'जुड़ने का अनुरोध भेजें या हमसे सवाल पूछें।',
+        reqCardTitle: 'जुड़ने का अनुरोध भेजें', reqCardDesc: 'अपनी दुकान की जानकारी दें। मंज़ूरी के बाद इसी नंबर से ऑर्डर करें।',
+        otherNumber: 'दूसरा नंबर डालें', powered: 'DistributeKaro द्वारा संचालित',
+        units: { PACK: 'पैक', KG: 'किलो', PCS: 'पीस', CASE: 'केस', L: 'लीटर', BOX: 'बॉक्स', DOZEN: 'दर्जन', G: 'ग्राम' }, per: (u) => `प्रति ${u} बिक्री`,
+      },
+    };
+    const t = T[lang];
+
+    // ---------- live status (IST): open Mon–Sat 8–20, same-day cut-off 14:00
+    const n = new Date(st.now);
+    const ist = new Date(st.now + (330 + n.getTimezoneOffset()) * 60000);
+    const mins = ist.getHours() * 60 + ist.getMinutes();
+    const dow = ist.getDay();
+    const open = dow >= 1 && dow <= 6 && mins >= 480 && mins < 1200;
+    const left = 840 - mins;
+    const live = open
+      ? { status: t.openNow, sub: t.closes, dot: '#22C55E', statusFg: 'var(--successFg)', pulse: 'dk-pulse 1.8s ease-out infinite',
+          headline: left > 0 ? t.countdown(Math.floor(left / 60), left % 60) : t.after,
+          progress: `${Math.min(100, Math.max(4, ((mins - 480) / 360) * 100)).toFixed(0)}%` }
+      : { status: t.closedNow, sub: t.opens, dot: '#8F8EA8', statusFg: 'var(--text2)', pulse: 'none', headline: t.closedMsg, progress: '100%' };
+
+    // ---------- toran
+    const toran = [];
+    [0, 130, 260].forEach((x0, sag) => [0.12, 0.31, 0.5, 0.69, 0.88].forEach((tt, i) => {
+      const k = sag * 5 + i;
+      const flower = k % 2 === 0;
+      toran.push({ left: `${x0 + 130 * tt - 10}px`, top: `${6 + 56 * tt * (1 - tt) - 1}px`, flower, leaf: !flower,
+        dur: `${3 + (k % 3) * 0.6}s`, delay: `${-(k * 0.37).toFixed(2)}s` });
+    }));
+
+    // ---------- content (fixtures/storefront.json)
+    const P = {
+      truck: 'M3 6h11v10H3zM14 9h4l3 3v4h-7M7.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3zM17.5 19a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3z',
+      credit: 'M3 6h18v12H3zM3 10h18M7 15h3', tag: 'M3 12V4h8l10 10-8 8zM7.5 8.5h.01',
+      box: 'M4 8l8-4 8 4v8l-8 4-8-4zM4 8l8 4 8-4M12 12v8', phone: 'M7 3h10v18H7zM11 18h2',
+      shield: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6zM8.5 12l2.5 2.5 4.5-5',
+    };
+    const highlights = [
+      [P.truck, 'Same-day delivery', 'Order by 2 PM, get it today'], [P.credit, '7-day credit', 'For regular retailers'],
+      [P.tag, 'Wholesale rates', 'Best prices, updated daily'], [P.box, '500+ products', 'Staples, FMCG & home care'],
+      [P.phone, 'Order from your phone', 'No calls, no notebooks'], [P.shield, 'Genuine products', 'Direct from brand depots'],
+    ].map(([icon, title, text], i) => { const [bg, fg, chip] = tints[i % 4]; return { icon, title, text, bg, fg, chip }; });
+    const dots = highlights.map((_, i) => ({ w: i === st.hl ? '22px' : '6px', bg: i === st.hl ? 'var(--primary)' : 'var(--outline2)' }));
+
+    const CI = {
+      'Staples': 'M12 21V9M12 9c0-3 2-5 4-6 0 3-1.5 5-4 6zM12 9c0-3-2-5-4-6 0 3 1.5 5 4 6zM12 14c0-2.5 2-4.5 4-5 0 2.5-1.5 4.5-4 5zM12 14c0-2.5-2-4.5-4-5 0 2.5 1.5 4.5 4 5z',
+      'Pulses': 'M3 11h18a9 9 0 0 1-18 0zM8 8h.01M12 6.5h.01M16 8h.01',
+      'Edible Oil': 'M10 3h4v3l2 3v11a1 1 0 0 1-1 1H9a1 1 0 0 1-1-1V9l2-3zM8 13h8',
+      'Dairy': 'M8 3h8v3l2 3v12H6V9l2-3zM6 9h12M10 14h4',
+      'Biscuits': 'M12 21a9 9 0 1 0 0-18 9 9 0 0 0 0 18zM9 9h.01M14 8h.01M15 13h.01M10 15h.01M12 12h.01',
+      'Instant Food': 'M3 12h18a9 9 0 0 1-18 0zM7 12V4M11 12V3M15 4l-2 8',
+      'Beverages': 'M5 8h12v6a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17M9 3v2M13 3v2',
+      'Snacks': 'M6 3h12l-1 3 1 3-1 3 1 3-1 3 1 3H6l1-3-1-3 1-3-1-3 1-3zM10 10h4',
+      'Spices': 'M8 3h8v3H8zM7 6h10v14a1 1 0 0 1-1 1H8a1 1 0 0 1-1-1zM10 12h4',
+      'Home Care': 'M9 9h6v12H9zM10 9V6h4l3-2M15 6h3M12 13v4',
+      'Personal Care': 'M4 12a4 4 0 0 1 4-4h8a4 4 0 0 1 4 4v4a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM9 4.5h.01M13 3h.01',
+    };
+    const catNames = ['Staples', 'Pulses', 'Edible Oil', 'Dairy', 'Biscuits', 'Instant Food', 'Beverages', 'Snacks', 'Spices'];
+    const tintOf = (c) => tints[Math.max(0, catNames.indexOf(c)) % 4];
+    const cats = catNames.map((c) => {
+      const [bg, fg] = tintOf(c);
+      const on = st.cat === c;
+      return { label: c, icon: CI[c], bg, fg, on, ring: on ? 'var(--primary)' : 'transparent', scale: on ? 'scale(0.96)' : 'none',
+        pick: () => this.setState({ cat: on ? null : c }) };
+    });
+    const catalog = [
+      ['Aashirvaad Shudh Chakki Atta 10 kg', 'PACK', 'Staples', 'At', true], ['Tata Salt 1 kg (case of 25)', 'CASE', 'Staples', 'TS', false],
+      ['Sugar (loose)', 'KG', 'Staples', 'Su', false], ['Fortune Sunflower Oil', 'L', 'Edible Oil', 'FO', true], ['Toor Dal', 'KG', 'Pulses', 'TD', false],
+      ['Basmati Rice (loose)', 'KG', 'Staples', 'BR', false], ['Parle-G 80 g (box of 48)', 'BOX', 'Biscuits', 'PG', true],
+      ['Britannia Good Day Cashew 200 g', 'PCS', 'Biscuits', 'GD', false], ['Maggi 2-Minute Noodles 70 g', 'DOZEN', 'Instant Food', 'Mg', true],
+      ['Amul Butter 500 g', 'PCS', 'Dairy', 'AB', true], ['Amul Taaza Toned Milk', 'L', 'Dairy', 'AT', false],
+      ['Red Label Tea 1 kg', 'PCS', 'Beverages', 'RL', true], ['Bru Instant Coffee 200 g', 'PCS', 'Beverages', 'Br', false],
+      ["Haldiram's Aloo Bhujia 1 kg", 'PCS', 'Snacks', 'HB', true], ['Haldi Powder (loose)', 'G', 'Spices', 'HP', false],
+    ];
+    const popular = catalog.filter((p) => (st.cat ? p[2] === st.cat : p[4])).map(([name, unit, cat, initials]) => {
+      const [bg, fg] = tintOf(cat);
+      return { name, initials, bg, fg, icon: CI[cat], open: () => this.setState({ sheet: 'product', product: { name, unit, cat, initials } }) };
+    });
+    const qpRaw = st.product;
+    const qp = qpRaw ? (() => { const [bg, fg] = tintOf(qpRaw.cat); return { ...qpRaw, bg, fg, icon: CI[qpRaw.cat], unit: t.per(t.units[qpRaw.unit]) }; })()
+      : { name: '', unit: '', cat: '', initials: '', bg: 'transparent', fg: 'inherit', icon: '' };
+
+    const steps = t.steps.map(([title, text], i) => ({ title, text, n: i + 1, done: i === 0, todo: i !== 0, line: i < 2,
+      circle: i === 0 ? 'var(--successFg)' : 'var(--opc)', circleFg: i === 0 ? 'var(--successBg)' : 'var(--pc)' }));
+
+    const brands = ['Aashirvaad', 'Tata', 'Fortune', 'Parle', 'Britannia', 'Nestlé', 'Amul', 'HUL', 'Colgate', 'Dettol', "Haldiram's", 'Everest'];
+    const brandsA = [...brands.slice(0, 6), ...brands.slice(0, 6), ...brands.slice(0, 6), ...brands.slice(0, 6)];
+    const brandsB = [...brands.slice(6), ...brands.slice(6), ...brands.slice(6), ...brands.slice(6)];
+
+    // ---------- delivery map
+    const pts = { 'Vaishali Nagar': ['v', 70, 70], 'C-Scheme': ['c', 205, 122], 'Raja Park': ['rp', 252, 86], 'Malviya Nagar': ['mn', 250, 150],
+      'Jagatpura': ['j', 312, 170], 'Pratap Nagar': ['pn', 270, 196], 'Sanganer': ['s', 185, 194], 'Mansarovar': ['m', 96, 158] };
+    const dot = {};
+    Object.entries(pts).forEach(([name, [k]]) => { const on = st.area === name; dot[k] = { r: on ? 8 : 5.5, f: on ? '#F2B33D' : 'var(--primary)' }; });
+    const sel = st.area ? pts[st.area] : null;
+    const gx = 170, gy = 98;
+    const route = sel
+      ? { d: `M${gx} ${gy}Q${((gx + sel[1]) / 2 + (sel[2] - gy) * 0.35).toFixed(1)} ${((gy + sel[2]) / 2 - (sel[1] - gx) * 0.35).toFixed(1)} ${sel[1]} ${sel[2]}`,
+          o: 1, msg: t.areaMsg(st.area), msgFg: 'var(--text)' }
+      : { d: `M${gx} ${gy}`, o: 0, msg: t.pickArea, msgFg: 'var(--text2)' };
+    const ring = sel ? { left: `${sel[1]}px`, top: `${sel[2]}px`, o: 1 } : { left: '0px', top: '0px', o: 0 };
+    const areas = Object.keys(pts).map((a) => {
+      const on = st.area === a;
+      return { label: a, on, pick: () => this.setState({ area: on ? null : a }),
+        bg: on ? 'var(--primary)' : 'transparent', fg: on ? 'var(--onPrimary)' : 'var(--text2)', border: on ? 'var(--primary)' : 'var(--outline2)' };
+    });
+
+    // ---------- phone check (fixtures/retailers.page.json)
+    const registered = { '9828011111': 'Sharma General Store', '9828022222': 'Gupta Kirana', '9828033333': 'Jain Provision Store', '9828044444': 'New Bharat Mart', '9828066666': 'Om Sai Kirana' };
+    const valid = /^[6-9]\d{9}$/.test(st.phone);
+
+    return {
+      vars, s: { ...t, rateTag: signedIn ? t.inCatalog : t.joinRates }, rootClass: motion ? '' : 'dk-still',
+      toggleLang: () => this.setState({ lang: lang === 'en' ? 'hi' : 'en' }),
+      onScroll: (e) => { const sc = e.target.scrollTop > 250; if (sc !== st.scrolled) this.setState({ scrolled: sc }); },
+      headerT: st.scrolled ? 'none' : 'translateY(-100%)', headerO: st.scrolled ? 1 : 0, headerPE: st.scrolled ? 'auto' : 'none',
+      live, stats: t.stats.map(([v, l]) => ({ v, l })), toran,
+      highlights, dots,
+      onCarousel: (e) => { const i = Math.min(highlights.length - 1, Math.round(e.target.scrollLeft / 272)); if (i !== st.hl) this.setState({ hl: i }); },
+      cats, popular, hasCat: !!st.cat, clearCat: () => this.setState({ cat: null }),
+      popularTitle: st.cat ? t.popularIn(st.cat) : t.popular,
+      steps, brandsA, brandsB, dot, route, ring, areas,
+      signedIn, visitor: !signedIn, viewer: st.viewer ?? 'Sharma General Store',
+      sheetOpen: !!st.sheet, sheet: { product: st.sheet === 'product', phone: st.sheet === 'phone', notreg: st.sheet === 'notreg' }, qp,
+      closeSheet: () => this.setState({ sheet: null }),
+      openPhone: () => this.setState({ sheet: 'phone', phoneTried: false }),
+      phone: st.phone, phoneDisplay: st.phone ? `+91 ${st.phone.slice(0, 5)} ${st.phone.slice(5)}` : '',
+      onPhone: (e) => this.setState({ phone: e.target.value.replace(/\D/g, '').slice(0, 10) }),
+      phoneErr: st.phoneTried && !valid, phoneBorder: st.phoneTried && !valid ? 'var(--danger)' : 'transparent',
+      submitPhone: () => {
+        if (!valid) return this.setState({ phoneTried: true });
+        if (registered[st.phone]) return this.setState({ sheet: null, signedIn: true, viewer: registered[st.phone] });
+        return this.setState({ sheet: 'notreg' });
+      },
+    };
+  }
+}
+</script>
+</body>
+</html>

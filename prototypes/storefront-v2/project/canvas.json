@@ -1,0 +1,13 @@
+{
+  "v": 3,
+  "createdOnFiles": { "v": 1, "at": "2026-10-08T18:00:00Z" },
+  "title": "DistributeKaro Storefront v2",
+  "launch": { "view": "canvas" },
+  "pages": [],
+  "boards": {
+    "Main.dc.html": { "x": 0, "y": 0, "w": 390, "h": 844, "title": "Storefront v2 · scroll & tap", "is_interactive": true, "radius": 32 }
+  },
+  "order": ["Main.dc.html"],
+  "notes": {},
+  "designSystems": []
+}
