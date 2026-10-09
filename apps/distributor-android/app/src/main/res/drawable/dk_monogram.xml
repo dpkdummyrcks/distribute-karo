@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Logo C (ADR-019) on its indigo tile, for in-app use. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="64dp"
+    android:height="64dp"
+    android:viewportWidth="64"
+    android:viewportHeight="64">
+    <path android:pathData="M16,0H48A16,16 0 0,1 64,16V48A16,16 0 0,1 48,64H16A16,16 0 0,1 0,48V16A16,16 0 0,1 16,0Z" android:fillColor="#3730A3" />
+    <path android:pathData="M14,38a9,9 0 1,0 18,0a9,9 0 1,0 -18,0" android:strokeColor="#FFFFFF" android:strokeWidth="5" />
+        <path android:pathData="M32,16V47M40,16V47" android:strokeColor="#FFFFFF" android:strokeWidth="5" android:strokeLineCap="round" />
+        <path android:pathData="M50,27L40,37L51,47" android:strokeColor="#F2B33D" android:strokeWidth="5" android:strokeLineCap="round" android:strokeLineJoin="round" />
+</vector>

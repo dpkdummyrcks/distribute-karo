@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="Theme.DistributeKaro" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:windowBackground">@color/dk_window</item>
+    </style>
+
+    <style name="Theme.DistributeKaro.Starting" parent="Theme.SplashScreen">
+        <item name="windowSplashScreenBackground">@color/dk_window</item>
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_launcher_foreground</item>
+        <item name="windowSplashScreenIconBackgroundColor">@color/dk_indigo</item>
+        <item name="postSplashScreenTheme">@style/Theme.DistributeKaro</item>
+    </style>
+</resources>

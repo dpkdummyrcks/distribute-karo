@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Window/splash only; Compose colours come from DkTokens. -->
+    <color name="dk_indigo">#FF3730A3</color>
+    <color name="dk_window">#FFF7F6FC</color>
+</resources>

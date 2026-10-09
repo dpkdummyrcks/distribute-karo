@@ -30,6 +30,7 @@
 | ADR-023 | **Real map + delivery zones**: MapLibre (web + Android) on self-hosted Protomaps PMTiles (OSM data) served from Garage via Caddy; distributor draws circle zones; zones stored as rows (no PostGIS) | Accepted | 2026-10-08 |
 | ADR-024 | **No horizontal scrolling in the distributor app**: chip rows, filters and suggestions wrap onto new lines; long text truncates with an ellipsis; nothing is wider than the screen (retailer web → QH) | Accepted | 2026-10-08 |
 | ADR-025 | Toolchain: **Node 24 LTS** (brief said 22), **pnpm 12** (pinned via `packageManager`), **TypeScript 6.0.x** (TS 7 native compiler not yet supported by typescript-eslint), **Zod 4**, ESLint 10 flat config, Vitest 4, Turbo 2 | Accepted | 2026-10-09 |
+| ADR-026 | Android toolchain: **AGP 9.4.1 (built-in Kotlin) + Kotlin 2.4.21, Gradle 9.8.1** (wrapper pinned by SHA-256), Compose BOM 2026.09.00, **compileSdk/targetSdk 37, minSdk 26**, JDK 17. **applicationId + package `in.distributekaro.app`** (domain distributekaro.in; Kotlin needs `` `in` `` backticks, so ktlint `package-name` is off). ktlint (android_studio + trailing commas), detekt 1.23.8, Android lint warnings-as-errors | Accepted | 2026-10-09 |
 | ADR-016 | **Distributor-only stock tracking** via a stock ledger: sold vs remaining per item; retailers never see stock and can order freely | Accepted | 2026-10-08 |
 
 ---
