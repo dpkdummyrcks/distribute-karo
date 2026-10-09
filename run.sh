@@ -8,7 +8,10 @@
 #   ./run.sh app        build, install and launch on the phone   (no laptop emulator)
 #   ./run.sh logs       follow API + web logs
 #   ./run.sh status     what is running
-#   ./run.sh stop       stop API + web started by this script
+#   ./run.sh stop       stop API + web started by this script (docker keeps running)
+#   ./run.sh down       stop API + web AND the docker stack (data volumes are kept)
+#   ./run.sh restart    down, then start everything again in the background
+#   ./run.sh infra:restart   restart only the docker stack (Postgres, Valkey, Garage)
 #   ./run.sh clean      stop + kill Gradle/Kotlin/turbo daemons, leftover test containers, adb reverse
 #   ./run.sh clean --all   clean + stop the docker stack (data volumes are kept)
 #
@@ -186,6 +189,13 @@ up() {
   wait
 }
 
+down() {
+  stop_all
+  info "stopping docker stack (volumes kept)"
+  compose down >/dev/null 2>&1
+  ok "docker stack stopped"
+}
+
 background() {
   server
   web
@@ -202,7 +212,10 @@ case "${1:-up}" in
   logs) tail -n 50 -F "$RUN"/*.log ;;
   status) status ;;
   stop) stop_all ;;
+  down) down ;;
+  restart) down; background ;;
+  infra:restart) info "restarting docker stack"; compose restart >/dev/null 2>&1; infra ;;
   clean) clean "${2:-}" ;;
-  -h | --help | help) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//' ;;
+  -h | --help | help) sed -n '2,21p' "$0" | sed 's/^# \{0,1\}//' ;;
   *) die "unknown command '$1' (try ./run.sh help)" ;;
 esac
