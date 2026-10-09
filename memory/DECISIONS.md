@@ -29,6 +29,7 @@
 | ADR-022 | **Storefront v2 replaces R-01**: toran/jali hero, live open + same-day cut-off card, stats, swipe highlights, category tiles → popular products, quick view, 3-step how-to, brand marquee, delivery map, owner note, enquiry banner | Accepted | 2026-10-08 |
 | ADR-023 | **Real map + delivery zones**: MapLibre (web + Android) on self-hosted Protomaps PMTiles (OSM data) served from Garage via Caddy; distributor draws circle zones; zones stored as rows (no PostGIS) | Accepted | 2026-10-08 |
 | ADR-024 | **No horizontal scrolling in the distributor app**: chip rows, filters and suggestions wrap onto new lines; long text truncates with an ellipsis; nothing is wider than the screen (retailer web → QH) | Accepted | 2026-10-08 |
+| ADR-025 | Toolchain: **Node 24 LTS** (brief said 22), **pnpm 12** (pinned via `packageManager`), **TypeScript 6.0.x** (TS 7 native compiler not yet supported by typescript-eslint), **Zod 4**, ESLint 10 flat config, Vitest 4, Turbo 2 | Accepted | 2026-10-09 |
 | ADR-016 | **Distributor-only stock tracking** via a stock ledger: sold vs remaining per item; retailers never see stock and can order freely | Accepted | 2026-10-08 |
 
 ---

@@ -5,8 +5,8 @@
 
 ## Current checkpoint
 - **Phase:** 1B — Foundation
-- **Last completed:** Phase 1A signed off (owner: proceed); `contract-v0` tagged (LLD §6.2 + fixtures frozen)
-- **Next step:** 1B.1 monorepo scaffold → 1B.2 shared schemas → 1B.3 tokens → 1B.4 infra → 1B.5 DB → 1B.6 env + Android skeleton → 1B.7 CI
+- **Last completed:** 1B.2 shared package (schemas = contract v0, enforced by fixture tests)
+- **Next step:** 1B.3 tokens → 1B.4 infra → 1B.5 DB → 1B.6 env + Android skeleton → 1B.7 CI
 - **Blockers:** none. Open: QB (password reset via admin CLI), QD (approve → prefilled form), QH (web swipe rows kept)
 
 ## Checklist
@@ -37,8 +37,8 @@
 Status values: `not started` · `in progress` · `in review` · `changes requested` · `approved`
 
 ### Phase 1B — Foundation
-- [ ] 1B.1 pnpm + Turborepo scaffold, `packages/config`, strict TS
-- [ ] 1B.2 `packages/shared`: zod schemas, error codes, order machine (+ tests)
+- [x] 1B.1 pnpm + Turborepo scaffold, `packages/config`, strict TS (ADR-025)
+- [x] 1B.2 `packages/shared`: zod schemas, error codes, order machine, qty/money (+ 252 tests, 100% coverage; every fixture validated against its schema)
 - [ ] 1B.3 `packages/ui-tokens` + generators (CSS, Kotlin)
 - [ ] 1B.4 `infra/` compose: PG18, Valkey, Garage, Caddy; Garage spike (signed Content-Length, lifecycle)
 - [ ] 1B.5 Drizzle schema, migrations, RLS, roles, seed (1 distributor, 20 items, 5 retailers, 3 access requests, 3 enquiries, 10 orders)
@@ -96,3 +96,4 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 | 2026-10-08 | UI-4 approved (owner: finish). UI-6 published (artifact NHwipyCfbcgs86icTBVzYb): catalog w/ category bottom sheet (no horizontal scroll on web either), typed decimal steppers, cart w/ unavailable item, placed w/ cut-off ETA, history, detail w/ cancel + reorder. |
 | 2026-10-08 | UI-7 published (artifact CPkrUDXM1Ciq7Hktn8t74N): join request → approve → login → order → partial accept (stock drops) → retailer sees confirmed → dispatch → deliver, EN/HI. Phase 1A complete pending sign-off. |
 | 2026-10-09 | Owner approved UI-6 + UI-7 ("proceed"). Phase 1A closed; tag contract-v0. Phase 1B started. |
+| 2026-10-09 | 1B.1 + 1B.2 done. Contract check found 2 gaps (DeliveryZoneAdmin, problem detail fields) → fixed in LLD §6.2 first. Tooling ADR-025. |

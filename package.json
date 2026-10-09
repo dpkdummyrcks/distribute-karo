@@ -1,0 +1,25 @@
+{
+  "name": "distributekaro",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@12.10.1",
+  "engines": {
+    "node": ">=24"
+  },
+  "scripts": {
+    "build": "turbo run build",
+    "dev": "turbo run dev",
+    "lint": "turbo run lint",
+    "typecheck": "turbo run typecheck",
+    "test": "turbo run test",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "fixtures:gen": "node packages/shared/scripts/gen-fixtures.mjs",
+    "tokens:build": "pnpm --filter @dk/ui-tokens build"
+  },
+  "devDependencies": {
+    "prettier": "^3.6.0",
+    "turbo": "^2.11.7",
+    "typescript": "6.0.3"
+  }
+}

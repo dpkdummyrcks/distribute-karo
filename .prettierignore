@@ -1,0 +1,9 @@
+pnpm-lock.yaml
+prototypes/
+packages/shared/fixtures/
+docs/
+memory/
+**/dist/
+**/coverage/
+apps/distributor-android/
+CLAUDE.md

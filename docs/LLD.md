@@ -35,7 +35,7 @@ memory/                     # PROGRESS.md, DECISIONS.md
 | Phone | E.164 (`+919876543210`), normalised with `libphonenumber-js`, default region IN |
 | JSON | camelCase; nullable fields explicit `null` |
 | Lists | `{ data: T[], nextCursor: string \| null }`; opaque cursor; `limit` default 20, max 100 |
-| Errors | RFC 9457 problem+json: `{ type, title, status, code, detail?, errors?: [{path, message}], traceId }` |
+| Errors | RFC 9457 problem+json: `{ type, title, status, code, detail, errors?: [{path, message, …details}], retryAfterSec?, traceId }`; `detail` is `null` when absent; error items may carry typed details (e.g. `INSUFFICIENT_STOCK`: `lineId, itemId, requested, accepted, available`) |
 | Images | DTOs expose signed `…Url` (hour-bucketed for stable ETags), never raw keys |
 | Validation | Zod `.strict()`, trimmed strings, limits in §4 |
 
@@ -316,7 +316,7 @@ Base `/v1`. `D` = distributor bearer (aud `dk-distributor`). `R` = retailer bear
 | PATCH `/d/enquiries/:id` | D | `{status: "READ"\|"CLOSED"}` | 200 `Enquiry` |
 | GET `/d/inbox/counts` | D | – | 200 `InboxCounts` |
 | GET / PUT `/d/storefront` | D | `StorefrontInput` (PUT) | 200 `StorefrontAdmin` |
-| GET / POST `/d/delivery-zones` · PATCH / DELETE `/d/delivery-zones/:id` | D | `DeliveryZoneInput` | 200/201 `DeliveryZone` / 204 |
+| GET / POST `/d/delivery-zones` · PATCH / DELETE `/d/delivery-zones/:id` | D | `DeliveryZoneInput` | 200 `Page<DeliveryZoneAdmin>` · 201/200 `DeliveryZoneAdmin` / 204 |
 | GET `/d/orders` | D | `?status=A,B&retailerId&cursor&limit` | 200 `Page<OrderSummary>` |
 | GET `/d/orders/:id` | D | – | 200 `OrderDetail` |
 | POST `/d/orders/:id/decision` | D | `DecisionInput` | 200 `OrderDetail` |
@@ -427,6 +427,7 @@ type Highlight = { icon: "truck"|"credit"|"tag"|"box"|"clock"|"star"|"shield"|"p
 type OpeningHours = { days: number[] /* 1=Mon … 7=Sun */; open: string /* "08:00" */; close: string /* "20:00" */ };
 type DeliveryZone = { id: string; name: string; kind: "CIRCLE"; center: { lat: number; lng: number }; radiusM: number };
 type DeliveryZoneInput = { name: string; center: { lat: number; lng: number }; radiusM: number; sortOrder?: number; isActive?: boolean };
+type DeliveryZoneAdmin = DeliveryZone & { sortOrder: number; isActive: boolean };   // GET /d/delivery-zones items
 type Storefront = { distributor: PublicDistributor & { coverUrl: string | null; tagline: string | null };
   highlights: Highlight[]; stats: { value: string; label: string }[]; categories: string[]; brands: string[];
   openingHours: OpeningHours | null; sameDayCutoff: string | null;           // clients compute "Open now" + countdown in Asia/Kolkata
