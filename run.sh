@@ -2,6 +2,7 @@
 # DistributeKaro local dev runner.
 #
 #   ./run.sh            infra + API + retailer web (the Android app is separate: ./run.sh app)
+#   ./run.sh bg         same, in the background: returns to the prompt (stop with ./run.sh stop)
 #   ./run.sh server     infra + migrate + seed + API only        (http://localhost:3000)
 #   ./run.sh web        retailer web only                        (http://localhost:5173)
 #   ./run.sh app        build, install and launch on the phone   (no laptop emulator)
@@ -185,8 +186,16 @@ up() {
   wait
 }
 
+background() {
+  server
+  web
+  echo
+  ok "running in the background. ./run.sh logs to follow, ./run.sh stop to stop"
+}
+
 case "${1:-up}" in
   up) up ;;
+  bg | background | -d) background ;;
   server) server ;;
   web) web ;;
   app) app ;;
@@ -194,6 +203,6 @@ case "${1:-up}" in
   status) status ;;
   stop) stop_all ;;
   clean) clean "${2:-}" ;;
-  -h | --help | help) sed -n '2,17p' "$0" | sed 's/^# \{0,1\}//' ;;
+  -h | --help | help) sed -n '2,18p' "$0" | sed 's/^# \{0,1\}//' ;;
   *) die "unknown command '$1' (try ./run.sh help)" ;;
 esac
