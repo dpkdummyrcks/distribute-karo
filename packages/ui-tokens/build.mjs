@@ -82,13 +82,13 @@ const scheme = (c) =>
     `inverseSurface = ${argb(c.inverseSurface)}`,
     `inverseOnSurface = ${argb(c.onInverseSurface)}`,
   ]
-    .map((l) => `    ${l},`)
+    .map((l) => `        ${l},`)
     .join('\n');
 const statusEntries = (mode) =>
   Object.entries(t.status)
     .map(
       ([s, v]) =>
-        `        OrderStatusKey.${s} to StatusColors(container = ${argb(v[mode][0])}, content = ${argb(v[mode][1])}),`,
+        `            OrderStatusKey.${s} to StatusColors(container = ${argb(v[mode][0])}, content = ${argb(v[mode][1])}),`,
     )
     .join('\n');
 const ext = (c) =>
@@ -102,14 +102,33 @@ const ext = (c) =>
     'warningContainer',
     'onWarningContainer',
   ]
-    .map((k) => `    ${k} = ${argb(c[k])},`)
+    .map((k) => `        ${k} = ${argb(c[k])},`)
     .join('\n');
+// tokens.json type roles → Material 3 slots
+const TYPE_SLOTS = {
+  display: 'displaySmall',
+  headline: 'headlineMedium',
+  title: 'titleLarge',
+  body: 'bodyLarge',
+  label: 'labelLarge',
+  caption: 'bodySmall',
+};
+const typeSlots = Object.entries(TYPE_SLOTS)
+  .map(([role, slot]) => {
+    const r = t.type[role];
+    return `        ${slot} = TextStyle(fontSize = ${r.size}.sp, lineHeight = ${r.line}.sp, fontWeight = FontWeight(${r.weight})),`;
+  })
+  .join('\n');
 const kt = `// ${HEADER}
 package \`in\`.distributekaro.app.core.designsystem
 
+import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.sp
 
 enum class OrderStatusKey { ${Object.keys(t.status).join(', ')} }
 
@@ -149,6 +168,11 @@ ${ext(t.color.dark)}
         status = mapOf(
 ${statusEntries('dark')}
         ),
+    )
+
+    /** Type scale from tokens.json; font families are applied by DkTheme. */
+    val Typography = Typography(
+${typeSlots}
     )
 
     object Radius {
