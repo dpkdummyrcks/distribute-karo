@@ -5,8 +5,8 @@
 
 ## Current checkpoint
 - **Phase:** 1B — Foundation
-- **Last completed:** 1B.2 shared package (schemas = contract v0, enforced by fixture tests)
-- **Next step:** 1B.3 tokens → 1B.4 infra → 1B.5 DB → 1B.6 env + Android skeleton → 1B.7 CI
+- **Last completed:** 1B.3 design tokens (tokens.json → Tailwind v4 CSS + Compose DkTokens.kt)
+- **Next step:** 1B.4 infra → 1B.4 infra → 1B.5 DB → 1B.6 env + Android skeleton → 1B.7 CI
 - **Blockers:** none. Open: QB (password reset via admin CLI), QD (approve → prefilled form), QH (web swipe rows kept)
 
 ## Checklist
@@ -39,7 +39,7 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 ### Phase 1B — Foundation
 - [x] 1B.1 pnpm + Turborepo scaffold, `packages/config`, strict TS (ADR-025)
 - [x] 1B.2 `packages/shared`: zod schemas, error codes, order machine, qty/money (+ 252 tests, 100% coverage; every fixture validated against its schema)
-- [ ] 1B.3 `packages/ui-tokens` + generators (CSS, Kotlin)
+- [x] 1B.3 `packages/ui-tokens` + generators (CSS, Kotlin) + WCAG AA contrast test (52 checks, both themes)
 - [ ] 1B.4 `infra/` compose: PG18, Valkey, Garage, Caddy; Garage spike (signed Content-Length, lifecycle)
 - [ ] 1B.5 Drizzle schema, migrations, RLS, roles, seed (1 distributor, 20 items, 5 retailers, 3 access requests, 3 enquiries, 10 orders)
 - [ ] 1B.6 Env validation; Android Gradle skeleton (empty Compose app + theme from tokens)

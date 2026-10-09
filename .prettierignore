@@ -7,3 +7,4 @@ memory/
 **/coverage/
 apps/distributor-android/
 CLAUDE.md
+packages/ui-tokens/generated/

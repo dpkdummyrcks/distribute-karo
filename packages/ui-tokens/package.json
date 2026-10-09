@@ -1,0 +1,21 @@
+{
+  "name": "@dk/ui-tokens",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    "./tokens.json": "./tokens.json",
+    "./tokens.css": "./generated/tokens.css"
+  },
+  "scripts": {
+    "build": "node build.mjs",
+    "lint": "eslint .",
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@dk/config": "workspace:*",
+    "@types/node": "^24.0.0",
+    "eslint": "^10.0.0",
+    "vitest": "^4.0.0"
+  }
+}
