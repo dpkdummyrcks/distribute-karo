@@ -499,6 +499,7 @@ type PlaceOrderInput = { lines: { itemId: string; qty: Qty }[]; note?: string|nu
 Headers: `RateLimit-Policy` and `RateLimit` (IETF draft), plus `Retry-After` on 429. The IP comes from `X-Forwarded-For`, trusting Caddy only.
 
 ## 9. Uploads
+0. The S3 client is created with `forcePathStyle: true`, `requestChecksumCalculation: 'WHEN_REQUIRED'` and `responseChecksumValidation: 'WHEN_REQUIRED'`. Otherwise the SDK signs an empty-body CRC32 into presigned URLs and Garage rejects real uploads (ADR-004 check).
 1. `presign` checks type ∈ {jpeg, png, webp} and length ≤ 2 MiB. Key = `tmp/{did}/{uuidv7}`. The ticket `upl:{uploadId}` → `{key, did, purpose}` lives in Valkey (1 h). The PUT is signed with Content-Type + Content-Length and expires in 5 min.
 2. The client PUTs directly to Garage. The Android app first downsizes to ≤ 1600 px JPEG.
 3. Writes carry an `…UploadId`. The API checks the ticket owner and purpose, fetches the object, checks magic bytes, re-encodes with sharp (≤ 1600 px, webp q80, metadata stripped), writes `img/{did}/{uuidv7}.webp` and deletes the tmp object. This is synchronous.

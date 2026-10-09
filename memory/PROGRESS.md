@@ -5,8 +5,8 @@
 
 ## Current checkpoint
 - **Phase:** 1B — Foundation
-- **Last completed:** 1B.3 design tokens (tokens.json → Tailwind v4 CSS + Compose DkTokens.kt)
-- **Next step:** 1B.4 infra → 1B.4 infra → 1B.5 DB → 1B.6 env + Android skeleton → 1B.7 CI
+- **Last completed:** 1B.4 infra up locally; Garage confirmed (ADR-004)
+- **Next step:** 1B.5 Drizzle schema + migrations + RLS + seed (with apps/api skeleton + env validation) → 1B.4 infra → 1B.5 DB → 1B.6 env + Android skeleton → 1B.7 CI
 - **Blockers:** none. Open: QB (password reset via admin CLI), QD (approve → prefilled form), QH (web swipe rows kept)
 
 ## Checklist
@@ -40,7 +40,7 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 - [x] 1B.1 pnpm + Turborepo scaffold, `packages/config`, strict TS (ADR-025)
 - [x] 1B.2 `packages/shared`: zod schemas, error codes, order machine, qty/money (+ 252 tests, 100% coverage; every fixture validated against its schema)
 - [x] 1B.3 `packages/ui-tokens` + generators (CSS, Kotlin) + WCAG AA contrast test (52 checks, both themes)
-- [ ] 1B.4 `infra/` compose: PG18, Valkey, Garage, Caddy; Garage spike (signed Content-Length, lifecycle)
+- [x] 1B.4 `infra/` compose: PG18 (dk_owner/dk_app roles), Valkey 8, Garage v2.1 + bootstrap script; Garage check PASSED (signed size/type, tmp/ lifecycle, stable signed GET). Caddy added with api/web in 1C/1D
 - [ ] 1B.5 Drizzle schema, migrations, RLS, roles, seed (1 distributor, 20 items, 5 retailers, 3 access requests, 3 enquiries, 10 orders)
 - [ ] 1B.6 Env validation; Android Gradle skeleton (empty Compose app + theme from tokens)
 - [ ] 1B.7 CI: TS (lint, typecheck, test, build, audit), Android (lint, detekt, test, assemble), CodeQL, Trivy, Renovate
@@ -97,3 +97,4 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 | 2026-10-08 | UI-7 published (artifact CPkrUDXM1Ciq7Hktn8t74N): join request → approve → login → order → partial accept (stock drops) → retailer sees confirmed → dispatch → deliver, EN/HI. Phase 1A complete pending sign-off. |
 | 2026-10-09 | Owner approved UI-6 + UI-7 ("proceed"). Phase 1A closed; tag contract-v0. Phase 1B started. |
 | 2026-10-09 | 1B.1 + 1B.2 done. Contract check found 2 gaps (DeliveryZoneAdmin, problem detail fields) → fixed in LLD §6.2 first. Tooling ADR-025. |
+| 2026-10-09 | 1B.4: compose stack running (PG 18.6, Valkey 8, Garage 2.1). Garage check passed after setting SDK checksum mode WHEN_REQUIRED (recorded in ADR-004 + LLD §9). |
