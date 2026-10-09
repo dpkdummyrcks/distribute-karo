@@ -8,3 +8,4 @@ memory/
 apps/distributor-android/
 CLAUDE.md
 packages/ui-tokens/generated/
+infra/checks/

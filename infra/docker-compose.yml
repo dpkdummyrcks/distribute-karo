@@ -1,0 +1,59 @@
+# Local + single-VPS stack (HLD §5). Host ports bind to 127.0.0.1 only.
+# Usage: cp infra/.env.example infra/.env && docker compose -f infra/docker-compose.yml up -d
+name: distributekaro
+
+services:
+  postgres:
+    image: postgres:18-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-distributekaro}
+      POSTGRES_USER: ${POSTGRES_SUPERUSER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_SUPERUSER_PASSWORD:?set in infra/.env}
+      DK_OWNER_PASSWORD: ${DK_OWNER_PASSWORD:?set in infra/.env}
+      DK_APP_PASSWORD: ${DK_APP_PASSWORD:?set in infra/.env}
+    volumes:
+      - pgdata:/var/lib/postgresql
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    ports:
+      - '127.0.0.1:${POSTGRES_HOST_PORT:-55432}:5432'
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${POSTGRES_SUPERUSER:-postgres} -d ${POSTGRES_DB:-distributekaro}']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  valkey:
+    image: valkey/valkey:8-alpine
+    restart: unless-stopped
+    command: ['valkey-server', '--appendonly', 'yes', '--requirepass', '${VALKEY_PASSWORD:?set in infra/.env}']
+    volumes:
+      - valkeydata:/data
+    ports:
+      - '127.0.0.1:${VALKEY_HOST_PORT:-56379}:6379'
+    healthcheck:
+      test: ['CMD-SHELL', 'valkey-cli -a "$$VALKEY_PASSWORD" --no-auth-warning ping | grep PONG']
+      interval: 5s
+      timeout: 3s
+      retries: 20
+    environment:
+      VALKEY_PASSWORD: ${VALKEY_PASSWORD}
+
+  garage:
+    image: dxflrs/garage:v2.1.0
+    restart: unless-stopped
+    environment:
+      GARAGE_RPC_SECRET: ${GARAGE_RPC_SECRET:?set in infra/.env}
+      GARAGE_ADMIN_TOKEN: ${GARAGE_ADMIN_TOKEN:?set in infra/.env}
+    volumes:
+      - ./garage/garage.toml:/etc/garage.toml:ro
+      - garagemeta:/var/lib/garage/meta
+      - garagedata:/var/lib/garage/data
+    ports:
+      - '127.0.0.1:${GARAGE_S3_HOST_PORT:-53900}:3900'
+
+volumes:
+  pgdata:
+  valkeydata:
+  garagemeta:
+  garagedata:
