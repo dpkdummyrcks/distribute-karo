@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # DistributeKaro local dev runner.
 #
-#   ./run.sh            infra + API + retailer web + build/install/launch the Android app on the USB phone
+#   ./run.sh            infra + API + retailer web (the Android app is separate: ./run.sh app)
 #   ./run.sh server     infra + migrate + seed + API only        (http://localhost:3000)
 #   ./run.sh web        retailer web only                        (http://localhost:5173)
 #   ./run.sh app        build, install and launch on the phone   (no laptop emulator)
@@ -168,9 +168,9 @@ stop_daemons() {
 
 on_interrupt() {
   echo
+  [[ -n "${TAIL_PID:-}" ]] && kill "$TAIL_PID" 2>/dev/null
   stop_all
-  stop_daemons
-  ok "stopped API, web and Gradle daemons (infra still running)"
+  ok "stopped API + web (infra still running)"
   exit 0
 }
 
@@ -178,10 +178,10 @@ up() {
   trap on_interrupt INT TERM
   server
   web
-  app
   echo
-  ok "all up. Ctrl-C stops API + web and the Gradle daemon; infra keeps running (./run.sh clean --all to stop it)"
+  ok "API + web up. Ctrl-C stops them; infra keeps running (./run.sh clean --all to stop it)"
   tail -n 0 -F "$RUN"/api.log $( [[ -f "$RUN/web.log" ]] && echo "$RUN/web.log" ) &
+  TAIL_PID=$!
   wait
 }
 
