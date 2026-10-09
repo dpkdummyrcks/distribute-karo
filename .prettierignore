@@ -1,6 +1,8 @@
 pnpm-lock.yaml
 prototypes/
 packages/shared/fixtures/
+packages/shared/seed/
+apps/api/drizzle/meta/
 docs/
 memory/
 **/dist/

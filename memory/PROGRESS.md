@@ -5,8 +5,8 @@
 
 ## Current checkpoint
 - **Phase:** 1B — Foundation
-- **Last completed:** 1B.4 infra up locally; Garage confirmed (ADR-004)
-- **Next step:** 1B.5 Drizzle schema + migrations + RLS + seed (with apps/api skeleton + env validation) → 1B.4 infra → 1B.5 DB → 1B.6 env + Android skeleton → 1B.7 CI
+- **Last completed:** 1B.5 DB schema, migrations, RLS and seed; integration tests green
+- **Next step:** 1B.6 minimal Hono app (/healthz, /readyz) + Android Gradle skeleton (Compose + DkTokens theme) → 1B.7 CI
 - **Blockers:** none. Open: QB (password reset via admin CLI), QD (approve → prefilled form), QH (web swipe rows kept)
 
 ## Checklist
@@ -41,7 +41,7 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 - [x] 1B.2 `packages/shared`: zod schemas, error codes, order machine, qty/money (+ 252 tests, 100% coverage; every fixture validated against its schema)
 - [x] 1B.3 `packages/ui-tokens` + generators (CSS, Kotlin) + WCAG AA contrast test (52 checks, both themes)
 - [x] 1B.4 `infra/` compose: PG18 (dk_owner/dk_app roles), Valkey 8, Garage v2.1 + bootstrap script; Garage check PASSED (signed size/type, tmp/ lifecycle, stable signed GET). Caddy added with api/web in 1C/1D
-- [ ] 1B.5 Drizzle schema, migrations, RLS, roles, seed (1 distributor, 20 items, 5 retailers, 3 access requests, 3 enquiries, 10 orders)
+- [x] 1B.5 Drizzle schema, migrations, RLS, roles, seed (1 distributor, 20 items, 6 retailers, access requests, enquiries, 10 orders; stock = Σ movements)
 - [ ] 1B.6 Env validation; Android Gradle skeleton (empty Compose app + theme from tokens)
 - [ ] 1B.7 CI: TS (lint, typecheck, test, build, audit), Android (lint, detekt, test, assemble), CodeQL, Trivy, Renovate
 
@@ -98,3 +98,4 @@ Status values: `not started` · `in progress` · `in review` · `changes request
 | 2026-10-09 | Owner approved UI-6 + UI-7 ("proceed"). Phase 1A closed; tag contract-v0. Phase 1B started. |
 | 2026-10-09 | 1B.1 + 1B.2 done. Contract check found 2 gaps (DeliveryZoneAdmin, problem detail fields) → fixed in LLD §6.2 first. Tooling ADR-025. |
 | 2026-10-09 | 1B.4: compose stack running (PG 18.6, Valkey 8, Garage 2.1). Garage check passed after setting SDK checksum mode WHEN_REQUIRED (recorded in ADR-004 + LLD §9). |
+| 2026-10-09 | 1B.5: drizzle 0000_init + 0001_rls (forced RLS on 10 tenant tables, append-only ledgers for dk_app), seed from packages/shared/seed/seed.json via withTenant, Testcontainers int test (8 pass). Local dev env in gitignored infra/.env.api (DB URLs derived from infra/.env). Demo login +91 98123 45678 / balaji@1998 (dev only). |

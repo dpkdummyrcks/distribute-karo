@@ -2,3 +2,11 @@ packages:
   - apps/api
   - apps/retailer-web
   - packages/*
+allowBuilds:
+  cpu-features: false
+  esbuild: true
+  protobufjs: false
+  ssh2: false
+minimumReleaseAgeExclude:
+  - '@hono/node-server@2.1.4'
+  - drizzle-orm@0.45.4

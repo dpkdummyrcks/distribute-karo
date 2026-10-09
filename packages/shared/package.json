@@ -9,11 +9,13 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./seed.json": "./seed/seed.json"
   },
   "files": [
     "dist",
-    "fixtures"
+    "fixtures",
+    "seed"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
